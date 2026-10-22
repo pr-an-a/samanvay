@@ -26,9 +26,11 @@ def list_cases(f: CaseFilters = Depends(), db: Session = Depends(get_db), user: 
 
 @router.post("", response_model=CaseCreateOut, status_code=201)
 def new_case(body: CaseCreate, db: Session = Depends(get_db), user: User = Depends(require_roles(*OFFICER_ROLES))):
-    """Register a complaint and immediately check it for overlaps with other bureaus' cases."""
+    """Register a complaint and immediately check it for overlaps with other bureaus' cases.
+    Saving and matching are one transaction: if either fails, nothing is stored."""
     case = create_case(db, body, user)
-    links = match_case(db, case)
+    links = match_case(db, case, commit=False)
+    db.commit()
     # Most useful first: counterparts that are still open, then by confidence.
     links.sort(key=lambda l: (not is_open(l.case_b if l.case_a_id == case.id else l.case_a),
                               -l.scores["final_confidence"]))

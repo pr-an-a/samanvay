@@ -116,5 +116,5 @@ def create_case(db: Session, body, user: User) -> Case:
     db.add(case)
     db.flush()
     db.add(CaseEvent(case_id=case.id, actor=user.name, bureau=bureau, action="Complaint registered"))
-    db.commit()
+    db.flush()  # the caller commits, together with any overlap links
     return case

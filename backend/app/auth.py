@@ -1,4 +1,4 @@
-"""Demo-grade auth: one random bearer token per demo user. Not production auth."""
+"""Demo-grade auth: a random bearer token per sign-in (several per user allowed). Not production auth."""
 
 import secrets
 
@@ -7,13 +7,15 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .db import get_db
-from .models import Role, User
+from .models import AuthToken, Role, User
 
 
 def issue_token(db: Session, user: User) -> str:
-    user.token = secrets.token_urlsafe(24)
+    """Add a new session; earlier sessions for the same user stay valid."""
+    token = secrets.token_urlsafe(24)
+    db.add(AuthToken(token=token, user_id=user.id))
     db.commit()
-    return user.token
+    return token
 
 
 def get_current_user(
@@ -23,7 +25,7 @@ def get_current_user(
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Missing bearer token")
     token = authorization.removeprefix("Bearer ").strip()
-    user = db.scalar(select(User).where(User.token == token))
+    user = db.scalar(select(User).join(AuthToken, AuthToken.user_id == User.id).where(AuthToken.token == token))
     if user is None:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid token")
     return user

@@ -348,7 +348,7 @@ def run_all(db: Session) -> int:
     return len(created)
 
 
-def match_case(db: Session, case: Case) -> list[CaseLink]:
+def match_case(db: Session, case: Case, commit: bool = True) -> list[CaseLink]:
     """Suggest links for one (new) case against existing cases from other bureaus in its region."""
     q = select(Case).where(Case.region == case.region, Case.source_bureau != case.source_bureau, Case.id != case.id)
     if not is_open(case):
@@ -361,5 +361,8 @@ def match_case(db: Session, case: Case) -> list[CaseLink]:
     me, existing = profile(case), _existing_pairs(db)
     created = [l for other in candidates
                if (s := score_pair(me, profile(other), text)) and (l := _suggest(db, case, other, s, existing))]
-    db.commit()
+    if commit:
+        db.commit()
+    else:
+        db.flush()
     return created

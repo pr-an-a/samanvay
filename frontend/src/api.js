@@ -24,6 +24,8 @@ export const session = {
   },
 };
 
+const SESSION_ENDED = "Your sign-in has expired and could not be renewed.";
+
 function describe(detail) {
   if (!detail) return "Request failed";
   if (typeof detail === "string") return detail;
@@ -31,15 +33,50 @@ function describe(detail) {
   return detail.map((d) => `${d.loc?.slice(1).join(".")}: ${d.msg}`).join("; ");
 }
 
-export async function api(path, { method = "GET", body, raw = false } = {}) {
+function send(path, method, body) {
   const headers = {};
   if (session.token()) headers.Authorization = `Bearer ${session.token()}`;
   if (body !== undefined) headers["Content-Type"] = "application/json";
-  const res = await fetch(BASE + path, { method, headers, body: body === undefined ? undefined : JSON.stringify(body) });
+  return fetch(BASE + path, { method, headers, body: body === undefined ? undefined : JSON.stringify(body) });
+}
+
+// Demo users have no passwords, so an expired token (e.g. after the database was reseeded) can be
+// renewed silently by signing in again as the same demo role. Concurrent 401s share one attempt.
+let renewing = null;
+async function renewSession() {
+  const previous = session.user();
+  if (!previous) return false;
+  renewing ??= (async () => {
+    try {
+      const users = await (await fetch(`${BASE}/auth/demo-users`)).json();
+      const same = users.find((u) => u.role === previous.role && u.bureau === previous.bureau);
+      if (!same) return false;
+      const res = await fetch(`${BASE}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: same.id }),
+      });
+      if (!res.ok) return false;
+      const { token, user } = await res.json();
+      session.save(token, user);
+      return true;
+    } catch {
+      return false;
+    } finally {
+      setTimeout(() => (renewing = null), 0);
+    }
+  })();
+  return renewing;
+}
+
+export async function api(path, { method = "GET", body, raw = false } = {}) {
+  let res = await send(path, method, body);
+  // A 401 is rejected before the backend does any work, so retrying once is safe, even for POST.
+  if (res.status === 401 && !path.startsWith("/auth/") && (await renewSession())) {
+    res = await send(path, method, body);
+  }
   if (res.status === 401 && !path.startsWith("/auth/")) {
-    session.clear();
-    window.location.assign("/login");
-    throw new ApiError(401, "Session expired");
+    throw new ApiError(401, `${SESSION_ENDED}${method === "GET" ? "" : " Nothing was saved."} Please sign in again.`);
   }
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));

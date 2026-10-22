@@ -128,6 +128,11 @@ variations the generator produces. Real data will score lower.
 
 ### Demo login
 Auth is demo-grade: pick a demo user, receive a bearer token. No passwords. **Not production auth.**
+Each sign-in gets its own token, so the same demo user can be signed in on several laptops at once.
+Reseeding wipes all tokens. The frontend then silently signs in again as the same demo role and
+retries the request once. If that fails, it shows a "sign in again" message instead of navigating away.
+A 401 is rejected before any work is done, and saving a complaint plus matching is one transaction,
+so a failed submit never leaves a half-saved case.
 
 ```bash
 curl localhost:8000/auth/demo-users

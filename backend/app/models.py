@@ -135,4 +135,15 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(100))
     role: Mapped[str] = mapped_column(String(16))
     bureau: Mapped[str | None] = mapped_column(String(16))
-    token: Mapped[str | None] = mapped_column(String(64), unique=True, index=True)
+
+
+class AuthToken(Base):
+    """One row per sign-in, so a demo user can be signed in on several devices at once."""
+
+    __tablename__ = "auth_tokens"
+
+    token: Mapped[str] = mapped_column(String(64), primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+    user: Mapped[User] = relationship()

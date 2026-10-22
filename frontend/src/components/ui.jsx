@@ -104,8 +104,11 @@ export function ErrorBox({ error }) {
   if (!error) return null;
   return (
     <div role="alert" className="rounded-xl border border-late/40 bg-surface p-4 text-lg text-ink">
-      <span className="font-semibold text-late">Something went wrong: </span>
+      <span className="font-semibold text-late">{error.status === 401 ? "Signed out: " : "Something went wrong: "}</span>
       {error.message || String(error)}
+      {error.status === 401 && (
+        <Link to="/login" className="ml-2 font-semibold text-accent underline-offset-4 hover:underline">Sign in again</Link>
+      )}
     </div>
   );
 }
