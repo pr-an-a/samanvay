@@ -42,6 +42,8 @@ export const ROLES = {
 };
 
 export const PLAIN_TITLE = "Another bureau is already handling this college";
+// Official alert wording from the SIH26264 problem statement, shown as a subtitle under the plain headline.
+export const OFFICIAL_TITLE = "Potential Overlapping Cases – Coordination Required";
 
 export function formatDate(value) {
   if (!value) return "—";

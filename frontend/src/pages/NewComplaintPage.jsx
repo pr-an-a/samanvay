@@ -4,7 +4,7 @@ import { api } from "../api";
 import { useAuth } from "../auth";
 import Evidence from "../components/Evidence";
 import { Bureau, Button, Card, ErrorBox, PageTitle } from "../components/ui";
-import { BUREAUS, CATEGORIES, PLAIN_TITLE, REGIONS, bureauName, daysAgo, lowerFirst, plainAction } from "../labels";
+import { BUREAUS, CATEGORIES, OFFICIAL_TITLE, PLAIN_TITLE, REGIONS, bureauName, daysAgo, lowerFirst, plainAction } from "../labels";
 import { useTour } from "../tour";
 
 const EMPTY = {
@@ -27,8 +27,8 @@ function MatchBanner({ result }) {
   const mine = result.case;
   return (
     <section role="alert" className="mb-10 rounded-xl border-2 border-amber-line bg-amber-wash p-8">
-      <p className="text-base font-semibold uppercase tracking-wide text-amber">Coordination needed</p>
-      <h2 className="mt-1 text-3xl font-semibold">{PLAIN_TITLE}</h2>
+      <h2 className="text-3xl font-semibold">{PLAIN_TITLE}</h2>
+      <p className="mt-1 text-lg font-semibold text-amber">{OFFICIAL_TITLE}</p>
       <p className="mt-3 text-lg text-ink-2">
         Your complaint was saved as <Link to={`/cases/${mine.id}`} className="text-accent underline-offset-4 hover:underline">{mine.case_id}</Link>.
         Nothing has been merged: please check the match below before acting.

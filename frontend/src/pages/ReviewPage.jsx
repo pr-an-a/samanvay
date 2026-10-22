@@ -5,7 +5,7 @@ import { useAuth } from "../auth";
 import Evidence from "../components/Evidence";
 import { Bureau, Button, Card, ErrorBox, Field, LinkStatus, Loading, OverdueTag, Status, TextLink } from "../components/ui";
 import { useApi } from "../hooks";
-import { CATEGORIES, PLAIN_TITLE, daysAgo, formatDate, formatDateTime, plainAction } from "../labels";
+import { CATEGORIES, OFFICIAL_TITLE, PLAIN_TITLE, daysAgo, formatDate, formatDateTime, plainAction } from "../labels";
 import { useTour } from "../tour";
 
 function CaseSide({ c }) {
@@ -68,6 +68,7 @@ export default function ReviewPage() {
       <div>
         <div className="mb-2"><LinkStatus status={link.status} /></div>
         <h1 className="text-3xl font-semibold">Is this the same college?</h1>
+        <p className="mt-1 text-lg font-semibold text-amber">{OFFICIAL_TITLE}</p>
         <p className="mt-2 text-lg text-ink-2">{PLAIN_TITLE}. Compare the two cases, then decide.</p>
       </div>
 
