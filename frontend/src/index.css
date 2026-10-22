@@ -1,44 +1,48 @@
 @import "tailwindcss";
 
-/* Light, high-contrast theme sized for a projector. Colours follow the dataviz reference palette. */
+/*
+  Samanvay design system
+  - Navy top bar, white cards on light grey, ONE accent colour (blue) for actions, links and data.
+  - Inter, two weights only: 400 (font-normal) and 600 (font-semibold).
+  - Amber = "needs coordination" (calm warning). Red only for the small "Overdue" tag. Green only for "confirmed".
+  - Bureau dots identify bureaus on timelines and always come with the bureau's full name.
+*/
 @theme {
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --color-page: #f4f5f7;
+  --color-navy: #0f2a4a;
+  --color-page: #f2f4f7;
   --color-surface: #ffffff;
-  --color-ink: #0b0b0b;
-  --color-ink-2: #3f3e3b;
-  --color-muted: #5f5e5a;
-  --color-line: #d9d8d2;
-  --color-grid: #e1e0d9;
-  --color-axis: #c3c2b7;
+  --color-line: #e2e5ea;
+  --color-ink: #121721;
+  --color-ink-2: #46505f;
+  --color-muted: #667085;
 
-  --color-brand: #184f95;
-  --color-brand-dark: #0d366b;
-  --color-brand-wash: #e8f0fb;
+  --color-accent: #1f5fbf;
+  --color-accent-dark: #174a96;
+  --color-accent-wash: #eaf1fb;
 
-  /* Bureau identity (categorical slots 1-3). Always shown with a text label. */
+  --color-amber: #b26b00;
+  --color-amber-line: #f0b429;
+  --color-amber-wash: #fff8e8;
+  --color-ok: #1a7f37;
+  --color-ok-wash: #e9f6ec;
+  --color-late: #b42318;
+
   --color-rb: #2a78d6;
   --color-pgrc: #eb6834;
   --color-regional: #1baf7a;
-
-  /* Status (reserved): always paired with an icon and a label. */
-  --color-good: #0ca30c;
-  --color-good-text: #006300;
-  --color-warning: #fab219;
-  --color-critical: #d03b3b;
-  --color-critical-wash: #fdecec;
-  --color-alert-wash: #fff6e0;
 }
 
 html {
-  font-size: 18px; /* everything in rem scales up for projector viewing */
+  font-size: 18px; /* sized for a projector; everything in rem scales with it */
 }
 
 body {
   background: var(--color-page);
   color: var(--color-ink);
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
 
 .tabular {
@@ -46,6 +50,6 @@ body {
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-brand);
+  outline: 3px solid var(--color-accent);
   outline-offset: 2px;
 }

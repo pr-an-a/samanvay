@@ -1,183 +1,165 @@
 import { useNavigate } from "react-router-dom";
-import { Bar, BarChart, CartesianGrid, LabelList, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { BureauTag, Button, Card, ErrorBox, Loading, PageTitle, Pct } from "../components/ui";
+import { Bar, BarChart, CartesianGrid, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bureau, Button, Card, ErrorBox, LinkStatus, Loading, MatchStrength, Status } from "../components/ui";
 import { useApi } from "../hooks";
-import { BUREAUS, formatDate } from "../labels";
+import { BUREAUS, plainAction } from "../labels";
 
-const KPIS = [
-  ["Total cases", (s) => s.total_cases, "/cases"],
-  ["Pending", (s) => s.by_status.pending, "/cases?status=pending"],
-  ["Under process", (s) => s.by_status.under_process, "/cases?status=under_process"],
-  ["Transferred", (s) => s.by_status.transferred, "/cases?status=transferred"],
-  ["Escalated", (s) => s.by_status.escalated, "/cases?status=escalated"],
-  ["Disposed", (s) => s.by_status.disposed, "/cases?status=disposed"],
-];
+const ACCENT = "#1f5fbf";
+const AXIS = { fill: "#46505f", fontSize: 15 };
 
-const AXIS = { fill: "#3f3e3b", fontSize: 16 };
-
-function Kpi({ label, value, sub, onClick, alert = false }) {
+function Kpi({ label, value, hint, onClick }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-lg border bg-surface p-4 text-left shadow-sm hover:border-brand ${alert ? "border-critical border-2" : "border-line"}`}
+      className="rounded-xl border border-line bg-surface p-5 text-left transition-colors hover:border-accent"
     >
-      <div className="text-lg text-ink-2">{label}</div>
-      <div className={`mt-1 text-4xl font-semibold ${alert ? "text-critical" : "text-ink"}`}>{value.toLocaleString("en-IN")}</div>
-      {sub && <div className="mt-1 text-base text-ink-2">{sub}</div>}
+      <div className="text-base text-ink-2">{label}</div>
+      <div className="tabular mt-1 text-4xl font-semibold">{value.toLocaleString("en-IN")}</div>
+      <div className="mt-1 text-base text-muted">{hint}</div>
     </button>
   );
 }
 
-function ChartTooltip({ active, payload, label }) {
-  if (!active || !payload?.length) return null;
+function CollegeRow({ item }) {
   return (
-    <div className="rounded-md border border-line bg-surface px-3 py-2 text-base shadow">
-      <div className="font-semibold">{label}</div>
-      {payload.map((p) => (
-        <div key={p.dataKey} className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded-sm" style={{ background: p.color }} />
-          {p.name}: <span className="tabular font-semibold">{p.value}</span>
+    <li className="grid gap-4 py-5 md:grid-cols-[1fr_auto] md:items-center">
+      <div>
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-xl font-semibold">{item.college_name}</span>
+          <LinkStatus status={item.status} />
         </div>
-      ))}
-    </div>
+        <div className="mt-0.5 text-base text-muted">{[item.district, item.region].filter(Boolean).join(", ")}</div>
+        <ul className="mt-3 space-y-1.5">
+          {item.cases.map((c) => (
+            <li key={c.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 text-base">
+              <Bureau code={c.source_bureau} className="w-44" />
+              <span className="text-ink-2">{c.case_id}</span>
+              <span className="text-ink-2">·</span>
+              <Status status={c.status} />
+              <span className="text-ink-2">· last action:</span>
+              <span className="text-ink">{plainAction(c.last_action)}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="flex flex-col items-start gap-3 md:items-end">
+        <MatchStrength value={item.match_strength} />
+        <Button to={`/links/${item.link_id}`} variant={item.status === "suggested" ? "primary" : "secondary"}>
+          {item.status === "suggested" ? "Check now" : "View"}
+        </Button>
+      </div>
+    </li>
   );
 }
 
 export default function DashboardPage() {
   const navigate = useNavigate();
   const { data: s, error, loading } = useApi("/dashboard/stats");
-  const { data: alerts } = useApi("/alerts/overlaps");
+  const { data: colleges } = useApi("/dashboard/coordination?limit=6");
 
   if (error) return <ErrorBox error={error} />;
   if (loading || !s) return <Loading />;
 
-  const workload = s.bureau_workload.map((b) => ({
-    bureau: BUREAUS[b.bureau].label,
-    code: b.bureau,
-    within: b.open - b.overdue,
-    overdue: b.overdue,
-    open: b.open,
-    total: b.total,
-  }));
-  const ageing = Object.entries(s.ageing_open).map(([bucket, count]) => ({ bucket: `${bucket} days`, count }));
+  const maxOpen = Math.max(...s.bureau_workload.map((b) => b.open), 1);
+  const ageing = Object.entries(s.ageing_open).map(([bucket, count]) => ({ bucket: `${bucket} d`, count }));
 
   return (
-    <div>
-      <PageTitle sub={`Figures as of ${formatDate(s.as_of)}. Click any card to open the matching cases.`}>Dashboard</PageTitle>
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-semibold">Overview</h1>
+        <p className="mt-2 max-w-4xl text-lg text-ink-2">
+          Different AICTE bureaus can act on the same college without knowing it. Samanvay spots this and warns officers
+          before duplicate or conflicting action.
+        </p>
+      </div>
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 xl:grid-cols-7">
-        {KPIS.map(([label, get, to]) => (
-          <Kpi key={label} label={label} value={get(s)} onClick={() => navigate(to)} />
-        ))}
+      <Card
+        title="Colleges needing coordination"
+        sub="Two bureaus are working on the same college right now. Check each match, then coordinate."
+        actions={<Button to="/alerts" variant="secondary">See all</Button>}
+        className="border-t-4 border-t-accent"
+      >
+        {!colleges ? (
+          <Loading />
+        ) : colleges.length === 0 ? (
+          <p className="text-lg text-ink-2">No college is being handled by two bureaus right now.</p>
+        ) : (
+          <ul className="divide-y divide-line">
+            {colleges.map((c) => <CollegeRow key={c.link_id} item={c} />)}
+          </ul>
+        )}
+      </Card>
+
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
+        <Kpi label="Open cases" value={s.sla.open} hint="across all bureaus" onClick={() => navigate("/cases?open=true")} />
+        <Kpi label="Overdue" value={s.sla.overdue} hint="past the demo time limit" onClick={() => navigate("/cases?overdue=true")} />
+        <Kpi label="Needs your check" value={s.overlaps.suggested} hint="possible same-college matches" onClick={() => navigate("/alerts")} />
         <Kpi
-          label="Overdue vs SLA"
-          value={s.sla.overdue}
-          sub={`of ${s.sla.open} open cases`}
-          alert
-          onClick={() => navigate("/cases?overdue=true")}
+          label="Coordinated this month"
+          value={s.coordinated_this_month}
+          hint="matches confirmed by officers"
+          onClick={() => navigate("/alerts?status=confirmed")}
         />
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <Card title="Bureau workload (open cases)">
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={workload} margin={{ top: 24, right: 16, left: 0, bottom: 0 }}>
-                <CartesianGrid vertical={false} stroke="#e1e0d9" />
-                <XAxis dataKey="bureau" tick={AXIS} axisLine={{ stroke: "#c3c2b7" }} tickLine={false} />
-                <YAxis allowDecimals={false} tick={AXIS} axisLine={false} tickLine={false} width={44} />
-                <Tooltip content={<ChartTooltip />} cursor={{ fill: "#f4f5f7" }} />
-                <Legend wrapperStyle={{ fontSize: 16, color: "#3f3e3b" }} />
-                <Bar dataKey="within" name="Within SLA" stackId="open" fill="#2a78d6" stroke="#fff" strokeWidth={2} maxBarSize={24} isAnimationActive={false} />
-                <Bar dataKey="overdue" name="Overdue" stackId="open" fill="#d03b3b" stroke="#fff" strokeWidth={2} maxBarSize={24} isAnimationActive={false} radius={[4, 4, 0, 0]}>
-                  <LabelList dataKey="open" position="top" style={{ fill: "#0b0b0b", fontSize: 16, fontWeight: 600 }} />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-          <p className="mt-2 text-base text-ink-2">Number above each bar: total open cases. Hover for the split.</p>
-        </Card>
-
-        <Card title="Ageing of open cases">
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={ageing} margin={{ top: 24, right: 16, left: 0, bottom: 0 }}>
-                <CartesianGrid vertical={false} stroke="#e1e0d9" />
-                <XAxis dataKey="bucket" tick={AXIS} axisLine={{ stroke: "#c3c2b7" }} tickLine={false} />
-                <YAxis allowDecimals={false} tick={AXIS} axisLine={false} tickLine={false} width={44} />
-                <Tooltip content={<ChartTooltip />} cursor={{ fill: "#f4f5f7" }} />
-                <Bar dataKey="count" name="Open cases" fill="#2a78d6" maxBarSize={24} isAnimationActive={false} radius={[4, 4, 0, 0]}>
-                  <LabelList dataKey="count" position="top" style={{ fill: "#0b0b0b", fontSize: 16, fontWeight: 600 }} />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-          <p className="mt-2 text-base text-ink-2">Days since the complaint was received.</p>
-        </Card>
-      </div>
-
-      <div className="mt-6 grid gap-6 lg:grid-cols-5">
-        <Card
-          title="Overlaps needing coordination"
-          className="lg:col-span-3"
-          actions={<Button to="/alerts" variant="secondary">View all</Button>}
-        >
-          <p className="mb-3 text-lg text-ink-2">
-            <span className="text-3xl font-semibold text-ink">{s.overlaps.suggested}</span> awaiting review ·{" "}
-            {s.overlaps.confirmed} confirmed · {s.overlaps.rejected} rejected
-          </p>
-          <ul className="divide-y divide-line">
-            {alerts?.slice(0, 6).map((l) => (
-              <li key={l.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2 text-lg">
-                    <BureauTag bureau={l.case_a.source_bureau} /> <span className="font-medium">{l.case_a.raw_institution_name}</span>
-                  </div>
-                  <div className="mt-1 flex flex-wrap items-center gap-2 text-lg">
-                    <BureauTag bureau={l.case_b.source_bureau} /> <span className="font-medium">{l.case_b.raw_institution_name}</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-base text-ink-2">
-                    confidence <span className="text-lg font-semibold text-ink"><Pct value={l.scores.final_confidence} /></span>
+      <div className="grid gap-5 lg:grid-cols-3">
+        <Card title="Open cases by bureau">
+          <ul className="space-y-5">
+            {s.bureau_workload.map((b) => (
+              <li key={b.bureau}>
+                <div className="flex items-baseline justify-between gap-3 text-base">
+                  <span>{BUREAUS[b.bureau].name}</span>
+                  <span className="tabular text-ink-2">
+                    <span className="font-semibold text-ink">{b.open}</span> open · {b.overdue} overdue
                   </span>
-                  <Button to={`/links/${l.id}`}>Review</Button>
+                </div>
+                <div className="mt-1.5 h-3 rounded-full bg-page" title={`${b.open} open cases`}>
+                  <div className="h-3 rounded-full bg-accent" style={{ width: `${(b.open / maxOpen) * 100}%` }} />
                 </div>
               </li>
             ))}
-            {alerts && alerts.length === 0 && <li className="py-3 text-lg text-ink-2">Nothing awaiting review.</li>}
           </ul>
         </Card>
 
-        <Card title="Cases by region" className="lg:col-span-2">
-          <table className="w-full text-lg">
+        <Card title="How long open cases have waited">
+          <div className="h-52">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={ageing} margin={{ top: 20, right: 8, left: 8, bottom: 0 }}>
+                <CartesianGrid vertical={false} stroke="#e2e5ea" />
+                <XAxis dataKey="bucket" tick={AXIS} axisLine={{ stroke: "#c9ced6" }} tickLine={false} />
+                <YAxis hide />
+                <Tooltip cursor={{ fill: "#f2f4f7" }} formatter={(v) => [v, "Open cases"]} />
+                <Bar dataKey="count" fill={ACCENT} maxBarSize={24} radius={[4, 4, 0, 0]} isAnimationActive={false}>
+                  <LabelList dataKey="count" position="top" style={{ fill: "#121721", fontSize: 15 }} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
+        <Card title="By region">
+          <table className="w-full text-base">
             <thead>
-              <tr className="border-b border-line text-left text-base text-muted">
-                <th className="py-2 font-medium">Region</th>
-                <th className="py-2 text-right font-medium">Total</th>
-                <th className="py-2 text-right font-medium">Open</th>
-                <th className="py-2 text-right font-medium">Overdue</th>
+              <tr className="text-left text-muted">
+                <th className="pb-2 font-normal">Region</th>
+                <th className="pb-2 text-right font-normal">Open</th>
+                <th className="pb-2 text-right font-normal">Overdue</th>
               </tr>
             </thead>
             <tbody className="tabular">
               {s.by_region.map((r) => (
-                <tr
-                  key={r.region}
-                  className="cursor-pointer border-b border-line/60 hover:bg-page"
-                  onClick={() => navigate(`/cases?region=${encodeURIComponent(r.region)}`)}
-                >
-                  <td className="py-2 text-brand underline-offset-2 hover:underline">{r.region}</td>
-                  <td className="py-2 text-right">{r.total}</td>
-                  <td className="py-2 text-right">{r.open}</td>
-                  <td className={`py-2 text-right ${r.overdue ? "font-semibold text-critical" : ""}`}>{r.overdue}</td>
+                <tr key={r.region} className="cursor-pointer border-t border-line hover:bg-page" onClick={() => navigate(`/cases?region=${encodeURIComponent(r.region)}`)}>
+                  <td className="py-1.5 text-accent">{r.region}</td>
+                  <td className="py-1.5 text-right">{r.open}</td>
+                  <td className="py-1.5 text-right">{r.overdue}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </Card>
       </div>
-      <p className="mt-4 text-base text-ink-2">{s.sla.note}</p>
+      <p className="text-base text-muted">Time limits (SLA) are demo settings, not official AICTE rules.</p>
     </div>
   );
 }

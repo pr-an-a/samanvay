@@ -1,67 +1,69 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth";
 import { ROLES } from "../labels";
-import { BureauTag } from "./ui";
+import { useTour } from "../tour";
+import TourPanel from "./TourPanel";
 
 const NAV = [
-  ["/", "Dashboard"],
-  ["/cases", "Cases"],
-  ["/alerts", "Overlap review"],
-  ["/new", "New complaint"],
-  ["/accuracy", "Matcher accuracy"],
+  ["/", "Overview"],
+  ["/alerts", "Needs your check"],
+  ["/new", "Register complaint"],
+  ["/cases", "All cases"],
+  ["/accuracy", "How accurate is matching?"],
 ];
 
 export const FOOTER_TEXT = "Prototype on synthetic data. Not integrated with AICTE systems. SLA values are demo settings.";
 
 export function Footer() {
+  return <footer className="px-6 py-6 text-center text-base text-muted">{FOOTER_TEXT}</footer>;
+}
+
+export function Brand() {
   return (
-    <footer className="border-t border-line bg-surface px-6 py-4 text-center text-base text-ink-2">{FOOTER_TEXT}</footer>
+    <div>
+      <div className="text-2xl font-semibold tracking-tight">Samanvay</div>
+      <div className="text-base text-white/75">One view of complaints across AICTE bureaus</div>
+    </div>
   );
 }
 
 export default function Layout() {
   const { user, logout } = useAuth();
+  const tour = useTour();
   const navigate = useNavigate();
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="bg-brand-dark text-white">
-        <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-4 px-6 py-3">
-          <div>
-            <div className="text-2xl font-bold tracking-wide">Samanvay</div>
-            <div className="text-base text-white/85">Integrated complaint monitoring across AICTE bureaus</div>
-          </div>
-          <div className="flex items-center gap-4">
+      <header className="bg-navy text-white">
+        <div className="mx-auto flex max-w-[1360px] flex-wrap items-center justify-between gap-6 px-8 pt-5">
+          <Brand />
+          <div className="flex items-center gap-5">
             <div className="text-right">
-              <div className="text-lg font-semibold">{user?.name}</div>
-              <div className="text-base text-white/85">{ROLES[user?.role] || user?.role}</div>
+              <div className="font-semibold">{user?.name}</div>
+              <div className="text-base text-white/75">{ROLES[user?.role] || user?.role}</div>
             </div>
-            {user?.bureau && (
-              <span className="hidden sm:inline">
-                <BureauTag bureau={user.bureau} />
-              </span>
-            )}
             <button
               type="button"
               onClick={() => {
+                tour.end();
                 logout();
                 navigate("/login");
               }}
-              className="rounded-md border border-white/40 px-3 py-1.5 text-base font-semibold hover:bg-white/10"
+              className="rounded-lg border border-white/30 px-4 py-2 text-base font-semibold hover:bg-white/10"
             >
               Switch user
             </button>
           </div>
         </div>
-        <nav className="border-t border-white/15">
-          <ul className="mx-auto flex max-w-[1400px] flex-wrap gap-1 px-4">
+        <nav className="mx-auto max-w-[1360px] px-6">
+          <ul className="flex flex-wrap gap-2 pt-3">
             {NAV.map(([to, label]) => (
               <li key={to}>
                 <NavLink
                   to={to}
                   end={to === "/"}
                   className={({ isActive }) =>
-                    `block border-b-4 px-4 py-2.5 text-lg font-medium ${isActive ? "border-white text-white" : "border-transparent text-white/80 hover:text-white"}`
+                    `block border-b-[3px] px-3 py-3 text-base ${isActive ? "border-white font-semibold text-white" : "border-transparent text-white/75 hover:text-white"}`
                   }
                 >
                   {label}
@@ -71,8 +73,18 @@ export default function Layout() {
           </ul>
         </nav>
       </header>
-      <main className="mx-auto w-full max-w-[1400px] flex-1 px-6 py-8">
-        <Outlet />
+      <main className="mx-auto w-full max-w-[1360px] flex-1 px-8 py-10">
+        {tour.active ? (
+          // The guided-demo panel gets its own column so it never covers a button.
+          <div className="flex items-start gap-8">
+            <div className="min-w-0 flex-1">
+              <Outlet />
+            </div>
+            <TourPanel />
+          </div>
+        ) : (
+          <Outlet />
+        )}
       </main>
       <Footer />
     </div>

@@ -20,9 +20,9 @@ SLA_DAYS = {"fee_refund": 30, "faculty_shortage": 45, "infrastructure": 60, "adm
 BUREAUS = ["RB", "PGRC", "REGIONAL"]
 
 USERS = [
-    ("Demo RB Officer", "RB_OFFICER", "RB"),
-    ("Demo PGRC Officer", "PGRC_OFFICER", "PGRC"),
-    ("Demo Regional Officer", "REGIONAL", "REGIONAL"),
+    ("Demo Regulation Bureau Officer", "RB_OFFICER", "RB"),
+    ("Demo Grievance Cell Officer", "PGRC_OFFICER", "PGRC"),
+    ("Demo Regional Office Officer", "REGIONAL", "REGIONAL"),
     ("Demo Admin", "ADMIN", None),
 ]
 

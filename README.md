@@ -78,16 +78,18 @@ Use `npm run dev` or `./node_modules/.bin/vite`, not a bare `npx vite`. If the p
 isn't installed, `npx` fetches a different major version that ignores `vite.config.js`, so the
 `/api` proxy stops working.
 
-Screens: login (demo roles), dashboard (KPI cards link to filtered cases), cases (search,
-filters, CSV export), case detail, institution profile (unified cross-bureau timeline), overlap
-review (side-by-side cases, score bars, reasons, confirm/reject with remarks), new complaint
-(with "Load demo complaint"), and matcher accuracy (from `eval/results.json`).
+Screens: sign-in (demo users and a **guided demo**), overview (the hero list "Colleges needing
+coordination", then 4 key numbers, then small charts), needs your check, register complaint, all
+cases (search, filters, CSV download), case detail, college profile (one shared timeline across
+bureaus), the "Is this the same college?" check screen, and "How accurate is matching?".
 
-**Demo walk-through:** sign in as *PGRC officer*, go to **New complaint**, click **Load demo
-complaint**, then **Save**. The "Potential Overlapping Cases – Coordination Required" banner shows
-RB/2026/0150 with its last action and the evidence. **Open overlap review**, add a remark and
-**Confirm**. The institution profile then shows both bureaus' cases on one timeline. Reseed
-(`python -m app.seed`) to run the demo again from scratch.
+Design: navy top bar, white cards on light grey, one blue accent, Inter (bundled, works offline),
+two font weights. Plain language throughout: bureau full names, "match strength", "needs your
+check". Codes and "overlap" wording from the API are translated in `src/labels.js`.
+
+**Guided demo:** on the sign-in page click **Start guided demo**. A side panel walks through four
+steps: a complaint arrives, Samanvay finds the other bureau's case, the officer confirms, and both
+bureaus share one timeline. Reseed (`python -m app.seed`) to run it again from scratch.
 
 Rebuild the accuracy page data after matcher changes: `python ../eval/build_results.py` (from `backend/`).
 

@@ -66,3 +66,19 @@ def test_search_filters_and_csv_use_same_filters(client, headers):
     assert r.headers["content-type"].startswith("text/csv")
     rows = list(csv.DictReader(io.StringIO(r.text)))
     assert [row["case_id"] for row in rows] == [c["case_id"] for c in api]
+
+
+def test_open_filter_and_coordination_list(client, headers):
+    h = headers["ADMIN"]
+    s = client.get("/dashboard/stats", headers=h).json()
+    assert len(client.get("/cases?open=true", headers=h).json()) == s["sla"]["open"]
+    assert s["coordinated_this_month"] <= s["overlaps"]["confirmed"]
+
+    items = client.get("/dashboard/coordination?limit=50", headers=h).json()
+    assert items
+    for it in items:
+        assert it["status"] != "rejected"
+        assert len({c["source_bureau"] for c in it["cases"]}) == 2
+        assert all(c["status"] != "disposed" for c in it["cases"])
+    needs_check = [it["status"] == "suggested" for it in items]
+    assert needs_check == sorted(needs_check, reverse=True)  # needs-check items first

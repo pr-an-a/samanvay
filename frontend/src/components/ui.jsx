@@ -1,24 +1,27 @@
 import { Link } from "react-router-dom";
-import { BUREAUS, STATUSES, isOverdue } from "../labels";
+import { BUREAUS, LINK_STATUS, STATUSES, isOverdue, percent } from "../labels";
 
 export function PageTitle({ children, sub, actions }) {
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-      <div>
+    <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+      <div className="max-w-4xl">
         <h1 className="text-3xl font-semibold text-ink">{children}</h1>
-        {sub && <p className="mt-1 text-lg text-ink-2">{sub}</p>}
+        {sub && <p className="mt-2 text-lg text-ink-2">{sub}</p>}
       </div>
       {actions && <div className="flex flex-wrap gap-3">{actions}</div>}
     </div>
   );
 }
 
-export function Card({ title, children, className = "", actions }) {
+export function Card({ title, sub, children, className = "", actions }) {
   return (
-    <section className={`rounded-lg border border-line bg-surface p-5 shadow-sm ${className}`}>
+    <section className={`rounded-xl border border-line bg-surface p-6 ${className}`}>
       {(title || actions) && (
-        <div className="mb-4 flex items-center justify-between gap-3">
-          {title && <h2 className="text-xl font-semibold text-ink">{title}</h2>}
+        <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
+          <div>
+            {title && <h2 className="text-xl font-semibold text-ink">{title}</h2>}
+            {sub && <p className="mt-1 text-base text-ink-2">{sub}</p>}
+          </div>
           {actions}
         </div>
       )}
@@ -27,70 +30,81 @@ export function Card({ title, children, className = "", actions }) {
   );
 }
 
-/** Bureau identity: coloured swatch + text label (never colour alone). */
-export function BureauTag({ bureau, long = false }) {
-  const b = BUREAUS[bureau] || { label: bureau, long: bureau, color: "var(--color-muted)" };
+/** Bureau: coloured dot + full name (never colour alone, never a code). */
+export function Bureau({ code, className = "" }) {
+  const b = BUREAUS[code] || { name: code, color: "var(--color-muted)" };
   return (
-    <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-line bg-surface px-3 py-0.5 text-base font-medium text-ink">
-      <span aria-hidden className="h-3 w-3 rounded-full" style={{ background: b.color }} />
-      {long ? b.long : b.label}
+    <span className={`inline-flex items-center gap-2 whitespace-nowrap text-ink ${className}`}>
+      <span aria-hidden className="h-3 w-3 shrink-0 rounded-full" style={{ background: b.color }} />
+      {b.name}
     </span>
   );
 }
 
-export function StatusBadge({ status }) {
-  const muted = status === "disposed";
-  return (
-    <span className={`inline-block whitespace-nowrap rounded px-2 py-0.5 text-base font-medium ${muted ? "bg-page text-muted" : "bg-brand-wash text-brand-dark"}`}>
-      {STATUSES[status] || status}
-    </span>
-  );
+export function Status({ status }) {
+  return <span className="whitespace-nowrap text-ink-2">{STATUSES[status] || status}</span>;
 }
 
-export function OverdueBadge({ caseItem }) {
+export function OverdueTag({ caseItem }) {
   if (!isOverdue(caseItem)) return null;
-  return (
-    <span className="inline-flex items-center gap-1 whitespace-nowrap rounded bg-critical-wash px-2 py-0.5 text-base font-semibold text-critical">
-      <span aria-hidden>⚠</span> Overdue
-    </span>
-  );
+  return <span className="whitespace-nowrap font-semibold text-late">Overdue</span>;
 }
 
-export function LinkStatusBadge({ status }) {
-  const styles = {
-    suggested: "bg-alert-wash text-ink",
-    confirmed: "bg-[#e6f4e6] text-good-text",
+export function LinkStatus({ status }) {
+  const style = {
+    suggested: "bg-amber-wash text-amber",
+    confirmed: "bg-ok-wash text-ok",
     rejected: "bg-page text-muted",
-  };
+  }[status];
   const icon = { suggested: "●", confirmed: "✓", rejected: "✕" }[status];
   return (
-    <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded px-2 py-0.5 text-base font-semibold ${styles[status] || ""}`}>
-      <span aria-hidden>{icon}</span> {status === "suggested" ? "Awaiting review" : status[0].toUpperCase() + status.slice(1)}
+    <span className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-base font-semibold ${style}`}>
+      <span aria-hidden>{icon}</span>
+      {LINK_STATUS[status]}
     </span>
   );
 }
 
-export function Button({ as, to, variant = "primary", className = "", ...props }) {
-  const styles = {
-    primary: "bg-brand text-white hover:bg-brand-dark",
-    secondary: "border border-line bg-surface text-ink hover:bg-page",
-    danger: "bg-critical text-white hover:brightness-90",
-    good: "bg-good-text text-white hover:brightness-110",
-  };
-  const cls = `inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-lg font-semibold disabled:cursor-not-allowed disabled:opacity-50 ${styles[variant]} ${className}`;
+export function MatchStrength({ value, compact = false }) {
+  return (
+    <span className="inline-flex items-center gap-2 whitespace-nowrap">
+      {!compact && <span className="text-base text-ink-2">Match strength</span>}
+      <span className="h-2 w-16 overflow-hidden rounded-full bg-page" aria-hidden>
+        <span className="block h-2 rounded-full bg-accent" style={{ width: percent(value) }} />
+      </span>
+      <span className="tabular font-semibold text-ink">{percent(value)}</span>
+    </span>
+  );
+}
+
+export function Button({ to, variant = "primary", size = "md", className = "", ...props }) {
+  const look = {
+    primary: "bg-accent text-white hover:bg-accent-dark",
+    secondary: "border border-line bg-surface text-ink hover:border-accent hover:text-accent",
+  }[variant];
+  const pad = size === "lg" ? "px-6 py-3 text-lg" : "px-4 py-2 text-base";
+  const cls = `inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${pad} ${look} ${className}`;
   if (to) return <Link to={to} className={cls} {...props} />;
   return <button type="button" className={cls} {...props} />;
 }
 
+export function TextLink({ to, children }) {
+  return (
+    <Link to={to} className="text-accent underline-offset-4 hover:underline">
+      {children}
+    </Link>
+  );
+}
+
 export function Loading() {
-  return <p className="py-8 text-lg text-muted">Loading…</p>;
+  return <p className="py-10 text-lg text-muted">Loading…</p>;
 }
 
 export function ErrorBox({ error }) {
   if (!error) return null;
   return (
-    <div role="alert" className="rounded-md border border-critical bg-critical-wash p-4 text-lg text-ink">
-      <span className="font-semibold text-critical">⚠ Error: </span>
+    <div role="alert" className="rounded-xl border border-late/40 bg-surface p-4 text-lg text-ink">
+      <span className="font-semibold text-late">Something went wrong: </span>
       {error.message || String(error)}
     </div>
   );
@@ -100,11 +114,7 @@ export function Field({ label, children }) {
   return (
     <div>
       <dt className="text-base text-muted">{label}</dt>
-      <dd className="mt-0.5 text-lg text-ink">{children ?? "—"}</dd>
+      <dd className="mt-1 text-lg text-ink">{children ?? "—"}</dd>
     </div>
   );
-}
-
-export function Pct({ value }) {
-  return <span className="tabular">{value === null || value === undefined ? "—" : value.toFixed(2)}</span>;
 }

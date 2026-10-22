@@ -30,6 +30,7 @@ class CaseFilters:
     received_to: date | None = None
     institution_id: int | None = None
     overdue: bool | None = None
+    open: bool | None = None
 
 
 def case_query(f: CaseFilters) -> Select:
@@ -58,6 +59,8 @@ def case_query(f: CaseFilters) -> Select:
         q = q.where(Case.received_date <= f.received_to)
     if f.institution_id is not None:
         q = q.where(Case.institution_id == f.institution_id)
+    if f.open is not None:
+        q = q.where((Case.status != CaseStatus.disposed.value) if f.open else (Case.status == CaseStatus.disposed.value))
     if f.overdue is not None:
         overdue = (Case.status != CaseStatus.disposed.value) & (Case.expected_disposal_date < date.today())
         q = q.where(overdue if f.overdue else ~overdue)
