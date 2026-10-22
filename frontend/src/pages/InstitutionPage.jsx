@@ -55,7 +55,7 @@ export default function InstitutionPage() {
               <div className="flex flex-wrap gap-x-3 text-base @3xl:block">
                 <Bureau code={t.case_bureau} />
                 <div>
-                  <Link to={`/cases/${t.case_pk}`} className="text-accent underline-offset-4 hover:underline">{t.case_id}</Link>
+                  <Link to={`/cases/${t.case_pk}`} className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink">{t.case_id}</Link>
                 </div>
               </div>
               <div>
@@ -77,8 +77,8 @@ export default function InstitutionPage() {
             {inst.cases.map((c) => (
               <li key={c.id} className="py-3">
                 <div className="flex flex-wrap items-center gap-x-4">
-                  <Link to={`/cases/${c.id}`} className="text-lg text-accent underline-offset-4 hover:underline">{c.case_id}</Link>
-                  <Bureau code={c.source_bureau} className="text-base text-ink-2" />
+                  <Link to={`/cases/${c.id}`} className="text-lg text-ink underline decoration-line underline-offset-4 hover:decoration-ink">{c.case_id}</Link>
+                  <Bureau code={c.source_bureau} />
                 </div>
                 <div className="text-base text-ink-2">
                   {CATEGORIES[c.category]} · <Status status={c.status} /> · received {formatDate(c.received_date)} <SlaTag caseItem={c} />

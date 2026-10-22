@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth";
-import { Brand, Footer } from "../components/Layout";
+import { Footer, Logo } from "../components/Layout";
 import { Bureau, Button, ErrorBox, Loading } from "../components/ui";
 import { useApi } from "../hooks";
 import { ROLES } from "../labels";
@@ -45,9 +45,9 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="bg-navy px-8 py-6 text-white">
+      <header className="px-8 pt-8">
         <div className="mx-auto max-w-5xl">
-          <Brand />
+          <Logo />
         </div>
       </header>
       <main className="mx-auto w-full max-w-5xl flex-1 px-8 py-12">
@@ -86,7 +86,7 @@ export default function LoginPage() {
                   type="button"
                   disabled={busy}
                   onClick={() => signIn(u, () => navigate(location.state?.from || "/", { replace: true }))}
-                  className="rounded-xl border border-line bg-surface p-5 text-left transition-colors hover:border-accent disabled:opacity-60"
+                  className="rounded-xl border border-line bg-surface p-5 text-left transition-colors hover:border-ink disabled:opacity-60"
                 >
                   <div className="text-lg font-semibold">{ROLES[u.role] || u.role}</div>
                   <div className="mt-1 text-base text-ink-2">{ROLE_HELP[u.role]}</div>

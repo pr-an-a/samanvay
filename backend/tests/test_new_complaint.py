@@ -57,7 +57,7 @@ def test_confirmed_link_joins_institution_timeline(client, headers, demo_respons
 
     assert client.post(f"/links/{link['id']}/confirm", headers=headers["RB"]).status_code == 200
     reviewed = client.get(f"/links/{link['id']}", headers=headers["PGRC"]).json()
-    assert reviewed["status"] == "confirmed" and reviewed["reviewer_name"] == "Demo Regulation Bureau Officer"
+    assert reviewed["status"] == "confirmed" and reviewed["reviewer_name"] == "Arjun Mehta"
     assert reviewed["reviewed_at"]
     after = client.get(f"/institutions/{inst_id}", headers=headers["ADMIN"]).json()
     assert new_case["id"] in {c["id"] for c in after["cases"]}

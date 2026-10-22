@@ -90,15 +90,15 @@ export default function AlertsBell() {
         onClick={toggle}
         aria-expanded={open}
         aria-label={`Alerts${unseen ? (isAdmin ? ", new alerts" : `, ${unseen} new`) : ""}`}
-        className="relative rounded-lg border border-white/30 p-2 text-white hover:bg-white/10"
+        className="relative rounded-xl border border-line bg-surface p-2.5 text-ink hover:border-ink"
       >
         <BellIcon />
         {unseen > 0 &&
           (isAdmin ? (
             // The Administrator sees every bureau: a dot here, the per-bureau numbers inside.
-            <span className="absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full border-2 border-navy bg-amber-line" />
+            <span className="absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full border-2 border-page bg-ink" />
           ) : (
-            <span className="tabular absolute -right-2 -top-2 min-w-6 rounded-full bg-amber-line px-1.5 text-center text-sm font-semibold text-ink">
+            <span className="tabular absolute -right-2 -top-2 min-w-6 rounded-full bg-ink px-1.5 text-center text-sm font-semibold text-white">
               {unseen > CAP ? `${CAP}+` : unseen}
             </span>
           ))}
@@ -160,7 +160,7 @@ export default function AlertsBell() {
                         <Link
                           to={i.kind === "needs_check" ? `/links/${i.link_id}` : `/cases/${i.case_pk}`}
                           onClick={() => setOpen(false)}
-                          className="flex gap-3 py-2.5 text-base hover:text-accent"
+                          className="flex gap-3 py-2.5 text-base hover:underline"
                         >
                           <span aria-hidden className={`mt-2 h-2 w-2 shrink-0 rounded-full ${i.new ? "bg-accent" : "bg-transparent"}`} />
                           <span>
@@ -175,7 +175,7 @@ export default function AlertsBell() {
                     <Link
                       to={kind === "needs_check" ? "/alerts" : kind === "overdue" ? "/cases?overdue=true" : "/cases?open=true"}
                       onClick={() => setOpen(false)}
-                      className="text-base text-accent underline-offset-4 hover:underline"
+                      className="text-base text-ink underline decoration-line underline-offset-4 hover:decoration-ink"
                     >
                       See all {data.counts[kind]}
                     </Link>
@@ -184,7 +184,7 @@ export default function AlertsBell() {
               );
             })}
           </div>
-          <div className="space-y-2 border-t border-line bg-page/60 px-5 py-4">
+          <div className="space-y-2 border-t border-line bg-sand px-5 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="text-base text-ink-2">
                 Last time-limit check:{" "}

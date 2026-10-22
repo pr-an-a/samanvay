@@ -26,11 +26,11 @@ function Label({ text, required, children, wide }) {
 function MatchBanner({ result }) {
   const mine = result.case;
   return (
-    <section role="alert" className="mb-10 rounded-xl border-2 border-amber-line bg-amber-wash p-8">
+    <section role="alert" className="mb-10 rounded-2xl border border-amber/30 bg-amber-wash p-8">
       <h2 className="text-3xl font-semibold">{PLAIN_TITLE}</h2>
       <p className="mt-1 text-lg font-semibold text-amber">{OFFICIAL_TITLE}</p>
       <p className="mt-3 text-lg text-ink-2">
-        Your complaint was saved as <Link to={`/cases/${mine.id}`} className="text-accent underline-offset-4 hover:underline">{mine.case_id}</Link>.
+        Your complaint was saved as <Link to={`/cases/${mine.id}`} className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink">{mine.case_id}</Link>.
         Nothing has been merged: please check the match below before acting.
       </p>
 
@@ -109,7 +109,7 @@ export default function NewComplaintPage() {
       {result && result.overlap_alerts.length === 0 && (
         <div role="status" className="mb-8 rounded-xl border border-line bg-surface p-6 text-lg">
           <span className="font-semibold text-ok">✓ Saved as {result.case.case_id}.</span> No other bureau is handling this college.{" "}
-          <Link to={`/cases/${result.case.id}`} className="text-accent underline-offset-4 hover:underline">Open the case</Link>
+          <Link to={`/cases/${result.case.id}`} className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink">Open the case</Link>
         </div>
       )}
 
@@ -124,7 +124,7 @@ export default function NewComplaintPage() {
         Register a complaint
       </PageTitle>
 
-      {note && <p className="mb-6 rounded-lg bg-accent-wash px-4 py-3 text-lg text-accent-dark">{note}</p>}
+      {note && <p className="mb-6 rounded-lg bg-sand px-4 py-3 text-lg text-ink">{note}</p>}
       <div className="mb-6"><ErrorBox error={error} /></div>
 
       <Card>

@@ -108,8 +108,12 @@ coordination", then 4 key numbers, then small charts), needs your check, registe
 cases (search, filters, CSV download), case detail, college profile (one shared timeline across
 bureaus), the "Is this the same college?" check screen, and "How accurate is matching?".
 
-Design: navy top bar, white cards on light grey, one blue accent, Inter (bundled, works offline),
-two font weights. Plain language throughout: bureau full names, "match strength", "needs your
+Design: earthy, restrained light theme with a sand sidebar, white cards on warm off-white,
+charcoal for primary buttons and the active page, Inter (bundled, works offline), two font weights.
+Bureau colours (muted slate, terracotta, olive) appear only on bureau chips and card edges, always
+with the bureau's name. There are only two alert colours: clay for overdue/escalated, and ochre for
+"needs your check" and matches made without an AICTE ID. Everything else is neutral. All colours
+are tokens in `frontend/src/index.css`. Plain language throughout: bureau full names, "match strength", "needs your
 check". Codes and "overlap" wording from the API are translated in `src/labels.js`.
 
 **Guided demo:** on the sign-in page click **Start guided demo**. A side panel walks through four

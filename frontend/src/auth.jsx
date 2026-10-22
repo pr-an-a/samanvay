@@ -6,27 +6,32 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(session.user());
+  // True after "Switch user": the next person should start on the overview, not on the last page.
+  const [switched, setSwitched] = useState(false);
 
   async function login(userId) {
     const { token, user } = await api("/auth/login", { method: "POST", body: { user_id: userId } });
     session.save(token, user);
+    setSwitched(false);
     setUser(user);
   }
 
   function logout() {
     session.clear();
+    setSwitched(true);
     setUser(null);
   }
 
-  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, switched, login, logout }}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => useContext(AuthContext);
 
 export function RequireAuth({ children }) {
-  const { user } = useAuth();
+  const { user, switched } = useAuth();
   const location = useLocation();
-  if (!user) return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
+  // Remember the page only when someone arrives signed out (e.g. a bookmark), not after "Switch user".
+  if (!user) return <Navigate to="/login" replace state={switched ? undefined : { from: location.pathname + location.search }} />;
   return children;
 }
 

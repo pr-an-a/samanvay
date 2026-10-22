@@ -131,10 +131,10 @@ export default function CasesPage() {
                 {cases.slice(0, shown).map((c) => (
                   <tr key={c.id} className="cursor-pointer border-t border-line hover:bg-accent-wash" onClick={() => navigate(`/cases/${c.id}`)}>
                     <td className="whitespace-nowrap px-4 py-3">
-                      <Link to={`/cases/${c.id}`} className="tabular text-accent underline-offset-4 hover:underline" onClick={(e) => e.stopPropagation()}>
+                      <Link to={`/cases/${c.id}`} className="tabular text-ink underline decoration-line underline-offset-4 hover:decoration-ink" onClick={(e) => e.stopPropagation()}>
                         {c.case_id}
                       </Link>
-                      <Bureau code={c.source_bureau} className="mt-1 flex text-ink-2" />
+                      <div className="mt-1"><Bureau code={c.source_bureau} /></div>
                     </td>
                     <td className="min-w-[15rem] px-4 py-3 text-lg">{c.raw_institution_name}</td>
                     <td className="px-4 py-3 text-ink-2">{[c.district, c.region].filter(Boolean).join(", ")}</td>

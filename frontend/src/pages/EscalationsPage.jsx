@@ -27,8 +27,8 @@ function EscalateRow({ c, onDone }) {
     <>
       <tr className="border-t border-line align-top">
         <td className="px-4 py-3">
-          <Link to={`/cases/${c.id}`} className="text-accent underline-offset-4 hover:underline">{c.case_id}</Link>
-          <Bureau code={c.source_bureau} className="mt-1 flex text-ink-2" />
+          <Link to={`/cases/${c.id}`} className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink">{c.case_id}</Link>
+          <div className="mt-1"><Bureau code={c.source_bureau} /></div>
         </td>
         <td className="px-4 py-3 text-lg">{c.raw_institution_name}</td>
         <td className="whitespace-nowrap px-4 py-3">
@@ -44,7 +44,7 @@ function EscalateRow({ c, onDone }) {
         </td>
       </tr>
       {open && (
-        <tr className="bg-page/60">
+        <tr className="bg-sand">
           <td colSpan={5} className="px-4 pb-4 pt-1">
             <label className="block text-base text-ink-2" htmlFor={`r-${c.id}`}>
               Note for the senior officer (recorded in the case history and audit log)

@@ -1,37 +1,54 @@
 @import "tailwindcss";
 
 /*
-  Samanvay design system
-  - Navy top bar, white cards on light grey, ONE accent colour (blue) for actions, links and data.
-  - Inter, two weights only: 400 (font-normal) and 600 (font-semibold).
-  - Amber = "needs coordination" (calm warning). Red only for the small "Overdue" tag. Green only for "confirmed".
-  - Bureau dots identify bureaus on timelines and always come with the bureau's full name.
+  Samanvay design system: earthy, restrained, light. As few colours as possible.
+
+  Neutrals (almost everything)   page #FBF9F5 · sand #F5F1EA · card #FFFFFF · border #E6E0D4
+                                 text #2E2A25 · secondary #6B6358 · primary/active = charcoal #2E2A25
+  Bureau colours (chips and card left borders only, always with the bureau's name)
+                                 Regulation Bureau slate · Grievance Cell terracotta · Regional Office olive
+  Alert colours (only two)       clay  = overdue / escalated / errors
+                                 ochre = needs your check / matched without AICTE ID
+  Charts                         sand and taupe bars; clay only for overdue or oldest.
+
+  Token names are kept from earlier versions so components didn't need renaming:
+  "accent" is now charcoal, "amber" is ochre, "late" is clay, "ok" (confirmed) is neutral.
 */
 @theme {
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --color-navy: #0f2a4a;
-  --color-page: #f2f4f7;
+  --color-page: #fbf9f5;
+  --color-sand: #f5f1ea;
   --color-surface: #ffffff;
-  --color-line: #e2e5ea;
-  --color-ink: #121721;
-  --color-ink-2: #46505f;
-  --color-muted: #667085;
+  --color-line: #e6e0d4;
+  --color-ink: #2e2a25;
+  --color-ink-2: #6b6358;
+  --color-muted: #6b6358;
 
-  --color-accent: #1f5fbf;
-  --color-accent-dark: #174a96;
-  --color-accent-wash: #eaf1fb;
+  --color-accent: #2e2a25;
+  --color-accent-wash: #f5f1ea;
+  --color-navy: #2e2a25;
 
-  --color-amber: #b26b00;
-  --color-amber-line: #f0b429;
-  --color-amber-wash: #fff8e8;
-  --color-ok: #1a7f37;
-  --color-ok-wash: #e9f6ec;
-  --color-late: #b42318;
+  --color-amber: #6e4e10; /* ochre */
+  --color-amber-wash: #f3e6c8;
+  --color-amber-line: #6e4e10;
+  --color-ok: #2e2a25; /* confirmed is neutral */
+  --color-ok-wash: #f5f1ea;
+  --color-late: #9c3d24; /* clay */
+  --color-late-wash: #f6e3dc;
 
-  --color-rb: #2a78d6;
-  --color-pgrc: #eb6834;
-  --color-regional: #1baf7a;
+  --color-rb: #5b6b7a;
+  --color-rb-chip: #e7eaed;
+  --color-rb-ink: #3a4652;
+  --color-pgrc: #b5654a;
+  --color-pgrc-chip: #f4e4dd;
+  --color-pgrc-ink: #7a3a24;
+  --color-regional: #7a8450;
+  --color-regional-chip: #eceedf;
+  --color-regional-ink: #4a5230;
+
+  --color-chart-sand: #d8d0c3;
+  --color-chart-taupe: #bfb3a3;
 }
 
 html {
@@ -50,6 +67,6 @@ body {
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-accent);
+  outline: 3px solid var(--color-ink);
   outline-offset: 2px;
 }

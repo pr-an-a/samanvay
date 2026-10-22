@@ -20,7 +20,7 @@ Everything works offline: no internet is needed once `./start.sh` has run once o
 | 0:15 | **Start guided demo** | "Samanvay spots that overlap and warns the officer before anyone acts. Here's a complaint arriving at the Grievance Cell." |
 | 0:25 | **Fill in demo complaint**. Point at the college name. | "The student misspelled the college's name and didn't give its AICTE ID, so a simple search would miss it." |
 | 0:40 | **Register complaint** | "The moment it's saved, Samanvay checks the other bureaus' cases." |
-| 0:45 | The amber banner appears. Read the first sentence aloud. | "The Regulation Bureau opened a case on this same college 8 days ago, and their last action was asking the college for a reply." |
+| 0:45 | The warning banner (ochre) appears. Read the first sentence aloud. | "The Regulation Bureau opened a case on this same college 8 days ago, and their last action was asking the college for a reply." |
 | 1:05 | Point at the ticked reasons. (Optional: **Show details**.) | "It explains why it thinks it's the same college: nearly the same name, same address, same district. Every match shows its evidence." |
 | 1:25 | **Check and confirm** | "Nothing is merged automatically. An officer looks at both cases side by side and decides." |
 | 1:40 | Type a short note, then **Yes, same college** | "The decision and the note are recorded on both cases and in the audit log." |
@@ -34,7 +34,7 @@ Everything works offline: no internet is needed once `./start.sh` has run once o
 
 1. **Start guided demo → Fill in demo complaint → Register complaint.**
    *"A complaint with a misspelled college name arrives at the Grievance Cell."*
-2. Point at the amber banner.
+2. Point at the warning banner.
    *"Samanvay immediately finds that the Regulation Bureau opened a case on the same college 8 days ago, and shows why it thinks so."*
 3. **Check and confirm → Yes, same college → See the shared timeline.**
    *"An officer confirms, and both bureaus now share one timeline, so nobody acts without knowing what the other has done."*
@@ -45,8 +45,8 @@ Everything works offline: no internet is needed once `./start.sh` has run once o
 
 | What happens | Do this | Say |
 |---|---|---|
-| A red **"Signed out"** box appears | Click **Sign in again** and pick **Grievance Cell officer**, then **Register complaint → Fill in demo complaint → Register complaint**. | "Let me sign back in. The complaint wasn't saved, so nothing is lost." |
-| No amber banner after registering (green "Saved" box instead) | Open **Needs your check** and click **Check now** on the first match. | "Here's one the system found earlier. It works the same way." |
+| A **"Signed out"** box appears | Click **Sign in again** and pick **Grievance Cell officer**, then **Register complaint → Fill in demo complaint → Register complaint**. | "Let me sign back in. The complaint wasn't saved, so nothing is lost." |
+| No warning banner after registering (a "Saved" box instead) | Open **Needs your check** and click **Check now** on the first match. | "Here's one the system found earlier. It works the same way." |
 | The banner shows a different case or several cases | Carry on with the first one. Reset demo data after the demo. | "Earlier rehearsals added a few complaints; the system found those too." |
 | The guided-demo side panel is gone | Continue with the buttons on the page: **Check and confirm**, then **Yes, same college**, then **See the shared timeline**. | (Nothing needed.) |
 | The page doesn't load at all | In the terminal: `./stop.sh && ./start.sh`, then reload the page. | "Give me ten seconds to restart the demo server." |

@@ -72,6 +72,7 @@ def coordination(limit: int = 8, db: Session = Depends(get_db)) -> list[dict]:
         name = inst.name if inst else max((l.case_a.raw_institution_name, l.case_b.raw_institution_name), key=len)
         out.append({
             "link_id": l.id, "status": l.status, "match_strength": l.scores["final_confidence"],
+            "match_tier": l.scores.get("match_tier", "entity"),  # "id" = same AICTE ID, "entity" = matched without it
             "college_name": name, "institution_id": inst.id if inst else None,
             "district": l.case_a.district or l.case_b.district, "region": l.case_a.region,
             "cases": [{"id": c.id, "case_id": c.case_id, "source_bureau": c.source_bureau, "status": c.status,

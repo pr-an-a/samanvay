@@ -29,12 +29,12 @@ export default function Evidence({ link }) {
         type="button"
         aria-expanded={open}
         onClick={() => setOpen(!open)}
-        className="mt-5 text-base font-semibold text-accent underline-offset-4 hover:underline"
+        className="mt-5 text-base font-semibold text-ink underline decoration-line underline-offset-4 hover:decoration-ink"
       >
         {open ? "Hide details ▲" : "Show details ▼"}
       </button>
       {open && (
-        <div className="mt-4 rounded-xl border border-line bg-page/60 p-5">
+        <div className="mt-4 rounded-xl border border-line bg-sand p-5">
           <ScoreBreakdown scores={link.scores} />
         </div>
       )}

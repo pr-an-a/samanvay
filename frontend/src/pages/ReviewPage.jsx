@@ -11,9 +11,9 @@ import { useTour } from "../tour";
 function CaseSide({ c }) {
   return (
     <Card>
-      <Bureau code={c.source_bureau} className="text-lg font-semibold" />
+      <Bureau code={c.source_bureau} className="text-lg" />
       <div className="mt-1 text-base text-muted">
-        Case <Link to={`/cases/${c.id}`} className="text-accent underline-offset-4 hover:underline">{c.case_id}</Link> · opened {daysAgo(c.received_date)}
+        Case <Link to={`/cases/${c.id}`} className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink">{c.case_id}</Link> · opened {daysAgo(c.received_date)}
       </div>
       <p className="mt-4 text-xl font-semibold">{c.raw_institution_name}</p>
       <p className="text-lg text-ink-2">{c.raw_address || "No address given"}</p>

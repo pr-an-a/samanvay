@@ -51,7 +51,7 @@ def test_audit_log_records_actions_and_filters(client, headers):
 
     h = headers["ADMIN"]
     registered = client.get("/audit?action=complaint_registered", headers=h).json()
-    assert any(e["case_refs"] == new["case"]["case_id"] and e["actor_name"] == "Demo Grievance Cell Officer" for e in registered)
+    assert any(e["case_refs"] == new["case"]["case_id"] and e["actor_name"] == "Priya Nair" for e in registered)
     rejected = client.get("/audit?action=link_rejected", headers=h).json()
     assert rejected[0]["link_id"] == link["id"] and rejected[0]["remarks"] == "Different campus"
     assert all(e["action"] == "link_rejected" for e in rejected)

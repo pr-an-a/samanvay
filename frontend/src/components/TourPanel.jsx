@@ -29,7 +29,7 @@ export default function TourPanel() {
       <div className="space-y-3 px-5 py-4">
         <h2 className="text-xl font-semibold">{current.title}</h2>
         <p className="text-base text-ink-2">{current.body}</p>
-        {current.hint && <p className="rounded-lg bg-accent-wash px-3 py-2 text-base text-accent-dark">{current.hint}</p>}
+        {current.hint && <p className="rounded-lg bg-sand px-3 py-2 text-base text-ink">{current.hint}</p>}
         {tour.step === 4 && (
           <div className="flex flex-wrap gap-3 pt-1">
             {!onTimeline && tour.timelineUrl && (

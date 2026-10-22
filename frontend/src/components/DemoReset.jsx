@@ -33,7 +33,7 @@ export default function DemoReset() {
       {!confirming ? (
         <Button variant="secondary" onClick={() => setConfirming(true)}>Reset demo data</Button>
       ) : (
-        <div className="rounded-lg border border-amber-line bg-amber-wash p-4">
+        <div className="rounded-lg border border-line bg-sand p-4">
           <p className="text-lg">
             Reset everything to the starting demo data? New complaints, decisions, escalations, alerts and audit entries made
             since the last reset will be removed. Everyone stays signed in.

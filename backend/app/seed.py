@@ -23,11 +23,12 @@ SLA_DAYS = {"fee_refund": 30, "faculty_shortage": 45, "infrastructure": 60, "adm
             "certificate_withholding": 21, "ragging_admin": 15, "other": 45}
 BUREAUS = ["RB", "PGRC", "REGIONAL"]
 
+# Fictional demo users (first names drive the "Good evening, Priya" greeting).
 USERS = [
-    ("Demo Regulation Bureau Officer", "RB_OFFICER", "RB"),
-    ("Demo Grievance Cell Officer", "PGRC_OFFICER", "PGRC"),
-    ("Demo Regional Office Officer", "REGIONAL", "REGIONAL"),
-    ("Demo Admin", "ADMIN", None),
+    ("Arjun Mehta", "RB_OFFICER", "RB"),
+    ("Priya Nair", "PGRC_OFFICER", "PGRC"),
+    ("Kavya Rao", "REGIONAL", "REGIONAL"),
+    ("Ravi Sharma", "ADMIN", None),
 ]
 
 

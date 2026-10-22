@@ -75,7 +75,7 @@ export default function AccuracyPage() {
           <p className="mt-5 text-base text-muted">{data.earlier_note}</p>
         </Card>
 
-        <Card title="Please read these numbers with care" className="border-amber-line bg-amber-wash">
+        <Card title="Please read these numbers with care" className="bg-sand">
           <ul className="list-disc space-y-2 pl-6 text-lg">
             {data.caveats.map((c) => <li key={c}>{c}</li>)}
           </ul>
