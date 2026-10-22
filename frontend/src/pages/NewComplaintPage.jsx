@@ -26,7 +26,7 @@ function Label({ text, required, children, wide }) {
 function MatchBanner({ result }) {
   const mine = result.case;
   return (
-    <section role="alert" className="mb-10 rounded-2xl border border-amber/30 bg-amber-wash p-8">
+    <section role="alert" className="mb-8 rounded-xl border border-amber/30 bg-amber-wash p-6">
       <h2 className="text-3xl font-semibold">{PLAIN_TITLE}</h2>
       <p className="mt-1 text-lg font-semibold text-amber">{OFFICIAL_TITLE}</p>
       <p className="mt-3 text-lg text-ink-2">
@@ -37,7 +37,7 @@ function MatchBanner({ result }) {
       {result.overlap_alerts.map((link) => {
         const other = link.case_a.id === mine.id ? link.case_b : link.case_a;
         return (
-          <div key={link.id} className="mt-6 rounded-xl bg-surface p-6">
+          <div key={link.id} className="mt-5 rounded-xl bg-surface p-5">
             <p className="text-2xl leading-snug">
               The <span className="font-semibold">{bureauName(other.source_bureau)}</span> opened case{" "}
               <span className="font-semibold">{other.case_id}</span> on this college {daysAgo(other.received_date)}.
@@ -107,7 +107,7 @@ export default function NewComplaintPage() {
     <div>
       {result && result.overlap_alerts.length > 0 && <MatchBanner result={result} />}
       {result && result.overlap_alerts.length === 0 && (
-        <div role="status" className="mb-8 rounded-xl border border-line bg-surface p-6 text-lg">
+        <div role="status" className="mb-6 rounded-xl border border-line bg-surface p-5 text-lg">
           <span className="font-semibold text-ok">✓ Saved as {result.case.case_id}.</span> No other bureau is handling this college.{" "}
           <Link to={`/cases/${result.case.id}`} className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink">Open the case</Link>
         </div>
@@ -128,7 +128,7 @@ export default function NewComplaintPage() {
       <div className="mb-6"><ErrorBox error={error} /></div>
 
       <Card>
-        <form onSubmit={submit} className="grid gap-6 md:grid-cols-2">
+        <form onSubmit={submit} className="grid gap-5 md:grid-cols-2">
           <Label text="Registering bureau">
             {isAdmin ? (
               <select required value={form.source_bureau} onChange={set("source_bureau")} className={INPUT}>

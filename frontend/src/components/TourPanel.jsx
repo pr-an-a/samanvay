@@ -13,7 +13,7 @@ export default function TourPanel() {
   return (
     <aside
       aria-label="Guided demo"
-      className="sticky top-6 w-[22rem] shrink-0 self-start overflow-hidden rounded-xl border border-line bg-surface shadow-lg"
+      className="sticky top-6 w-[19rem] shrink-0 self-start overflow-hidden rounded-xl border border-line bg-surface shadow-lg"
     >
       <div className="flex items-center justify-between bg-navy px-5 py-3 text-white">
         <span className="font-semibold">Guided demo · step {tour.step} of 4</span>

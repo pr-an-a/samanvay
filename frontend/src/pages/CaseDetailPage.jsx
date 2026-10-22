@@ -19,7 +19,7 @@ export default function CaseDetailPage() {
         Case {c.case_id}
       </PageTitle>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-5 lg:grid-cols-3">
         <Card title={c.raw_institution_name} sub="College name as written in the complaint" className="lg:col-span-2">
           <dl className="grid gap-x-8 gap-y-5 sm:grid-cols-2">
             <Field label="Address">{c.raw_address}</Field>

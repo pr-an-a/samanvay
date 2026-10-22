@@ -71,7 +71,7 @@ export default function InstitutionPage() {
         </ol>
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-5 lg:grid-cols-2">
         <Card title={`Cases (${inst.cases.length})`}>
           <ul className="divide-y divide-line">
             {inst.cases.map((c) => (

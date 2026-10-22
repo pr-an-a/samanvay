@@ -4,10 +4,10 @@ import { BUREAUS, LINK_STATUS, STATUSES, isDueSoon, isOverdue, percent } from ".
 
 export function PageTitle({ children, sub, actions }) {
   return (
-    <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div className="max-w-4xl">
         <h1 className="text-3xl font-semibold text-ink">{children}</h1>
-        {sub && <p className="mt-2 text-lg text-ink-2">{sub}</p>}
+        {sub && <p className="mt-1 text-lg text-ink-2">{sub}</p>}
       </div>
       {actions && <div className="flex flex-wrap gap-3">{actions}</div>}
     </div>
@@ -16,9 +16,9 @@ export function PageTitle({ children, sub, actions }) {
 
 export function Card({ title, sub, children, className = "", actions }) {
   return (
-    <section className={`rounded-xl border border-line bg-surface p-6 ${className}`}>
+    <section className={`rounded-xl border border-line bg-surface p-5 ${className}`}>
       {(title || actions) && (
-        <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
+        <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
           <div>
             {title && <h2 className="text-xl font-semibold text-ink">{title}</h2>}
             {sub && <p className="mt-1 text-base text-ink-2">{sub}</p>}
@@ -41,7 +41,7 @@ const BUREAU_CHIP = {
 export function Bureau({ code, className = "" }) {
   const name = BUREAUS[code]?.name || code;
   return (
-    <span className={`inline-flex w-fit items-center whitespace-nowrap rounded-full px-3 py-0.5 text-base ${BUREAU_CHIP[code] || "bg-sand text-ink"} ${className}`}>
+    <span className={`inline-flex w-fit items-center whitespace-nowrap rounded-full px-2.5 py-0.5 text-sm ${BUREAU_CHIP[code] || "bg-sand text-ink"} ${className}`}>
       {name}
     </span>
   );
@@ -49,7 +49,7 @@ export function Bureau({ code, className = "" }) {
 
 function Chip({ tone = "neutral", children }) {
   const look = { neutral: "bg-sand text-ink-2", clay: "bg-late-wash text-late", ochre: "bg-amber-wash text-amber" }[tone];
-  return <span className={`inline-flex w-fit items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-base ${look}`}>{children}</span>;
+  return <span className={`inline-flex w-fit items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-sm ${look}`}>{children}</span>;
 }
 
 /** Case status. Neutral, except Escalated (an alert: clay). */
@@ -89,17 +89,17 @@ export function MatchStrength({ value, compact = false }) {
 }
 
 /** Charcoal ring showing match strength, as in the overview mockup. */
-export function MatchRing({ value, size = 76 }) {
-  const r = size / 2 - 5;
+export function MatchRing({ value, size = 58 }) {
+  const r = size / 2 - 4;
   const c = 2 * Math.PI * r;
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`Match strength ${percent(value)}`}>
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--color-line)" strokeWidth="6" />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--color-line)" strokeWidth="5" />
       <circle
-        cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--color-ink)" strokeWidth="6" strokeLinecap="round"
+        cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--color-ink)" strokeWidth="5" strokeLinecap="round"
         strokeDasharray={`${c * value} ${c}`} transform={`rotate(-90 ${size / 2} ${size / 2})`}
       />
-      <text x="50%" y="50%" dominantBaseline="central" textAnchor="middle" fontSize="17" fontWeight="600" fill="var(--color-ink)">
+      <text x="50%" y="50%" dominantBaseline="central" textAnchor="middle" fontSize="13" fontWeight="600" fill="var(--color-ink)">
         {percent(value)}
       </text>
     </svg>
@@ -111,7 +111,7 @@ export function Button({ to, variant = "primary", size = "md", className = "", .
     primary: "bg-accent text-white hover:opacity-90",
     secondary: "border border-line bg-surface text-ink hover:border-ink",
   }[variant];
-  const pad = size === "lg" ? "px-6 py-3 text-lg" : "px-4 py-2 text-base";
+  const pad = size === "lg" ? "px-5 py-2.5 text-lg" : "px-4 py-2 text-base";
   const cls = `inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${pad} ${look} ${className}`;
   if (to) return <Link to={to} className={cls} {...props} />;
   return <button type="button" className={cls} {...props} />;

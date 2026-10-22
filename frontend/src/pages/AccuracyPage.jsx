@@ -62,7 +62,7 @@ export default function AccuracyPage() {
         </div>
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-5 lg:grid-cols-2">
         <Card title="What went wrong before the fixes">
           <ul className="space-y-4 text-lg">
             {data.before_fixes_test_half.misses.map((m) => (

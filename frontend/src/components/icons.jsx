@@ -17,7 +17,7 @@ const PATHS = {
   logo: ["M4 12h6", "M14 12h6", "M10 12a2 2 0 1 0 4 0 2 2 0 1 0-4 0", "M7 7l3 3", "M17 7l-3 3", "M7 17l3-3", "M17 17l-3-3"],
 };
 
-export default function Icon({ name, size = 22, className = "" }) {
+export default function Icon({ name, size = 18, className = "" }) {
   return (
     <svg aria-hidden width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
       strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>

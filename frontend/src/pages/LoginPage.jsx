@@ -45,16 +45,14 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="px-8 pt-8">
-        <div className="mx-auto max-w-5xl">
-          <Logo />
-        </div>
+      <header className="mx-auto w-full max-w-5xl px-8 pt-6">
+        <Logo />
       </header>
-      <main className="mx-auto w-full max-w-5xl flex-1 px-8 py-12">
-        <h1 className="max-w-3xl text-4xl font-semibold leading-tight">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-8 py-6">
+        <h1 className="max-w-3xl text-hero font-semibold">
           Spot when two AICTE bureaus are acting on the same college.
         </h1>
-        <p className="mt-4 max-w-3xl text-xl text-ink-2">
+        <p className="mt-3 max-w-3xl text-xl text-ink-2">
           Different bureaus can act on the same college without knowing it. Samanvay spots this and warns officers before
           duplicate or conflicting action.
         </p>
@@ -64,7 +62,7 @@ export default function LoginPage() {
 
         {users && (
           <>
-            <section className="mt-10 flex flex-wrap items-center justify-between gap-6 rounded-xl border border-line bg-surface p-6">
+            <section className="mt-6 flex flex-wrap items-center justify-between gap-5 rounded-xl border border-line bg-surface p-5">
               <div className="max-w-2xl">
                 <h2 className="text-xl font-semibold">New here? Take the 2-minute guided demo</h2>
                 <p className="mt-1 text-lg text-ink-2">
@@ -77,9 +75,9 @@ export default function LoginPage() {
               </Button>
             </section>
 
-            <h2 className="mt-12 text-xl font-semibold">Or sign in as a demo user</h2>
+            <h2 className="mt-8 text-xl font-semibold">Or sign in as a demo user</h2>
             <p className="mt-1 text-base text-muted">No passwords: this prototype uses demo users only.</p>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {users.map((u) => (
                 <button
                   key={u.id}
@@ -97,7 +95,7 @@ export default function LoginPage() {
           </>
         )}
       </main>
-      <Footer />
+      <Footer width="max-w-5xl" />
     </div>
   );
 }

@@ -22,11 +22,11 @@ const KPI_TONE = {
 function Kpi({ icon, value, label, tone = "neutral", onClick }) {
   const t = KPI_TONE[tone];
   return (
-    <button type="button" onClick={onClick} className="rounded-2xl border border-line bg-surface p-6 text-left hover:border-ink">
-      <span className={`flex h-12 w-12 items-center justify-center rounded-full ${t.circle}`}>
-        <Icon name={icon} size={22} />
+    <button type="button" onClick={onClick} className="rounded-xl border border-line bg-surface p-5 text-left hover:border-ink">
+      <span className={`flex h-11 w-11 items-center justify-center rounded-full ${t.circle}`}>
+        <Icon name={icon} size={18} />
       </span>
-      <div className={`tabular mt-4 text-4xl font-semibold ${t.value}`}>{value.toLocaleString("en-IN")}</div>
+      <div className={`tabular mt-3 text-4xl font-semibold ${t.value}`}>{value.toLocaleString("en-IN")}</div>
       <div className="mt-1 text-lg text-ink-2">{label}</div>
     </button>
   );
@@ -43,7 +43,7 @@ function CaseMini({ c }) {
       <span className="text-ink-2">{plainAction(c.last_action)}</span>
     );
   return (
-    <div className="rounded-lg border border-l-4 border-line bg-surface px-5 py-4" style={{ borderLeftColor: BUREAUS[c.source_bureau]?.color }}>
+    <div className="rounded-lg border border-l-4 border-line bg-surface px-4 py-3" style={{ borderLeftColor: BUREAUS[c.source_bureau]?.color }}>
       <Bureau code={c.source_bureau} />
       <div className="mt-2 text-lg text-ink">{c.case_id}</div>
       <div className="mt-0.5 text-base">{line}</div>
@@ -67,17 +67,17 @@ function CoordinationCard({ item }) {
     <Link
       to={`/links/${item.link_id}`}
       aria-label={`${item.college_name}: ${item.status === "suggested" ? "needs your check" : "confirmed"}`}
-      className="flex flex-col gap-4 rounded-2xl border border-line bg-sand/50 p-5 hover:border-ink @min-[50rem]:grid @min-[50rem]:grid-cols-[1fr_auto_1.15fr_auto_1fr_auto] @min-[50rem]:items-center @min-[50rem]:gap-3"
+      className="flex flex-col gap-3 rounded-xl border border-line bg-sand/50 p-4 hover:border-ink @min-[50rem]:grid @min-[50rem]:grid-cols-[1fr_auto_1.15fr_auto_1fr_auto] @min-[50rem]:items-center @min-[50rem]:gap-3"
     >
       <div className="order-2 @min-[50rem]:order-none"><CaseMini c={a} /></div>
       <Connector />
       <div className="order-1 flex flex-col items-center gap-2 text-center @min-[50rem]:order-none">
-        <Icon name="college" size={24} className="text-ink-2" />
+        <Icon name="college" size={18} className="text-ink-2" />
         <div className="text-lg text-ink">{item.college_name}</div>
         {item.match_tier === "id" ? (
-          <span className="rounded-full bg-sand px-3 py-0.5 text-base text-ink-2">Same AICTE ID</span>
+          <span className="rounded-full bg-sand px-2.5 py-0.5 text-sm text-ink-2">Same AICTE ID</span>
         ) : (
-          <span className="rounded-full bg-amber-wash px-3 py-0.5 text-base text-amber">Matched without AICTE ID</span>
+          <span className="rounded-full bg-amber-wash px-2.5 py-0.5 text-sm text-amber">Matched without AICTE ID</span>
         )}
       </div>
       <Connector />
@@ -116,7 +116,7 @@ export default function DashboardPage() {
   const maxOpen = Math.max(...s.bureau_workload.map((b) => b.open), 1);
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       <p className="-mt-4 max-w-4xl text-lg text-ink-2">
         Different AICTE bureaus can act on the same college without knowing it. Samanvay spots this and warns officers before
         duplicate or conflicting action.
@@ -142,7 +142,7 @@ export default function DashboardPage() {
         ) : colleges.length === 0 ? (
           <Card><p className="text-lg text-ink-2">No college is being handled by two bureaus right now.</p></Card>
         ) : (
-          <div className="@container space-y-4">
+          <div className="@container space-y-3">
             {colleges.map((c) => <CoordinationCard key={c.link_id} item={c} />)}
           </div>
         )}
@@ -150,15 +150,15 @@ export default function DashboardPage() {
 
       <div className="grid gap-5 lg:grid-cols-2">
         <Card title="How long open cases have waited">
-          <div className="h-56">
+          <div className="h-52">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={ageing} margin={{ top: 26, right: 8, left: 8, bottom: 0 }}>
-                <XAxis dataKey="bucket" tick={{ fill: INK_2, fontSize: 16 }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="bucket" tick={{ fill: INK_2, fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis hide />
                 <Tooltip content={<AgeTooltip />} cursor={{ fill: "#f5f1ea" }} />
                 <Bar dataKey="count" maxBarSize={72} radius={[6, 6, 0, 0]} isAnimationActive={false}>
                   {ageing.map((d) => <Cell key={d.bucket} fill={d.fill} />)}
-                  <LabelList dataKey="count" position="top" style={{ fill: INK, fontSize: 16 }} />
+                  <LabelList dataKey="count" position="top" style={{ fill: INK, fontSize: 13 }} />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>

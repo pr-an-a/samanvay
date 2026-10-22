@@ -72,12 +72,12 @@ export default function ReviewPage() {
         <p className="mt-2 text-lg text-ink-2">{PLAIN_TITLE}. Compare the two cases, then decide.</p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-5 lg:grid-cols-2">
         <CaseSide c={link.case_a} />
         <CaseSide c={link.case_b} />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-5">
+      <div className="grid gap-5 lg:grid-cols-5">
         <Card className="lg:col-span-3">
           <Evidence link={link} />
         </Card>

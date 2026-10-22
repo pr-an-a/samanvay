@@ -49,10 +49,31 @@
 
   --color-chart-sand: #d8d0c3;
   --color-chart-taupe: #bfb3a3;
-}
 
-html {
-  font-size: 18px; /* sized for a projector; everything in rem scales with it */
+  /*
+    Compact scale, crisp at 100% (use browser zoom for projectors).
+    Class names keep their roles: sm = small, base = secondary/labels, lg = body,
+    xl = card titles, 2xl = section headings, 3xl = page titles, 4xl = KPI numbers.
+  */
+  --text-sm: 12px;
+  --text-sm--line-height: 16px;
+  --text-base: 13px;
+  --text-base--line-height: 18px;
+  --text-lg: 14px;
+  --text-lg--line-height: 20px;
+  --text-xl: 16px;
+  --text-xl--line-height: 22px;
+  --text-2xl: 18px;
+  --text-2xl--line-height: 24px;
+  --text-3xl: 23px;
+  --text-3xl--line-height: 30px;
+  --text-4xl: 27px;
+  --text-4xl--line-height: 32px;
+  --text-hero: 34px; /* login headline only */
+  --text-hero--line-height: 40px;
+
+  /* Spacing unit: 3.2px instead of 4px, so every padding, gap and width tightens together. */
+  --spacing: 0.2rem;
 }
 
 body {
