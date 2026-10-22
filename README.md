@@ -7,8 +7,22 @@ Cases – Coordination Required** when different bureaus handle complaints about
 institution, with a score breakdown, for an officer to confirm or reject.
 
 > **Disclaimer:** All data is synthetic and all institutions/people are fictional.
-> SLA timelines are configurable demo values, not official AICTE rules.
+> SLA values are demo settings, not official AICTE timelines.
 > This project is not affiliated with or integrated into any AICTE system.
+
+## Quick start (demo)
+
+```bash
+./start.sh      # sets up anything missing, loads fresh demo data, starts both servers, waits until healthy
+                # then open http://localhost:5173
+./stop.sh       # stops both servers
+```
+
+The servers run in the background and keep running after the terminal closes; logs are in `.run/`.
+First-time setup needs Python 3.11+, Node 20+ and internet for `pip`/`npm`. After that it runs fully offline.
+`start.sh` starts **demo mode**: the SLA check runs only when you press "Run check now", and the
+Administrator gets a "Reset demo data" button (sessions survive the reset). Use `SAMANVAY_DEMO=0 ./start.sh`
+for the automatic 5-minute check. The live demo script is in **[DEMO.md](DEMO.md)**.
 
 ## Layout
 | Folder | Purpose |
@@ -16,7 +30,7 @@ institution, with a score breakdown, for an officer to confirm or reject.
 | `backend/` | FastAPI + SQLite (SQLAlchemy) API |
 | `frontend/` | React (Vite) + Tailwind + Recharts dashboard |
 | `data/` | Synthetic data generator (`generate.py`) and its output (`sources/`) |
-| `eval/` | `ground_truth.json` (planted overlaps + decoys); matcher evaluation — *coming next* |
+| `eval/` | Ground truth (planted overlaps + decoys), `evaluate.py`, `build_results.py` |
 
 ## Synthetic data
 

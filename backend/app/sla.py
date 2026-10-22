@@ -5,6 +5,7 @@ not official AICTE timelines.
 """
 
 import json
+import os
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
@@ -17,6 +18,13 @@ from .models import Alert, AlertKind, Case, CaseStatus, SLARule, utcnow
 SETTINGS_PATH = Path(__file__).with_name("sla_settings.json")
 SETTINGS = json.loads(SETTINGS_PATH.read_text())
 NOTE = "SLA values are demo settings, not official AICTE timelines."
+
+
+def demo_mode() -> bool:
+    """SAMANVAY_DEMO=1 (set by start.sh): no automatic SLA job, so alerts appear only on "Run check now",
+    and the Administrator can reset the demo data from the app."""
+    return os.environ.get("SAMANVAY_DEMO", "0") == "1"
+
 
 # Last run, for the "Last checked" line in the UI. Per process; resets when the server restarts.
 last_check: dict = {"at": None, "result": None}

@@ -4,8 +4,13 @@ import json
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 
-from ..auth import get_current_user
+from .. import seed
+from ..auth import get_current_user, require_roles
+from ..db import get_db
+from ..models import Role
+from ..sla import demo_mode, last_check
 
 router = APIRouter(tags=["demo"], dependencies=[Depends(get_current_user)])
 REPO = Path(__file__).resolve().parents[3]
@@ -27,3 +32,14 @@ def demo_complaint() -> dict:
 def eval_results() -> dict:
     """eval/results.json, built by eval/build_results.py."""
     return read_json(REPO / "eval" / "results.json")
+
+
+@router.post("/demo/reset")
+def reset_demo(db: Session = Depends(get_db), user=Depends(require_roles(Role.ADMIN))) -> dict:
+    """Demo mode only: rebuild the demo data between rehearsals. Everyone stays signed in."""
+    if not demo_mode():
+        raise HTTPException(403, "Resetting is only available in demo mode")
+    db.close()  # release this request's connection before the tables are dropped
+    summary = seed.run()
+    last_check.update(at=None, result=None)
+    return summary

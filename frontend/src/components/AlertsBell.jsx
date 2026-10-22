@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { api } from "../api";
-import { SLA_NOTE, formatDateTime } from "../labels";
+import { useAuth } from "../auth";
+import { useSlaSettings } from "../hooks";
+import { BUREAUS, SLA_NOTE, formatDateTime } from "../labels";
 import { Button } from "./ui";
 
 const SECTIONS = [
@@ -10,6 +12,7 @@ const SECTIONS = [
   ["needs_check", "Needs your check"],
 ];
 const POLL_MS = 60_000;
+const CAP = 20; // keep the badge readable: "20+" rather than "87"
 
 function BellIcon() {
   return (
@@ -28,6 +31,9 @@ export default function AlertsBell() {
   const [error, setError] = useState(null);
   const box = useRef(null);
   const { pathname } = useLocation();
+  const { user } = useAuth();
+  const settings = useSlaSettings();
+  const isAdmin = user?.role === "ADMIN";
 
   const load = useCallback(() => api("/notifications").then(setData).catch(setError), []);
 
@@ -83,15 +89,19 @@ export default function AlertsBell() {
         type="button"
         onClick={toggle}
         aria-expanded={open}
-        aria-label={`Alerts${unseen ? `, ${unseen} new` : ""}`}
+        aria-label={`Alerts${unseen ? (isAdmin ? ", new alerts" : `, ${unseen} new`) : ""}`}
         className="relative rounded-lg border border-white/30 p-2 text-white hover:bg-white/10"
       >
         <BellIcon />
-        {unseen > 0 && (
-          <span className="tabular absolute -right-2 -top-2 min-w-6 rounded-full bg-amber-line px-1.5 text-center text-sm font-semibold text-ink">
-            {unseen > 99 ? "99+" : unseen}
-          </span>
-        )}
+        {unseen > 0 &&
+          (isAdmin ? (
+            // The Administrator sees every bureau: a dot here, the per-bureau numbers inside.
+            <span className="absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full border-2 border-navy bg-amber-line" />
+          ) : (
+            <span className="tabular absolute -right-2 -top-2 min-w-6 rounded-full bg-amber-line px-1.5 text-center text-sm font-semibold text-ink">
+              {unseen > CAP ? `${CAP}+` : unseen}
+            </span>
+          ))}
       </button>
 
       {open && (
@@ -102,9 +112,39 @@ export default function AlertsBell() {
         >
           <div className="border-b border-line px-5 py-4">
             <h2 className="text-lg font-semibold">Alerts</h2>
-            <p className="text-base text-ink-2">
-              {data ? `${data.counts.overdue} overdue · ${data.counts.due_soon} due soon · ${data.counts.needs_check} need your check` : "Loading…"}
-            </p>
+            {!data ? (
+              <p className="text-base text-ink-2">Loading…</p>
+            ) : isAdmin ? (
+              <table className="mt-2 w-full text-base">
+                <thead className="text-left text-ink-2">
+                  <tr>
+                    <th className="pb-1 font-normal">Bureau</th>
+                    <th className="pb-1 text-right font-normal">Overdue</th>
+                    <th className="pb-1 text-right font-normal">Due soon</th>
+                    <th className="pb-1 text-right font-normal">To check</th>
+                    <th className="pb-1 text-right font-normal">New</th>
+                  </tr>
+                </thead>
+                <tbody className="tabular">
+                  {Object.entries(BUREAUS).map(([code, b]) => {
+                    const row = data.by_bureau[code] || { overdue: 0, due_soon: 0, needs_check: 0, new: 0 };
+                    return (
+                      <tr key={code} className="border-t border-line">
+                        <td className="py-1.5">{b.name}</td>
+                        <td className="py-1.5 text-right">{row.overdue}</td>
+                        <td className="py-1.5 text-right">{row.due_soon}</td>
+                        <td className="py-1.5 text-right">{row.needs_check}</td>
+                        <td className={`py-1.5 text-right ${row.new ? "font-semibold text-accent" : ""}`}>{row.new}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            ) : (
+              <p className="text-base text-ink-2">
+                {data.counts.overdue} overdue · {data.counts.due_soon} due soon · {data.counts.needs_check} need your check
+              </p>
+            )}
           </div>
           <div className="max-h-[26rem] overflow-y-auto px-5">
             {items.length === 0 && <p className="py-6 text-base text-ink-2">No alerts right now.</p>}
@@ -113,7 +153,7 @@ export default function AlertsBell() {
               if (!list.length) return null;
               return (
                 <section key={kind} className="py-3">
-                  <h3 className="text-base font-semibold text-ink-2">{title} ({list.length})</h3>
+                  <h3 className="text-base font-semibold text-ink-2">{title} ({data.counts[kind]})</h3>
                   <ul className="mt-1 divide-y divide-line">
                     {list.slice(0, 8).map((i) => (
                       <li key={i.id}>
@@ -131,13 +171,13 @@ export default function AlertsBell() {
                       </li>
                     ))}
                   </ul>
-                  {list.length > 8 && (
+                  {data.counts[kind] > Math.min(list.length, 8) && (
                     <Link
                       to={kind === "needs_check" ? "/alerts" : kind === "overdue" ? "/cases?overdue=true" : "/cases?open=true"}
                       onClick={() => setOpen(false)}
                       className="text-base text-accent underline-offset-4 hover:underline"
                     >
-                      See all {list.length}
+                      See all {data.counts[kind]}
                     </Link>
                   )}
                 </section>
@@ -147,7 +187,12 @@ export default function AlertsBell() {
           <div className="space-y-2 border-t border-line bg-page/60 px-5 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="text-base text-ink-2">
-                Last time-limit check: {data?.last_check ? formatDateTime(data.last_check) : "not yet (runs every few minutes)"}
+                Last time-limit check:{" "}
+                {data?.last_check
+                  ? formatDateTime(data.last_check)
+                  : settings?.automatic_checks
+                    ? `not yet (runs every ${settings.check_interval_minutes} minutes)`
+                    : "not yet"}
               </span>
               <Button variant="secondary" onClick={runCheck} disabled={checking}>{checking ? "Checking…" : "Run check now"}</Button>
             </div>
@@ -158,6 +203,9 @@ export default function AlertsBell() {
               </p>
             )}
             {error && <p className="text-base text-late">{error.message}</p>}
+            {settings && !settings.automatic_checks && (
+              <p className="text-sm text-ink-2">Demo mode: checks run only when you press “Run check now”.</p>
+            )}
             <p className="text-sm text-muted">{SLA_NOTE}</p>
           </div>
         </div>

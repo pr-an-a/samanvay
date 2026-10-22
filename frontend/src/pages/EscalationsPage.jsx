@@ -174,7 +174,10 @@ export default function EscalationsPage() {
             </table>
           </div>
           <p className="mt-3 text-base text-muted">
-            “Due soon” means due within {settings.due_soon_days} days. The time-limit check runs every {settings.check_interval_minutes} minutes.
+            “Due soon” means due within {settings.due_soon_days} days.{" "}
+            {settings.automatic_checks
+              ? `The time-limit check runs every ${settings.check_interval_minutes} minutes.`
+              : "Demo mode: the time-limit check runs only when someone presses “Run check now”."}
           </p>
         </Card>
       )}

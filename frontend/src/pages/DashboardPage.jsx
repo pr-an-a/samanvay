@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import DemoReset from "../components/DemoReset";
 import { Bar, BarChart, CartesianGrid, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Bureau, Button, Card, ErrorBox, LinkStatus, Loading, MatchStrength, Status } from "../components/ui";
 import { useApi } from "../hooks";
@@ -160,6 +161,7 @@ export default function DashboardPage() {
         </Card>
       </div>
       <p className="text-base text-muted">{SLA_NOTE}</p>
+      <DemoReset />
     </div>
   );
 }

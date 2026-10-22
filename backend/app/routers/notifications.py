@@ -53,8 +53,13 @@ def notifications(limit: int = 60, db: Session = Depends(get_db), user: User = D
             "new": is_new(a, user), "case_pk": case.id if case else None, "case_id": case.case_id if case else None,
             "link_id": a.link_id,
         })
-    return {"unseen": sum(is_new(a, user) for a in alerts), "counts": counts, "items": items,
-            "last_check": last_check["at"]}
+    by_bureau: dict[str, dict] = {}
+    for a in alerts:
+        row = by_bureau.setdefault(a.bureau, {"overdue": 0, "due_soon": 0, "needs_check": 0, "new": 0})
+        row[a.kind] += 1
+        row["new"] += is_new(a, user)
+    return {"unseen": sum(is_new(a, user) for a in alerts), "counts": counts, "by_bureau": by_bureau,
+            "items": items, "last_check": last_check["at"]}
 
 
 @router.post("/seen")

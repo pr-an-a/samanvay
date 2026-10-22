@@ -10,7 +10,7 @@ from ..auth import OFFICER_ROLES, get_current_user, require_roles
 from ..db import get_db
 from ..models import AuditAction, Case, CaseEvent, CaseStatus, Role, SLARule, User
 from ..privacy import case_out
-from ..sla import NOTE, SETTINGS, days_overdue, last_check, run_sla_check
+from ..sla import NOTE, SETTINGS, days_overdue, demo_mode, last_check, run_sla_check
 
 router = APIRouter(tags=["sla"])
 
@@ -26,6 +26,8 @@ def sla_settings(db: Session = Depends(get_db)) -> dict:
         "due_soon_days": SETTINGS["due_soon_days"],
         "escalate_after_days_overdue": SETTINGS["escalate_after_days_overdue"],
         "check_interval_minutes": SETTINGS["check_interval_minutes"],
+        "demo_mode": demo_mode(),
+        "automatic_checks": not demo_mode(),
         "rules": [{"bureau": r.bureau, "category": r.category, "days": r.days} for r in rules],
         "last_check": last_check["at"], "last_result": last_check["result"],
         "note": NOTE,
