@@ -4,3 +4,4 @@ sqlalchemy>=2.0.36
 pydantic>=2.9
 httpx2  # for fastapi.testclient in tests
 scikit-learn>=1.5
+pytest>=8  # tests

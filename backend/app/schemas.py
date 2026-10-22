@@ -1,8 +1,9 @@
 from datetime import date, datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from .models import CaseStatus
+from .ingest.common import CATEGORIES, REGION_BY_CODE
+from .models import Bureau, CaseStatus
 
 
 class ORM(BaseModel):
@@ -52,6 +53,35 @@ class CaseOut(ORM):
     next_action: str | None
     expected_disposal_date: date | None
     complainant_name: str | None
+    complainant_masked: bool = False
+
+
+class CaseCreate(BaseModel):
+    """A new complaint. Officers file for their own bureau; ADMIN must name the bureau."""
+    source_bureau: Bureau | None = None
+    raw_institution_name: str = Field(min_length=3)
+    raw_address: str | None = None
+    district: str | None = None
+    region: str
+    category: str
+    description: str = Field(min_length=5)
+    received_date: date | None = None
+    permanent_id: str | None = None
+    complainant_name: str | None = None
+
+    @field_validator("region")
+    @classmethod
+    def known_region(cls, v: str) -> str:
+        if v not in REGION_BY_CODE.values():
+            raise ValueError(f"region must be one of {sorted(REGION_BY_CODE.values())}")
+        return v
+
+    @field_validator("category")
+    @classmethod
+    def known_category(cls, v: str) -> str:
+        if v not in CATEGORIES:
+            raise ValueError(f"category must be one of {sorted(CATEGORIES)}")
+        return v
 
 
 class CaseEventIn(BaseModel):
@@ -80,6 +110,24 @@ class CaseLinkOut(ORM):
     created_at: datetime
 
 
+class CaseCreateOut(BaseModel):
+    case: CaseOut
+    alert_title: str | None
+    overlap_alerts: list[CaseLinkOut]
+
+
+class TimelineEntry(BaseModel):
+    timestamp: datetime
+    case_pk: int
+    case_id: str
+    case_bureau: str
+    actor: str
+    actor_bureau: str
+    action: str
+    remarks: str | None
+    via_confirmed_link: bool
+
+
 class LinkReviewIn(BaseModel):
     remarks: str | None = None
 
@@ -89,3 +137,9 @@ class SLARuleOut(ORM):
     bureau: str
     category: str
     days: int
+
+
+class InstitutionDetail(InstitutionOut):
+    cases: list[CaseOut]
+    timeline: list[TimelineEntry]
+    links: list[CaseLinkOut]

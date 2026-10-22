@@ -117,10 +117,39 @@ Demo users: 1 RB Officer, 2 PGRC Officer, 3 Regional Officer, 4 Admin.
 ### Endpoints
 - `GET /health`
 - `GET /auth/demo-users`, `POST /auth/login`, `GET /auth/me`
-- `GET /cases?bureau=&status=&region=&institution_id=`, `GET /cases/{id}`
-- `GET /cases/{id}/events`, `POST /cases/{id}/events` (append-only history)
+- `GET /cases` — filters: `q` (institution name / permanent ID / case ID), `institution`, `permanent_id`,
+  `case_id`, `bureau`, `region`, `category`, `status`, `received_from`, `received_to`, `institution_id`, `overdue`
+- `POST /cases` — new complaint; runs the matcher immediately and returns the case plus any
+  "Potential Overlapping Cases – Coordination Required" alerts with score breakdowns
+- `GET /cases/{id}`, `GET /cases/{id}/events`, `POST /cases/{id}/events` (append-only history)
+- `GET /alerts/overlaps?bureau=&region=` — suggested links awaiting review, newest first
 - `GET /links?status=`, `POST /links/{id}/confirm`, `POST /links/{id}/reject`
-- `GET /institutions`, `GET /sla-rules`
+- `GET /institutions`, `GET /institutions/{id}` — details, chronological timeline across bureaus,
+  links. Cases join the timeline through the permanent ID or an officer-*confirmed* link, never a suggested one.
+- `GET /dashboard/stats` — status totals, bureau workload, ageing of open cases (0-15/16-30/31-60/60+ days),
+  overdue vs SLA, overlap counts, region counts
+- `GET /reports/cases.csv` — CSV export, same filters as `GET /cases`
+- `GET /sla-rules`
+
+**Privacy:** complainant names are masked ("R*** K***") on cases from another bureau, in the
+API, alerts and CSV export alike. ADMIN sees full names.
+
+### Demo: new complaint raises an overlap alert
+`data/demo_complaint.json` is a PGRC complaint with a misspelled name and no permanent ID. It
+matches the open RB case RB/2026/0150 (last action: reply sought from institution). Seed first so
+the case exists:
+
+```bash
+TOKEN=$(curl -s -X POST localhost:8000/auth/login -H 'Content-Type: application/json' \
+  -d '{"user_id": 2}' | python3 -c 'import sys,json; print(json.load(sys.stdin)["token"])')
+curl -X POST localhost:8000/cases -H "Authorization: Bearer $TOKEN" \
+  -H 'Content-Type: application/json' -d @../data/demo_complaint.json
+```
+
+### Tests
+```bash
+python -m pytest -q    # uses a temporary database; the demo DB is untouched
+```
 
 ### Design rules
 - Cases are never auto-merged; the system only *suggests* links and an officer confirms/rejects.

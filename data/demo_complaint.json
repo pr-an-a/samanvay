@@ -1,0 +1,12 @@
+{
+  "_note": "Demo: new PGRC complaint, misspelled name, no permanent ID. Should raise an overlap alert against the open RB case below (RB action: 'Reply sought from institution'). Fields starting with _ are ignored by the API.",
+  "_expected_match": "RB/2026/0150",
+  "source_bureau": "PGRC",
+  "raw_institution_name": "Vidhyadhar Mega Inst. of Info. Tech.",
+  "raw_address": "Survey No. 269, Ring Rd, Godavaripet",
+  "district": "Godavaripet",
+  "region": "South-Eastern",
+  "category": "ragging_admin",
+  "description": "Ragging incident in hostel reported to the institution; no administrative action or inquiry by the anti-ragging committee so far.",
+  "complainant_name": "Ishaan Demo"
+}

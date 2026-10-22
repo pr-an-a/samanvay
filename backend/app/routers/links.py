@@ -5,17 +5,19 @@ from sqlalchemy.orm import Session
 from ..auth import OFFICER_ROLES, get_current_user, require_roles
 from ..db import get_db
 from ..models import CaseEvent, CaseLink, LinkStatus, User, utcnow
+from ..privacy import link_out
 from ..schemas import CaseLinkOut, LinkReviewIn
 
-router = APIRouter(prefix="/links", tags=["links"], dependencies=[Depends(get_current_user)])
+router = APIRouter(prefix="/links", tags=["links"])
 
 
 @router.get("", response_model=list[CaseLinkOut])
-def list_links(status: LinkStatus | None = None, db: Session = Depends(get_db)):
-    q = select(CaseLink).order_by(CaseLink.created_at.desc())
+def list_links(status: LinkStatus | None = None, db: Session = Depends(get_db),
+               user: User = Depends(get_current_user)):
+    q = select(CaseLink).order_by(CaseLink.created_at.desc(), CaseLink.id.desc())
     if status:
         q = q.where(CaseLink.status == status.value)
-    return db.scalars(q).all()
+    return [link_out(l, user) for l in db.scalars(q)]
 
 
 def review(db: Session, link_id: int, user: User, new_status: LinkStatus, remarks: str | None) -> CaseLink:
@@ -48,7 +50,7 @@ def confirm_link(
     db: Session = Depends(get_db),
     user: User = Depends(require_roles(*OFFICER_ROLES)),
 ):
-    return review(db, link_id, user, LinkStatus.confirmed, body.remarks if body else None)
+    return link_out(review(db, link_id, user, LinkStatus.confirmed, body.remarks if body else None), user)
 
 
 @router.post("/{link_id}/reject", response_model=CaseLinkOut)
@@ -58,4 +60,4 @@ def reject_link(
     db: Session = Depends(get_db),
     user: User = Depends(require_roles(*OFFICER_ROLES)),
 ):
-    return review(db, link_id, user, LinkStatus.rejected, body.remarks if body else None)
+    return link_out(review(db, link_id, user, LinkStatus.rejected, body.remarks if body else None), user)
