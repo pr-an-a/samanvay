@@ -309,9 +309,29 @@ def make_case(inst, bureau, *, age, status, category=None, has_pid=True, name=No
     return case
 
 
-def pair_ages() -> tuple[int, int]:
-    a = rng.randint(2, 25)
-    return a, max(0, a + rng.randint(-12, 12))
+def background_age() -> int:
+    return int(rng.triangular(0, 365, 0))  # skewed toward recent complaints
+
+
+def background_status(age: int) -> str:
+    if age > 30:
+        return rng.choices(["disposed", "transferred"], [95, 5])[0]
+    return rng.choices(STATUSES, [3, 4, 1, 1, 2])[0]
+
+
+def background_timeline() -> tuple[int, str]:
+    age = background_age()
+    return age, background_status(age)
+
+
+def pair_timeline() -> list[tuple[int, str]]:
+    """One side is drawn from background complaints that are still open, the other from all
+    background complaints. So every pair has an open side, yet within each status pair cases
+    are dated like background ones and can't be spotted by recency."""
+    open_side = next(t for t in iter(background_timeline, None) if t[1] != "disposed")
+    sides = [open_side, background_timeline()]
+    rng.shuffle(sides)
+    return sides
 
 
 def pair_categories() -> tuple[str, str]:
@@ -328,7 +348,7 @@ def build() -> tuple[list, list, list]:
     for tier, n in TIERS.items():
         for _ in range(n):
             inst = new_institution()
-            (b1, b2), (age1, age2), (cat1, cat2) = next(bureau_pairs), pair_ages(), pair_categories()
+            (b1, b2), ((age1, st1), (age2, st2)), (cat1, cat2) = next(bureau_pairs), pair_timeline(), pair_categories()
             info = {"tier": tier, "institution": inst, "variations": {}}
             if tier == "easy":
                 kw1, kw2 = {}, {}
@@ -347,8 +367,8 @@ def build() -> tuple[list, list, list]:
                 kw1 = {"has_pid": False, "name": name_a, "address": vary_address(inst["address"])}
                 kw2 = {"has_pid": False, "name": name_b, "district": rng.random() > 0.25}
                 info["variations"] = {"a": ops_a, "b": ops_b}
-            c1 = make_case(inst, b1, age=age1, status=open_status(), category=cat1, **kw1)
-            c2 = make_case(inst, b2, age=age2, status=open_status(), category=cat2, **kw2)
+            c1 = make_case(inst, b1, age=age1, status=st1, category=cat1, **kw1)
+            c2 = make_case(inst, b2, age=age2, status=st2, category=cat2, **kw2)
             overlaps.append((info, c1, c2))
 
     # Decoys: different institutions with similar names in different districts.
@@ -367,10 +387,10 @@ def build() -> tuple[list, list, list]:
         elif variant == "honorific":
             hon = "" if hon else "Sri"
         b = new_institution(region, district, hon, roots, kind, allow_dup=variant == "same_name")
-        (b1, b2), (age1, age2), (cat1, cat2) = next(bureau_pairs), pair_ages(), pair_categories()
-        c1 = make_case(a, b1, age=age1, status=open_status(), category=cat1,
+        (b1, b2), ((age1, st1), (age2, st2)), (cat1, cat2) = next(bureau_pairs), pair_timeline(), pair_categories()
+        c1 = make_case(a, b1, age=age1, status=st1, category=cat1,
                        has_pid=b1 == "RB", name=a["name"])
-        c2 = make_case(b, b2, age=age2, status=open_status(), category=cat2,
+        c2 = make_case(b, b2, age=age2, status=st2, category=cat2,
                        has_pid=b2 == "RB", name=b["name"])
         decoys.append(({"variant": variant, "a": a, "b": b}, c1, c2))
 
@@ -385,9 +405,8 @@ def build() -> tuple[list, list, list]:
         if n < N_SLA_BREACH:
             age, status = rng.randint(120, 300), rng.choice(["pending", "under_process", "escalated"])
         else:
-            age = int(rng.triangular(0, 365, 0))  # skewed toward recent complaints
-            status = (rng.choices(["disposed", "transferred"], [9, 1])[0] if age > 30
-                      else rng.choices(STATUSES, [3, 4, 1, 1, 2])[0])
+            age = background_age()
+            status = background_status(age)
         c = make_case(inst, bureau, age=age, status=status, has_pid=rng.random() < pid_rate[bureau],
                       district=bureau != "PGRC" or rng.random() > 0.1)
         if n < N_SLA_BREACH:

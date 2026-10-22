@@ -3,9 +3,9 @@
   "ref_date": "2026-10-20",
   "institutions": 150,
   "cases": {
-    "RB": 199,
-    "PGRC": 186,
-    "REGIONAL": 115
+    "RB": 179,
+    "PGRC": 189,
+    "REGIONAL": 132
   },
   "total_cases": 500,
   "overlaps": 50,

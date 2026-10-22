@@ -6,9 +6,9 @@
     {
       "pair_id": "P001",
       "tier": "easy",
-      "case_a": "RB/2026/0156",
-      "case_b": "PG-2026-00178",
-      "institution_permanent_id": "SYN-100136",
+      "case_a": "RB/2026/0049",
+      "case_b": "PG-2026-00172",
+      "institution_permanent_id": "SYN-100015",
       "canonical_name": "Nilgiri Aravali Engineering College",
       "name_a": "Nilgiri Aravali Engineering College",
       "name_b": "Nilgiri Aravali Engineering College",
@@ -17,335 +17,354 @@
     {
       "pair_id": "P002",
       "tier": "easy",
-      "case_a": "RB/2026/0137",
-      "case_b": "NRO/2026/011",
-      "institution_permanent_id": "SYN-100030",
-      "canonical_name": "Shri Pragati Kaveri School of Management",
-      "name_a": "Shri Pragati Kaveri School of Management",
-      "name_b": "Shri Pragati Kaveri Sch of Mgmt",
+      "case_a": "RB/2026/0159",
+      "case_b": "ERO/2026/012",
+      "institution_permanent_id": "SYN-100071",
+      "canonical_name": "Dr. Godavari Saraswati Institute of Engineering and Technology",
+      "name_a": "Dr. Godavari Saraswati Institute of Engineering and Technology",
+      "name_b": "Dr. Godavari Saraswati Inst of Engg & Tech",
       "variations": {}
     },
     {
       "pair_id": "P003",
       "tier": "easy",
-      "case_a": "PG-2026-00145",
-      "case_b": "CRO/2026/007",
-      "institution_permanent_id": "SYN-100011",
-      "canonical_name": "Shanti Himgiri College of Engineering",
-      "name_a": "Shanti Himgiri College of Engineering",
-      "name_b": "Shanti Himgiri Coll. of Engg.",
+      "case_a": "PG-2026-00142",
+      "case_b": "ERO/2026/010",
+      "institution_permanent_id": "SYN-100032",
+      "canonical_name": "Vidyadhar Aravali Engineering College",
+      "name_a": "Vidyadhar Aravali Engineering College",
+      "name_b": "Vidyadhar Aravali Engg Coll",
       "variations": {}
     },
     {
       "pair_id": "P004",
       "tier": "easy",
-      "case_a": "PG-2026-00131",
-      "case_b": "RB/2026/0143",
-      "institution_permanent_id": "SYN-100069",
-      "canonical_name": "Siddhi Chandra Institute of Information Technology",
-      "name_a": "Siddhi Chandra Institute of Information Technology",
-      "name_b": "Siddhi Chandra Institute of Information Technology",
+      "case_a": "PG-2025-00004",
+      "case_b": "RB/2026/0147",
+      "institution_permanent_id": "SYN-100130",
+      "canonical_name": "Prerana Kirti School of Management",
+      "name_a": "Sri Prerana Kirti School of Management",
+      "name_b": "Prerana Kirti School of Management",
       "variations": {}
     },
     {
       "pair_id": "P005",
       "tier": "easy",
-      "case_a": "NWRO/2026/013",
-      "case_b": "RB/2026/0158",
-      "institution_permanent_id": "SYN-100114",
-      "canonical_name": "Godavari Kirti Engineering College",
-      "name_a": "Godavari Kirti Engineering College",
-      "name_b": "Godavari Kirti Engineering College",
+      "case_a": "SWRO/2026/005",
+      "case_b": "RB/2026/0157",
+      "institution_permanent_id": "SYN-100041",
+      "canonical_name": "Shri Nilgiri Aravali College of Engineering",
+      "name_a": "Shri Nilgiri Aravali Coll. of Engg.",
+      "name_b": "Sri Nilgiri Aravali College of Engineering",
       "variations": {}
     },
     {
       "pair_id": "P006",
       "tier": "easy",
-      "case_a": "NRO/2026/007",
-      "case_b": "PG-2026-00123",
-      "institution_permanent_id": "SYN-100116",
-      "canonical_name": "Shri Ojas Nilgiri Institute of Information Technology",
-      "name_a": "Shri Ojas Nilgiri Inst of Info Tech",
-      "name_b": "Shri Ojas Nilgiri Inst of Info Tech",
+      "case_a": "SRO/2026/001",
+      "case_b": "PG-2026-00124",
+      "institution_permanent_id": "SYN-100092",
+      "canonical_name": "Anand Nilgiri College of Engineering",
+      "name_a": "Anand Nilgiri Coll. of Engg.",
+      "name_b": "Anand Nilgiri College of Engineering",
       "variations": {}
     },
     {
       "pair_id": "P007",
       "tier": "easy",
-      "case_a": "RB/2026/0188",
-      "case_b": "PG-2026-00181",
-      "institution_permanent_id": "SYN-100048",
-      "canonical_name": "Sri Kaveri Nilgiri Engineering College",
-      "name_a": "Sri Kaveri Nilgiri Engineering College",
-      "name_b": "Sri Kaveri Nilgiri Engineering College",
+      "case_a": "RB/2026/0090",
+      "case_b": "PG-2026-00146",
+      "institution_permanent_id": "SYN-100051",
+      "canonical_name": "Dr. Kamala Ramana Institute of Technology",
+      "name_a": "Kamala Ramana Institute of Technology",
+      "name_b": "Dr. Kamala Ramana Institute of Technology",
       "variations": {}
     },
     {
       "pair_id": "P008",
       "tier": "easy",
-      "case_a": "RB/2026/0148",
-      "case_b": "SRO/2026/006",
-      "institution_permanent_id": "SYN-100043",
-      "canonical_name": "Dr. Kamala Ramana Institute of Technology",
-      "name_a": "Dr. Kamala Ramana Institute of Technology",
-      "name_b": "Dr. Kamala Ramana Inst. of Tech.",
+      "case_a": "RB/2026/0172",
+      "case_b": "NWRO/2026/003",
+      "institution_permanent_id": "SYN-100073",
+      "canonical_name": "Chandra Surya School of Management",
+      "name_a": "Sri Chandra Surya School of Management",
+      "name_b": "Chandra Surya School of Management",
       "variations": {}
     },
     {
       "pair_id": "P009",
       "tier": "easy",
-      "case_a": "PG-2026-00156",
-      "case_b": "ERO/2026/010",
-      "institution_permanent_id": "SYN-100144",
-      "canonical_name": "Surya Megha Institute of Information Technology",
-      "name_a": "Surya Megha Institute of Information Technology",
-      "name_b": "Surya Megha Inst. of Info. Tech.",
+      "case_a": "PG-2026-00018",
+      "case_b": "CRO/2026/002",
+      "institution_permanent_id": "SYN-100113",
+      "canonical_name": "Smt. Kesar Lakshmi Engineering College",
+      "name_a": "Smt. Kesar Lakshmi Engineering College",
+      "name_b": "Smt. Kesar Lakshmi Engg Coll",
       "variations": {}
     },
     {
       "pair_id": "P010",
       "tier": "easy",
-      "case_a": "PG-2026-00134",
-      "case_b": "RB/2026/0157",
-      "institution_permanent_id": "SYN-100096",
-      "canonical_name": "Smt. Saraswati Narmada Memorial College of Engineering",
-      "name_a": "Smt. Saraswati Narmada Meml Coll of Engg",
-      "name_b": "Smt. Saraswati Narmada Memorial College of Engineering",
+      "case_a": "PG-2026-00012",
+      "case_b": "RB/2026/0138",
+      "institution_permanent_id": "SYN-100107",
+      "canonical_name": "Devika Godavari Memorial College of Engineering",
+      "name_a": "Devika Godavari Meml Coll of Engg",
+      "name_b": "Devika Godavari Memorial College of Engineering",
       "variations": {}
     },
     {
       "pair_id": "P011",
       "tier": "easy",
-      "case_a": "ERO/2026/011",
-      "case_b": "RB/2026/0144",
-      "institution_permanent_id": "SYN-100087",
-      "canonical_name": "Dr. Lakshmi Sahyadri Institute of Technology and Management",
-      "name_a": "Dr. Lakshmi Sahyadri Institute of Technology and Management",
-      "name_b": "Dr. Lakshmi Sahyadri Institute of Technology and Management",
+      "case_a": "ERO/2026/008",
+      "case_b": "RB/2026/0140",
+      "institution_permanent_id": "SYN-100138",
+      "canonical_name": "Dr. Himgiri Rohini College of Engineering",
+      "name_a": "Dr. Himgiri Rohini College of Engineering",
+      "name_b": "Himgiri Rohini College of Engineering",
       "variations": {}
     },
     {
       "pair_id": "P012",
       "tier": "easy",
-      "case_a": "NRO/2026/010",
-      "case_b": "PG-2026-00149",
-      "institution_permanent_id": "SYN-100133",
-      "canonical_name": "Devika Godavari Memorial College of Engineering",
-      "name_a": "Devika Godavari Meml. Coll. of Engg.",
-      "name_b": "Devika Godavari Memorial College of Engineering",
+      "case_a": "SWRO/2026/014",
+      "case_b": "PG-2026-00017",
+      "institution_permanent_id": "SYN-100121",
+      "canonical_name": "Siddhi Shanti Engineering College",
+      "name_a": "Siddhi Shanti Engg Coll",
+      "name_b": "Siddhi Shanti Engg Coll",
       "variations": {}
     },
     {
       "pair_id": "P013",
       "tier": "easy",
-      "case_a": "RB/2026/0175",
-      "case_b": "PG-2026-00154",
+      "case_a": "RB/2026/0163",
+      "case_b": "PG-2026-00045",
       "institution_permanent_id": "SYN-100119",
-      "canonical_name": "Kaveri Nilgiri Institute of Information Technology",
-      "name_a": "Kaveri Nilgiri Institute of Information Technology",
-      "name_b": "Kaveri Nilgiri Institute of Information Technology",
+      "canonical_name": "Dr. Anand Vindhya Memorial College of Engineering",
+      "name_a": "Dr. Anand Vindhya Memorial College of Engineering",
+      "name_b": "Dr. Anand Vindhya Memorial College of Engineering",
       "variations": {}
     },
     {
       "pair_id": "P014",
       "tier": "easy",
-      "case_a": "RB/2026/0174",
-      "case_b": "SERO/2026/012",
-      "institution_permanent_id": "SYN-100010",
-      "canonical_name": "Sumati Rohini Engineering College",
-      "name_a": "Sumati Rohini Engineering College",
-      "name_b": "Sumati Rohini Engg. Coll.",
+      "case_a": "RB/2026/0155",
+      "case_b": "ERO/2026/013",
+      "institution_permanent_id": "SYN-100069",
+      "canonical_name": "Dr. Anand Bhaskara Business School",
+      "name_a": "Anand Bhaskara Business School",
+      "name_b": "Dr. Anand Bhaskara Bus. Sch.",
       "variations": {}
     },
     {
       "pair_id": "P015",
       "tier": "easy",
-      "case_a": "PG-2026-00164",
-      "case_b": "SRO/2026/012",
-      "institution_permanent_id": "SYN-100064",
-      "canonical_name": "Sri Gyandeep Narmada Institute of Technology and Management",
-      "name_a": "Sri Gyandeep Narmada Institute of Technology and Management",
-      "name_b": "Sri Gyandeep Narmada Inst. of Tech. & Mgmt.",
+      "case_a": "PG-2026-00163",
+      "case_b": "WRO/2026/019",
+      "institution_permanent_id": "SYN-100063",
+      "canonical_name": "Dr. Mahima Himgiri Business School",
+      "name_a": "Dr. Mahima Himgiri Business School",
+      "name_b": "Dr. Mahima Himgiri Business School",
       "variations": {}
     },
     {
       "pair_id": "P016",
       "tier": "medium",
-      "case_a": "PG-2026-00137",
-      "case_b": "RB/2026/0170",
-      "institution_permanent_id": "SYN-100065",
-      "canonical_name": "Vindhya Kaveri Institute of Management Studies",
-      "name_a": "Vindhya Kaveri Institute of Management Studies",
-      "name_b": "Vindhya Kaveri Institute of Management Studies",
+      "case_a": "PG-2026-00161",
+      "case_b": "RB/2026/0114",
+      "institution_permanent_id": "SYN-100095",
+      "canonical_name": "Sri Kesar Rohini Business School",
+      "name_a": "Sri Kesar Rohini Business School",
+      "name_b": "Sri Kesar Rohini Business School",
       "variations": {}
     },
     {
       "pair_id": "P017",
       "tier": "medium",
-      "case_a": "SRO/2026/009",
-      "case_b": "RB/2026/0167",
-      "institution_permanent_id": "SYN-100100",
-      "canonical_name": "Dr. Godavari Kamala Institute of Engineering and Technology",
-      "name_a": "Dr. Godavari Kamala Institute of Engineering and Technology",
-      "name_b": "Dr. Godavari Kamala Institute of Engineering and Technology",
+      "case_a": "NRO/2026/026",
+      "case_b": "RB/2026/0110",
+      "institution_permanent_id": "SYN-100086",
+      "canonical_name": "Akshara Rohini Institute of Information Technology",
+      "name_a": "Akshara Rohini Institute of Information Technology",
+      "name_b": "Akshara Rohini Institute of Information Technology",
       "variations": {}
     },
     {
       "pair_id": "P018",
       "tier": "medium",
-      "case_a": "SWRO/2026/007",
-      "case_b": "PG-2026-00127",
-      "institution_permanent_id": "SYN-100107",
-      "canonical_name": "Amrit Nilgiri College of Engineering",
-      "name_a": "Amrit Nilgiri College of Engineering",
-      "name_b": "Amrit Nilgiri College of Engineering",
+      "case_a": "WRO/2026/009",
+      "case_b": "PG-2026-00081",
+      "institution_permanent_id": "SYN-100096",
+      "canonical_name": "Sri Sumati Kesar College of Engineering",
+      "name_a": "Sri Sumati Kesar College of Engineering",
+      "name_b": "Sri Sumati Kesar College of Engineering",
       "variations": {}
     },
     {
       "pair_id": "P019",
       "tier": "medium",
-      "case_a": "RB/2026/0147",
-      "case_b": "PG-2026-00143",
-      "institution_permanent_id": "SYN-100112",
-      "canonical_name": "Sri Kaveri Tapti Institute of Engineering and Technology",
-      "name_a": "Sri Kaveri Tapti Institute of Engineering and Technology",
-      "name_b": "Sri Kaveri Tapti Institute of Engineering and Technology",
+      "case_a": "RB/2026/0013",
+      "case_b": "PG-2026-00177",
+      "institution_permanent_id": "SYN-100024",
+      "canonical_name": "Smt. Ojas Kamala Memorial College of Engineering",
+      "name_a": "Smt. Ojas Kamala Memorial College of Engineering",
+      "name_b": "Smt. Ojas Kamala Memorial College of Engineering",
       "variations": {}
     },
     {
       "pair_id": "P020",
       "tier": "medium",
-      "case_a": "RB/2026/0181",
-      "case_b": "ERO/2026/014",
-      "institution_permanent_id": "SYN-100073",
-      "canonical_name": "Dr. Tapti Aravali Memorial College of Engineering",
-      "name_a": "Dr. Tapti Aravali Memorial College of Engineering",
-      "name_b": "Dr. Tapti Aravali Memorial College of Engineering",
+      "case_a": "RB/2026/0069",
+      "case_b": "NWRO/2026/006",
+      "institution_permanent_id": "SYN-100134",
+      "canonical_name": "Prerana Narmada Institute of Technology",
+      "name_a": "Prerana Narmada Institute of Technology",
+      "name_b": "Prerana Narmada Institute of Technology",
       "variations": {}
     },
     {
       "pair_id": "P021",
       "tier": "medium",
-      "case_a": "PG-2026-00140",
-      "case_b": "NRO/2026/006",
-      "institution_permanent_id": "SYN-100090",
-      "canonical_name": "Smt. Bhaskara Narmada College of Engineering",
-      "name_a": "Smt. Bhaskara Narmada College of Engineering",
-      "name_b": "Smt. Bhaskara Narmada College of Engineering",
-      "variations": {}
-    },
-    {
-      "pair_id": "P022",
-      "tier": "medium",
-      "case_a": "PG-2026-00133",
-      "case_b": "RB/2026/0133",
-      "institution_permanent_id": "SYN-100143",
-      "canonical_name": "Ramana Mahima Institute of Information Technology",
-      "name_a": "Ramana Mahima Institute of Information Technology",
-      "name_b": "Ramana Mahima Institute of Information Technology",
-      "variations": {}
-    },
-    {
-      "pair_id": "P023",
-      "tier": "medium",
-      "case_a": "SWRO/2026/009",
-      "case_b": "RB/2026/0149",
-      "institution_permanent_id": "SYN-100147",
-      "canonical_name": "Shri Ramana Saraswati Institute of Technology and Management",
-      "name_a": "Shri Ramana Saraswati Institute of Technology and Management",
-      "name_b": "Shri Ramana Saraswati Institute of Technology and Management",
-      "variations": {}
-    },
-    {
-      "pair_id": "P024",
-      "tier": "medium",
-      "case_a": "SERO/2026/015",
-      "case_b": "PG-2026-00180",
-      "institution_permanent_id": "SYN-100056",
-      "canonical_name": "Tapti Shanti School of Management",
-      "name_a": "Tapti Shanti School of Management",
-      "name_b": "Tapti Shanti School of Management",
-      "variations": {}
-    },
-    {
-      "pair_id": "P025",
-      "tier": "medium",
-      "case_a": "RB/2026/0153",
-      "case_b": "PG-2026-00169",
-      "institution_permanent_id": "SYN-100113",
-      "canonical_name": "Sumati Venkata School of Management",
-      "name_a": "Sumati Venkata School of Management",
-      "name_b": "Sumati Venkata School of Management",
-      "variations": {}
-    },
-    {
-      "pair_id": "P026",
-      "tier": "medium",
-      "case_a": "RB/2026/0168",
-      "case_b": "SWRO/2026/010",
-      "institution_permanent_id": "SYN-100019",
-      "canonical_name": "Kirti Mahima Memorial College of Engineering",
-      "name_a": "Kirti Mahima Memorial College of Engineering",
-      "name_b": "Kirti Mahima Memorial College of Engineering",
-      "variations": {}
-    },
-    {
-      "pair_id": "P027",
-      "tier": "medium",
-      "case_a": "PG-2026-00155",
-      "case_b": "WRO/2026/016",
-      "institution_permanent_id": "SYN-100121",
-      "canonical_name": "Smt. Godavari Mahima Institute of Information Technology",
-      "name_a": "Smt. Godavari Mahima Institute of Information Technology",
-      "name_b": "Smt. Godavari Mahima Institute of Information Technology",
-      "variations": {}
-    },
-    {
-      "pair_id": "P028",
-      "tier": "medium",
-      "case_a": "PG-2026-00170",
-      "case_b": "RB/2026/0192",
-      "institution_permanent_id": "SYN-100108",
-      "canonical_name": "Vidyadhar Devika Engineering College",
-      "name_a": "Vidyadhar Devika Engineering College",
-      "name_b": "Vidyadhar Devika Engineering College",
-      "variations": {}
-    },
-    {
-      "pair_id": "P029",
-      "tier": "medium",
-      "case_a": "CRO/2026/011",
-      "case_b": "RB/2026/0171",
-      "institution_permanent_id": "SYN-100031",
-      "canonical_name": "Surya Nilgiri Institute of Technology and Management",
-      "name_a": "Surya Nilgiri Institute of Technology and Management",
-      "name_b": "Surya Nilgiri Institute of Technology and Management",
-      "variations": {}
-    },
-    {
-      "pair_id": "P030",
-      "tier": "medium",
-      "case_a": "SERO/2026/014",
-      "case_b": "PG-2026-00146",
-      "institution_permanent_id": "SYN-100002",
+      "case_a": "PG-2026-00117",
+      "case_b": "SERO/2026/001",
+      "institution_permanent_id": "SYN-100114",
       "canonical_name": "Shri Tapti Amrit Institute of Technology and Management",
       "name_a": "Shri Tapti Amrit Institute of Technology and Management",
       "name_b": "Shri Tapti Amrit Institute of Technology and Management",
       "variations": {}
     },
     {
+      "pair_id": "P022",
+      "tier": "medium",
+      "case_a": "PG-2026-00164",
+      "case_b": "RB/2025/0004",
+      "institution_permanent_id": "SYN-100116",
+      "canonical_name": "Shri Anand Narmada Institute of Technology and Management",
+      "name_a": "Shri Anand Narmada Institute of Technology and Management",
+      "name_b": "Shri Anand Narmada Institute of Technology and Management",
+      "variations": {}
+    },
+    {
+      "pair_id": "P023",
+      "tier": "medium",
+      "case_a": "ERO/2026/020",
+      "case_b": "RB/2026/0102",
+      "institution_permanent_id": "SYN-100106",
+      "canonical_name": "Smt. Kirti Vindhya Engineering College",
+      "name_a": "Smt. Kirti Vindhya Engineering College",
+      "name_b": "Smt. Kirti Vindhya Engineering College",
+      "variations": {}
+    },
+    {
+      "pair_id": "P024",
+      "tier": "medium",
+      "case_a": "ERO/2026/018",
+      "case_b": "PG-2026-00023",
+      "institution_permanent_id": "SYN-100005",
+      "canonical_name": "Ramana Akshara Institute of Information Technology",
+      "name_a": "Ramana Akshara Institute of Information Technology",
+      "name_b": "Ramana Akshara Institute of Information Technology",
+      "variations": {}
+    },
+    {
+      "pair_id": "P025",
+      "tier": "medium",
+      "case_a": "RB/2026/0167",
+      "case_b": "PG-2026-00145",
+      "institution_permanent_id": "SYN-100131",
+      "canonical_name": "Sri Ramana Himgiri Institute of Technology",
+      "name_a": "Sri Ramana Himgiri Institute of Technology",
+      "name_b": "Sri Ramana Himgiri Institute of Technology",
+      "variations": {}
+    },
+    {
+      "pair_id": "P026",
+      "tier": "medium",
+      "case_a": "RB/2026/0143",
+      "case_b": "CRO/2026/004",
+      "institution_permanent_id": "SYN-100046",
+      "canonical_name": "Devika Chandra Institute of Information Technology",
+      "name_a": "Devika Chandra Institute of Information Technology",
+      "name_b": "Devika Chandra Institute of Information Technology",
+      "variations": {}
+    },
+    {
+      "pair_id": "P027",
+      "tier": "medium",
+      "case_a": "PG-2026-00051",
+      "case_b": "SRO/2026/002",
+      "institution_permanent_id": "SYN-100007",
+      "canonical_name": "Dr. Devika Kamala Institute of Technology and Management",
+      "name_a": "Dr. Devika Kamala Institute of Technology and Management",
+      "name_b": "Dr. Devika Kamala Institute of Technology and Management",
+      "variations": {}
+    },
+    {
+      "pair_id": "P028",
+      "tier": "medium",
+      "case_a": "PG-2026-00120",
+      "case_b": "RB/2026/0165",
+      "institution_permanent_id": "SYN-100045",
+      "canonical_name": "Kamala Narayana Memorial College of Engineering",
+      "name_a": "Kamala Narayana Memorial College of Engineering",
+      "name_b": "Kamala Narayana Memorial College of Engineering",
+      "variations": {}
+    },
+    {
+      "pair_id": "P029",
+      "tier": "medium",
+      "case_a": "CRO/2026/007",
+      "case_b": "RB/2026/0108",
+      "institution_permanent_id": "SYN-100017",
+      "canonical_name": "Akshara Padmavati Engineering College",
+      "name_a": "Akshara Padmavati Engineering College",
+      "name_b": "Akshara Padmavati Engineering College",
+      "variations": {}
+    },
+    {
+      "pair_id": "P030",
+      "tier": "medium",
+      "case_a": "NWRO/2026/009",
+      "case_b": "PG-2026-00138",
+      "institution_permanent_id": "SYN-100060",
+      "canonical_name": "Lakshmi Vidyadhar Institute of Information Technology",
+      "name_a": "Lakshmi Vidyadhar Institute of Information Technology",
+      "name_b": "Lakshmi Vidyadhar Institute of Information Technology",
+      "variations": {}
+    },
+    {
       "pair_id": "P031",
       "tier": "hard",
-      "case_a": "RB/2026/0140",
-      "case_b": "PG-2026-00153",
-      "institution_permanent_id": "SYN-100115",
-      "canonical_name": "Shri Aravali Mahima Institute of Technology",
-      "name_a": "Shri Aravalimahima Inst. of Tech.",
-      "name_b": "S.A.M. Inst. of Tech.",
+      "case_a": "RB/2026/0020",
+      "case_b": "PG-2026-00074",
+      "institution_permanent_id": "SYN-100036",
+      "canonical_name": "Dr. Kirti Nilgiri Institute of Information Technology",
+      "name_a": "Kirtinilgiri Institute of Information Technology",
+      "name_b": "D.K.N. Institute of Information Technology",
       "variations": {
         "a": [
-          "merge",
-          "abbrev"
+          "honorific",
+          "merge"
+        ],
+        "b": [
+          "initials"
+        ]
+      }
+    },
+    {
+      "pair_id": "P032",
+      "tier": "hard",
+      "case_a": "RB/2026/0173",
+      "case_b": "CRO/2026/003",
+      "institution_permanent_id": "SYN-100072",
+      "canonical_name": "Surya Siddhi Engineering College",
+      "name_a": "Suryasiddhi Engg Coll",
+      "name_b": "S.S. Engg. Coll.",
+      "variations": {
+        "a": [
+          "abbrev",
+          "merge"
         ],
         "b": [
           "initials",
@@ -354,37 +373,17 @@
       }
     },
     {
-      "pair_id": "P032",
-      "tier": "hard",
-      "case_a": "RB/2026/0139",
-      "case_b": "SERO/2026/010",
-      "institution_permanent_id": "SYN-100142",
-      "canonical_name": "Sri Shanti Himgiri Institute of Engineering and Technology",
-      "name_a": "S.S.H. Institute of Engineering and Technology",
-      "name_b": "Sri Shnti Himgiri Inst. of Engg. & Tech.",
-      "variations": {
-        "a": [
-          "initials"
-        ],
-        "b": [
-          "typo",
-          "abbrev"
-        ]
-      }
-    },
-    {
       "pair_id": "P033",
       "tier": "hard",
-      "case_a": "PG-2026-00136",
-      "case_b": "SWRO/2026/008",
-      "institution_permanent_id": "SYN-100094",
-      "canonical_name": "Shri Rohini Ojas Institute of Engineering and Technology",
-      "name_a": "Sri Rohiniojas Institute of Engineering and Technology",
-      "name_b": "S.R.O. Inst. of Engg. & Tech.",
+      "case_a": "PG-2026-00166",
+      "case_b": "NRO/2026/008",
+      "institution_permanent_id": "SYN-100100",
+      "canonical_name": "Vindhya Lakshmi Memorial College of Engineering",
+      "name_a": "Vindhya Laakshmi Memorial College of Engineering",
+      "name_b": "V.L. Meml. Coll. of Engg.",
       "variations": {
         "a": [
-          "merge",
-          "honorific"
+          "typo"
         ],
         "b": [
           "initials",
@@ -395,16 +394,53 @@
     {
       "pair_id": "P034",
       "tier": "hard",
-      "case_a": "PG-2026-00179",
-      "case_b": "RB/2026/0193",
-      "institution_permanent_id": "SYN-100093",
-      "canonical_name": "Amrit Vindhya Memorial College of Engineering",
-      "name_a": "Sri Amrit Veendhya Memorial College of Engineering",
-      "name_b": "A.V. Meml. Coll. of Engg.",
+      "case_a": "PG-2026-00159",
+      "case_b": "RB/2026/0113",
+      "institution_permanent_id": "SYN-100143",
+      "canonical_name": "Smt. Tejas Vidyadhar School of Management",
+      "name_a": "S.T.V. School of Management",
+      "name_b": "Shrimati Tejas Vidyadhar Sch of Mgmt",
       "variations": {
         "a": [
-          "typo",
+          "initials"
+        ],
+        "b": [
+          "abbrev",
           "honorific"
+        ]
+      }
+    },
+    {
+      "pair_id": "P035",
+      "tier": "hard",
+      "case_a": "WRO/2026/015",
+      "case_b": "RB/2026/0041",
+      "institution_permanent_id": "SYN-100053",
+      "canonical_name": "Vidyadhar Rohini College of Engineering",
+      "name_a": "Sri Vidyadhar Rohini Coll of Engg",
+      "name_b": "V.R. College of Engineering",
+      "variations": {
+        "a": [
+          "abbrev",
+          "honorific"
+        ],
+        "b": [
+          "initials"
+        ]
+      }
+    },
+    {
+      "pair_id": "P036",
+      "tier": "hard",
+      "case_a": "SWRO/2026/012",
+      "case_b": "PG-2026-00162",
+      "institution_permanent_id": "SYN-100112",
+      "canonical_name": "Shri Godavari Narmada Institute of Technology and Management",
+      "name_a": "Shri Gdavari Narmada Institute of Technology and Management",
+      "name_b": "S.G.N. Inst. of Tech. & Mgmt.",
+      "variations": {
+        "a": [
+          "typo"
         ],
         "b": [
           "initials",
@@ -413,35 +449,37 @@
       }
     },
     {
-      "pair_id": "P035",
+      "pair_id": "P037",
       "tier": "hard",
-      "case_a": "NRO/2026/009",
-      "case_b": "RB/2026/0131",
-      "institution_permanent_id": "SYN-100080",
-      "canonical_name": "Sri Vasundhara Himgiri Institute of Information Technology",
-      "name_a": "S.V.H. Institute of Information Technology",
-      "name_b": "Sri Vasundhara Himgiri Inst. of Info. Tech.",
+      "case_a": "RB/2026/0089",
+      "case_b": "PG-2026-00141",
+      "institution_permanent_id": "SYN-100150",
+      "canonical_name": "Shri Saraswati Bhaskara Institute of Information Technology",
+      "name_a": "Shri Saraswatibhaskara Inst. of Info. Tech.",
+      "name_b": "S.S.B. Institute of Information Technology",
       "variations": {
         "a": [
-          "initials"
+          "merge",
+          "abbrev"
         ],
         "b": [
-          "abbrev"
+          "initials"
         ]
       }
     },
     {
-      "pair_id": "P036",
+      "pair_id": "P038",
       "tier": "hard",
-      "case_a": "SRO/2026/008",
-      "case_b": "PG-2026-00159",
-      "institution_permanent_id": "SYN-100130",
-      "canonical_name": "Kamala Tejas School of Management",
-      "name_a": "K.T. School of Management",
-      "name_b": "Kemala Tejas School of Management",
+      "case_a": "RB/2026/0152",
+      "case_b": "NRO/2026/028",
+      "institution_permanent_id": "SYN-100115",
+      "canonical_name": "Ojas Anand Institute of Engineering and Technology",
+      "name_a": "O.A. Inst. of Engg. & Tech.",
+      "name_b": "Ojas Anannd Institute of Engineering and Technology",
       "variations": {
         "a": [
-          "initials"
+          "initials",
+          "abbrev"
         ],
         "b": [
           "typo"
@@ -449,55 +487,16 @@
       }
     },
     {
-      "pair_id": "P037",
-      "tier": "hard",
-      "case_a": "RB/2026/0179",
-      "case_b": "PG-2026-00184",
-      "institution_permanent_id": "SYN-100032",
-      "canonical_name": "Akshara Kaveri Institute of Technology and Management",
-      "name_a": "Sri Akshara Kaveri Institute of Technology and Management",
-      "name_b": "A.K. Inst of Tech & Mgmt",
-      "variations": {
-        "a": [
-          "honorific"
-        ],
-        "b": [
-          "initials",
-          "abbrev"
-        ]
-      }
-    },
-    {
-      "pair_id": "P038",
-      "tier": "hard",
-      "case_a": "RB/2026/0185",
-      "case_b": "SWRO/2026/012",
-      "institution_permanent_id": "SYN-100039",
-      "canonical_name": "Kamala Narayana Memorial College of Engineering",
-      "name_a": "Kamalanarayana Memorial College of Engineering",
-      "name_b": "K.N. Meml Coll of Engg",
-      "variations": {
-        "a": [
-          "merge"
-        ],
-        "b": [
-          "initials",
-          "abbrev"
-        ]
-      }
-    },
-    {
       "pair_id": "P039",
       "tier": "hard",
-      "case_a": "PG-2026-00175",
-      "case_b": "ERO/2026/012",
-      "institution_permanent_id": "SYN-100111",
-      "canonical_name": "Siddhi Ramana Institute of Technology",
-      "name_a": "Siddhiremana Institute of Technology",
-      "name_b": "S.R. Inst. of Tech.",
+      "case_a": "PG-2026-00174",
+      "case_b": "WRO/2026/017",
+      "institution_permanent_id": "SYN-100006",
+      "canonical_name": "Prerana Shanti Business School",
+      "name_a": "Preranashanti Business School",
+      "name_b": "P.S. Bus Sch",
       "variations": {
         "a": [
-          "typo",
           "merge"
         ],
         "b": [
@@ -509,161 +508,30 @@
     {
       "pair_id": "P040",
       "tier": "hard",
-      "case_a": "PG-2026-00139",
-      "case_b": "RB/2026/0163",
-      "institution_permanent_id": "SYN-100020",
-      "canonical_name": "Shri Ojas Kirti School of Management",
-      "name_a": "Shri Ojsa Kirti School of Management",
-      "name_b": "S.O.K. School of Management",
+      "case_a": "PG-2026-00149",
+      "case_b": "RB/2026/0100",
+      "institution_permanent_id": "SYN-100133",
+      "canonical_name": "Smt. Akshara Malwa School of Management",
+      "name_a": "S.A.M. School of Management",
+      "name_b": "Shrimati Akshara Malwa School of Management",
       "variations": {
         "a": [
-          "typo"
+          "initials"
         ],
         "b": [
-          "initials"
+          "honorific"
         ]
       }
     },
     {
       "pair_id": "P041",
       "tier": "hard",
-      "case_a": "SERO/2026/013",
-      "case_b": "RB/2026/0182",
-      "institution_permanent_id": "SYN-100072",
-      "canonical_name": "Shri Tapti Kaveri Engineering College",
-      "name_a": "Shri Taptikaveri Engineering College",
-      "name_b": "S.T.K. Engg. Coll.",
-      "variations": {
-        "a": [
-          "merge"
-        ],
-        "b": [
-          "initials",
-          "abbrev"
-        ]
-      }
-    },
-    {
-      "pair_id": "P042",
-      "tier": "hard",
-      "case_a": "ERO/2026/008",
-      "case_b": "PG-2026-00130",
-      "institution_permanent_id": "SYN-100148",
-      "canonical_name": "Sri Nilgiri Kesar Business School",
-      "name_a": "S.N.K. Bus. Sch.",
-      "name_b": "Sri Nilgiri Ksear Business School",
-      "variations": {
-        "a": [
-          "initials",
-          "abbrev"
-        ],
-        "b": [
-          "typo"
-        ]
-      }
-    },
-    {
-      "pair_id": "P043",
-      "tier": "hard",
-      "case_a": "RB/2026/0176",
-      "case_b": "PG-2026-00183",
-      "institution_permanent_id": "SYN-100003",
-      "canonical_name": "Smt. Anand Mahima Engineering College",
-      "name_a": "Shrimati Anand Mahima Engineering College",
-      "name_b": "S.A.M. Engineering College",
-      "variations": {
-        "a": [
-          "honorific"
-        ],
-        "b": [
-          "initials"
-        ]
-      }
-    },
-    {
-      "pair_id": "P044",
-      "tier": "hard",
-      "case_a": "RB/2026/0184",
-      "case_b": "ERO/2026/013",
-      "institution_permanent_id": "SYN-100138",
-      "canonical_name": "Kaveri Devika Business School",
-      "name_a": "K.D. Business School",
-      "name_b": "Kaveridevika Bus. Sch.",
-      "variations": {
-        "a": [
-          "initials"
-        ],
-        "b": [
-          "merge",
-          "abbrev"
-        ]
-      }
-    },
-    {
-      "pair_id": "P045",
-      "tier": "hard",
-      "case_a": "PG-2026-00161",
-      "case_b": "SERO/2026/017",
-      "institution_permanent_id": "SYN-100027",
-      "canonical_name": "Shri Bhaskara Megha School of Management",
-      "name_a": "Shri Bhaskara Meghe Sch. of Mgmt.",
-      "name_b": "S.B.M. School of Management",
-      "variations": {
-        "a": [
-          "abbrev",
-          "typo"
-        ],
-        "b": [
-          "initials"
-        ]
-      }
-    },
-    {
-      "pair_id": "P046",
-      "tier": "hard",
-      "case_a": "PG-2026-00177",
-      "case_b": "RB/2026/0190",
-      "institution_permanent_id": "SYN-100125",
-      "canonical_name": "Sri Vidyadhar Sumati Business School",
-      "name_a": "S.V.S. Business School",
-      "name_b": "Sri Vidyadharsuamti Business School",
-      "variations": {
-        "a": [
-          "initials"
-        ],
-        "b": [
-          "merge",
-          "typo"
-        ]
-      }
-    },
-    {
-      "pair_id": "P047",
-      "tier": "hard",
-      "case_a": "NWRO/2026/014",
-      "case_b": "RB/2026/0191",
-      "institution_permanent_id": "SYN-100045",
-      "canonical_name": "Smt. Prerana Padmavati Business School",
-      "name_a": "S.P.P. Business School",
-      "name_b": "Smt. Preranapadmavati Business School",
-      "variations": {
-        "a": [
-          "initials"
-        ],
-        "b": [
-          "merge"
-        ]
-      }
-    },
-    {
-      "pair_id": "P048",
-      "tier": "hard",
-      "case_a": "WRO/2026/017",
-      "case_b": "PG-2026-00182",
-      "institution_permanent_id": "SYN-100078",
-      "canonical_name": "Shri Amrit Nilgiri Institute of Management Studies",
-      "name_a": "Shri Amrit Nigiri Inst. of Mgmt. Studs.",
-      "name_b": "S.A.N. Institute of Management Studies",
+      "case_a": "NWRO/2026/010",
+      "case_b": "RB/2026/0120",
+      "institution_permanent_id": "SYN-100117",
+      "canonical_name": "Sri Sumati Prerana Institute of Technology and Management",
+      "name_a": "Sri Sumatee Prerana Inst of Tech & Mgmt",
+      "name_b": "S.S.P. Institute of Technology and Management",
       "variations": {
         "a": [
           "typo",
@@ -675,37 +543,170 @@
       }
     },
     {
-      "pair_id": "P049",
+      "pair_id": "P042",
       "tier": "hard",
-      "case_a": "RB/2026/0183",
+      "case_a": "NRO/2026/024",
+      "case_b": "PG-2026-00104",
+      "institution_permanent_id": "SYN-100149",
+      "canonical_name": "Narmada Prerana Institute of Technology and Management",
+      "name_a": "Nermada Prerana Institute of Technology and Management",
+      "name_b": "N.P. Institute of Technology and Management",
+      "variations": {
+        "a": [
+          "typo"
+        ],
+        "b": [
+          "initials"
+        ]
+      }
+    },
+    {
+      "pair_id": "P043",
+      "tier": "hard",
+      "case_a": "RB/2026/0174",
       "case_b": "PG-2026-00176",
-      "institution_permanent_id": "SYN-100092",
-      "canonical_name": "Sri Shanti Narayana Business School",
-      "name_a": "S.S.N. Business School",
-      "name_b": "Sri Shantinarayana Bus Sch",
+      "institution_permanent_id": "SYN-100059",
+      "canonical_name": "Megha Ojas Institute of Technology and Management",
+      "name_a": "M.O. Institute of Technology and Management",
+      "name_b": "Megha Ojas Inst of Tech & Mgmt",
       "variations": {
         "a": [
           "initials"
         ],
         "b": [
-          "abbrev",
+          "abbrev"
+        ]
+      }
+    },
+    {
+      "pair_id": "P044",
+      "tier": "hard",
+      "case_a": "RB/2026/0012",
+      "case_b": "NRO/2026/033",
+      "institution_permanent_id": "SYN-100021",
+      "canonical_name": "Kirti Devika School of Management",
+      "name_a": "K.D. Sch. of Mgmt.",
+      "name_b": "Kriti Devika School of Management",
+      "variations": {
+        "a": [
+          "initials",
+          "abbrev"
+        ],
+        "b": [
+          "typo"
+        ]
+      }
+    },
+    {
+      "pair_id": "P045",
+      "tier": "hard",
+      "case_a": "PG-2026-00144",
+      "case_b": "WRO/2026/018",
+      "institution_permanent_id": "SYN-100010",
+      "canonical_name": "Narayana Gyandeep Institute of Technology and Management",
+      "name_a": "Narayanagyadneep Institute of Technology and Management",
+      "name_b": "N.G. Inst of Tech & Mgmt",
+      "variations": {
+        "a": [
+          "typo",
           "merge"
+        ],
+        "b": [
+          "initials",
+          "abbrev"
+        ]
+      }
+    },
+    {
+      "pair_id": "P046",
+      "tier": "hard",
+      "case_a": "PG-2026-00143",
+      "case_b": "RB/2026/0099",
+      "institution_permanent_id": "SYN-100109",
+      "canonical_name": "Nilgiri Sumati Memorial College of Engineering",
+      "name_a": "Sri Nilgiri Sumai Memorial College of Engineering",
+      "name_b": "N.S. Memorial College of Engineering",
+      "variations": {
+        "a": [
+          "honorific",
+          "typo"
+        ],
+        "b": [
+          "initials"
+        ]
+      }
+    },
+    {
+      "pair_id": "P047",
+      "tier": "hard",
+      "case_a": "WRO/2026/020",
+      "case_b": "RB/2026/0095",
+      "institution_permanent_id": "SYN-100110",
+      "canonical_name": "Dr. Ojas Anand Memorial College of Engineering",
+      "name_a": "Dr. Ojjas Anand Meml Coll of Engg",
+      "name_b": "D.O.A. Memorial College of Engineering",
+      "variations": {
+        "a": [
+          "typo",
+          "abbrev"
+        ],
+        "b": [
+          "initials"
+        ]
+      }
+    },
+    {
+      "pair_id": "P048",
+      "tier": "hard",
+      "case_a": "SRO/2026/003",
+      "case_b": "PG-2026-00158",
+      "institution_permanent_id": "SYN-100080",
+      "canonical_name": "Shri Akshara Saraswati Institute of Engineering and Technology",
+      "name_a": "Shri Aksharaaraswati Institute of Engineering and Technology",
+      "name_b": "S.A.S. Inst of Engg & Tech",
+      "variations": {
+        "a": [
+          "merge",
+          "typo"
+        ],
+        "b": [
+          "initials",
+          "abbrev"
+        ]
+      }
+    },
+    {
+      "pair_id": "P049",
+      "tier": "hard",
+      "case_a": "RB/2026/0025",
+      "case_b": "PG-2026-00178",
+      "institution_permanent_id": "SYN-100067",
+      "canonical_name": "Shri Lakshmi Kaveri Memorial College of Engineering",
+      "name_a": "S.L.K. Meml. Coll. of Engg.",
+      "name_b": "Shri Lakshhmi Kaveri Meml. Coll. of Engg.",
+      "variations": {
+        "a": [
+          "initials",
+          "abbrev"
+        ],
+        "b": [
+          "typo",
+          "abbrev"
         ]
       }
     },
     {
       "pair_id": "P050",
       "tier": "hard",
-      "case_a": "RB/2026/0172",
-      "case_b": "SERO/2026/011",
-      "institution_permanent_id": "SYN-100054",
-      "canonical_name": "Mahima Lakshmi Memorial College of Engineering",
-      "name_a": "Sri Mahimalakshmi Memorial College of Engineering",
-      "name_b": "M.L. Memorial College of Engineering",
+      "case_a": "RB/2026/0057",
+      "case_b": "ERO/2026/004",
+      "institution_permanent_id": "SYN-100003",
+      "canonical_name": "Dr. Mahima Amrit Engineering College",
+      "name_a": "Dr. Mahia Amrit Engineering College",
+      "name_b": "D.M.A. Engineering College",
       "variations": {
         "a": [
-          "honorific",
-          "merge"
+          "typo"
         ],
         "b": [
           "initials"
@@ -717,224 +718,224 @@
     {
       "pair_id": "D001",
       "variant": "same_name",
-      "case_a": "PG-2026-00165",
-      "case_b": "CRO/2026/010",
-      "institution_a": "SYN-100046",
+      "case_a": "PG-2026-00090",
+      "case_b": "ERO/2026/017",
+      "institution_a": "SYN-100047",
       "institution_b": "SYN-100089",
-      "name_a": "Dr. Sumati Amrit Institute of Management Studies",
-      "name_b": "Dr. Sumati Amrit Institute of Management Studies",
-      "district_a": "Amravan",
-      "district_b": "Malwagarh"
+      "name_a": "Shri Surya Nilgiri Memorial College of Engineering",
+      "name_b": "Shri Surya Nilgiri Memorial College of Engineering",
+      "district_a": "Sitapuri",
+      "district_b": "Kansaiganj"
     },
     {
       "pair_id": "D002",
       "variant": "different_kind",
-      "case_a": "PG-2026-00163",
-      "case_b": "RB/2026/0189",
-      "institution_a": "SYN-100149",
-      "institution_b": "SYN-100074",
-      "name_a": "Malwa Sahyadri School of Management",
-      "name_b": "Malwa Sahyadri Institute of Engineering and Technology",
-      "district_a": "Sharavathinagar",
-      "district_b": "Subarnagram"
+      "case_a": "PG-2026-00114",
+      "case_b": "RB/2026/0142",
+      "institution_a": "SYN-100088",
+      "institution_b": "SYN-100135",
+      "name_a": "Kamala Devika Institute of Technology and Management",
+      "name_b": "Kamala Devika College of Engineering",
+      "district_a": "Amravan",
+      "district_b": "Tungapura"
     },
     {
       "pair_id": "D003",
       "variant": "extra_root",
-      "case_a": "SRO/2026/011",
-      "case_b": "RB/2026/0166",
-      "institution_a": "SYN-100097",
-      "institution_b": "SYN-100071",
-      "name_a": "Smt. Tapti Saraswati Institute of Technology",
-      "name_b": "Smt. Tapti Saraswati Bhaskara Institute of Technology",
-      "district_a": "Palarkottai",
-      "district_b": "Vaigaipuram"
+      "case_a": "WRO/2026/003",
+      "case_b": "RB/2026/0148",
+      "institution_a": "SYN-100052",
+      "institution_b": "SYN-100061",
+      "name_a": "Sumati Ojas Institute of Management Studies",
+      "name_b": "Sumati Ojas Kaveri Institute of Management Studies",
+      "district_a": "Konkanvadi",
+      "district_b": "Subarnagram"
     },
     {
       "pair_id": "D004",
       "variant": "honorific",
-      "case_a": "SERO/2026/016",
-      "case_b": "PG-2026-00168",
-      "institution_a": "SYN-100029",
-      "institution_b": "SYN-100036",
-      "name_a": "Sri Vindhya Pragati Institute of Engineering and Technology",
-      "name_b": "Vindhya Pragati Institute of Engineering and Technology",
-      "district_a": "Godavaripet",
-      "district_b": "Sitapuri"
-    },
-    {
-      "pair_id": "D005",
-      "variant": "same_name",
-      "case_a": "RB/2026/0136",
-      "case_b": "PG-2026-00124",
-      "institution_a": "SYN-100088",
-      "institution_b": "SYN-100017",
-      "name_a": "Shri Bhaskara Chandra Institute of Technology",
-      "name_b": "Shri Bhaskara Chandra Institute of Technology",
-      "district_a": "Sharavathinagar",
-      "district_b": "Malnadahalli"
-    },
-    {
-      "pair_id": "D006",
-      "variant": "different_kind",
-      "case_a": "RB/2026/0162",
-      "case_b": "NRO/2026/014",
-      "institution_a": "SYN-100006",
-      "institution_b": "SYN-100005",
-      "name_a": "Saraswati Tapti Institute of Technology and Management",
-      "name_b": "Saraswati Tapti Institute of Management Studies",
-      "district_a": "Kesarganj",
-      "district_b": "Sitapuri"
-    },
-    {
-      "pair_id": "D007",
-      "variant": "extra_root",
-      "case_a": "PG-2026-00157",
-      "case_b": "CRO/2026/009",
-      "institution_a": "SYN-100037",
-      "institution_b": "SYN-100135",
-      "name_a": "Shri Ramana Saraswati Institute of Management Studies",
-      "name_b": "Shri Ramana Saraswati Nilgiri Institute of Management Studies",
+      "case_a": "CRO/2026/006",
+      "case_b": "PG-2026-00122",
+      "institution_a": "SYN-100098",
+      "institution_b": "SYN-100076",
+      "name_a": "Kirti Himgiri Business School",
+      "name_b": "Sri Kirti Himgiri Business School",
       "district_a": "Rewapur",
       "district_b": "Malwagarh"
     },
     {
+      "pair_id": "D005",
+      "variant": "same_name",
+      "case_a": "RB/2026/0156",
+      "case_b": "PG-2026-00152",
+      "institution_a": "SYN-100118",
+      "institution_b": "SYN-100056",
+      "name_a": "Narayana Saraswati College of Engineering",
+      "name_b": "Narayana Saraswati College of Engineering",
+      "district_a": "Mahimgaon",
+      "district_b": "Konkanvadi"
+    },
+    {
+      "pair_id": "D006",
+      "variant": "different_kind",
+      "case_a": "RB/2026/0042",
+      "case_b": "SERO/2026/016",
+      "institution_a": "SYN-100101",
+      "institution_b": "SYN-100136",
+      "name_a": "Megha Mahima College of Engineering",
+      "name_b": "Megha Mahima Institute of Technology and Management",
+      "district_a": "Krishnapalli",
+      "district_b": "Nallamalapuram"
+    },
+    {
+      "pair_id": "D007",
+      "variant": "extra_root",
+      "case_a": "PG-2026-00126",
+      "case_b": "SERO/2026/017",
+      "institution_a": "SYN-100093",
+      "institution_b": "SYN-100120",
+      "name_a": "Narayana Nilgiri Institute of Management Studies",
+      "name_b": "Narayana Nilgiri Shanti Institute of Management Studies",
+      "district_a": "Betwapur",
+      "district_b": "Krishnapalli"
+    },
+    {
       "pair_id": "D008",
       "variant": "honorific",
-      "case_a": "PG-2026-00150",
-      "case_b": "RB/2026/0146",
-      "institution_a": "SYN-100018",
-      "institution_b": "SYN-100145",
-      "name_a": "Udaya Narmada Institute of Technology and Management",
-      "name_b": "Sri Udaya Narmada Institute of Technology and Management",
-      "district_a": "Sileruvaram",
-      "district_b": "Nallamalapuram"
+      "case_a": "PG-2026-00140",
+      "case_b": "RB/2026/0077",
+      "institution_a": "SYN-100077",
+      "institution_b": "SYN-100083",
+      "name_a": "Dr. Narayana Nilgiri College of Engineering",
+      "name_b": "Narayana Nilgiri College of Engineering",
+      "district_a": "Teestapara",
+      "district_b": "Kansaiganj"
     },
     {
       "pair_id": "D009",
       "variant": "same_name",
-      "case_a": "NRO/2026/012",
-      "case_b": "RB/2026/0178",
-      "institution_a": "SYN-100127",
-      "institution_b": "SYN-100038",
-      "name_a": "Dr. Chandra Mahima Institute of Engineering and Technology",
-      "name_b": "Dr. Chandra Mahima Institute of Engineering and Technology",
-      "district_a": "Amravan",
-      "district_b": "Sharavathinagar"
+      "case_a": "WRO/2026/005",
+      "case_b": "RB/2026/0164",
+      "institution_a": "SYN-100019",
+      "institution_b": "SYN-100008",
+      "name_a": "Shri Bhaskara Chandra Institute of Engineering and Technology",
+      "name_b": "Shri Bhaskara Chandra Institute of Engineering and Technology",
+      "district_a": "Sahyadripur",
+      "district_b": "Konkanvadi"
     },
     {
       "pair_id": "D010",
       "variant": "different_kind",
-      "case_a": "CRO/2026/006",
-      "case_b": "PG-2026-00158",
-      "institution_a": "SYN-100123",
-      "institution_b": "SYN-100015",
-      "name_a": "Dr. Tejas Sumati Memorial College of Engineering",
-      "name_b": "Dr. Tejas Sumati Engineering College",
-      "district_a": "Betwapur",
-      "district_b": "Konkanvadi"
+      "case_a": "NRO/2026/007",
+      "case_b": "PG-2026-00153",
+      "institution_a": "SYN-100037",
+      "institution_b": "SYN-100022",
+      "name_a": "Dr. Tapti Bhaskara Institute of Information Technology",
+      "name_b": "Dr. Tapti Bhaskara Business School",
+      "district_a": "Sitapuri",
+      "district_b": "Subarnagram"
     },
     {
       "pair_id": "D011",
       "variant": "extra_root",
-      "case_a": "RB/2026/0160",
-      "case_b": "PG-2026-00147",
-      "institution_a": "SYN-100105",
-      "institution_b": "SYN-100058",
-      "name_a": "Sri Ojas Devika Engineering College",
-      "name_b": "Sri Ojas Devika Vindhya Engineering College",
-      "district_a": "Kansaiganj",
-      "district_b": "Teestapara"
+      "case_a": "RB/2026/0161",
+      "case_b": "PG-2026-00021",
+      "institution_a": "SYN-100127",
+      "institution_b": "SYN-100038",
+      "name_a": "Dr. Rohini Narmada Institute of Management Studies",
+      "name_b": "Dr. Rohini Narmada Malwa Institute of Management Studies",
+      "district_a": "Dhauladhar",
+      "district_b": "Tungapura"
     },
     {
       "pair_id": "D012",
       "variant": "honorific",
-      "case_a": "RB/2026/0135",
-      "case_b": "WRO/2026/015",
-      "institution_a": "SYN-100077",
-      "institution_b": "SYN-100033",
-      "name_a": "Dr. Bhaskara Mahima Institute of Information Technology",
-      "name_b": "Bhaskara Mahima Institute of Information Technology",
-      "district_a": "Amravan",
-      "district_b": "Sahyadripur"
+      "case_a": "RB/2026/0137",
+      "case_b": "NRO/2026/017",
+      "institution_a": "SYN-100094",
+      "institution_b": "SYN-100111",
+      "name_a": "Sri Godavari Sahyadri Institute of Management Studies",
+      "name_b": "Godavari Sahyadri Institute of Management Studies",
+      "district_a": "Damodarpur",
+      "district_b": "Amravan"
     },
     {
       "pair_id": "D013",
       "variant": "same_name",
-      "case_a": "PG-2026-00152",
-      "case_b": "NRO/2026/008",
-      "institution_a": "SYN-100013",
-      "institution_b": "SYN-100132",
-      "name_a": "Aravali Gyandeep School of Management",
-      "name_b": "Aravali Gyandeep School of Management",
-      "district_a": "Teestapara",
-      "district_b": "Sitapuri"
+      "case_a": "PG-2026-00136",
+      "case_b": "WRO/2026/001",
+      "institution_a": "SYN-100141",
+      "institution_b": "SYN-100050",
+      "name_a": "Dr. Lakshmi Himgiri Institute of Technology",
+      "name_b": "Dr. Lakshmi Himgiri Institute of Technology",
+      "district_a": "Sitapuri",
+      "district_b": "Sagarwadi"
     },
     {
       "pair_id": "D014",
       "variant": "different_kind",
-      "case_a": "PG-2026-00172",
-      "case_b": "RB/2026/0194",
-      "institution_a": "SYN-100140",
-      "institution_b": "SYN-100124",
-      "name_a": "Sri Tapti Kesar Institute of Technology and Management",
-      "name_b": "Sri Tapti Kesar Engineering College",
-      "district_a": "Sileruvaram",
-      "district_b": "Godavaripet"
+      "case_a": "PG-2026-00170",
+      "case_b": "RB/2025/0001",
+      "institution_a": "SYN-100033",
+      "institution_b": "SYN-100004",
+      "name_a": "Godavari Vidyadhar Institute of Technology and Management",
+      "name_b": "Godavari Vidyadhar Institute of Management Studies",
+      "district_a": "Sagarwadi",
+      "district_b": "Konkanvadi"
     },
     {
       "pair_id": "D015",
       "variant": "extra_root",
-      "case_a": "ERO/2026/009",
-      "case_b": "RB/2026/0159",
-      "institution_a": "SYN-100047",
-      "institution_b": "SYN-100098",
-      "name_a": "Dr. Mahima Amrit Engineering College",
-      "name_b": "Dr. Mahima Amrit Siddhi Engineering College",
-      "district_a": "Kansaiganj",
-      "district_b": "Godavaripet"
+      "case_a": "NRO/2026/035",
+      "case_b": "RB/2026/0130",
+      "institution_a": "SYN-100025",
+      "institution_b": "SYN-100128",
+      "name_a": "Rohini Kesar Engineering College",
+      "name_b": "Rohini Kesar Ramana Engineering College",
+      "district_a": "Kesarganj",
+      "district_b": "Sitapuri"
     }
   ],
   "sla_breach_planted": [
     "CRO/2026/001",
-    "ERO/2026/002",
-    "ERO/2026/003",
-    "NRO/2026/002",
-    "NWRO/2026/002",
-    "PG-2025-00002",
-    "PG-2026-00001",
+    "ERO/2026/011",
+    "NRO/2026/001",
+    "NRO/2026/003",
+    "NRO/2026/005",
+    "NRO/2026/006",
+    "NRO/2026/011",
+    "PG-2025-00010",
     "PG-2026-00002",
-    "PG-2026-00004",
-    "PG-2026-00005",
-    "PG-2026-00006",
+    "PG-2026-00003",
     "PG-2026-00007",
-    "PG-2026-00010",
-    "PG-2026-00011",
-    "PG-2026-00012",
-    "PG-2026-00020",
-    "PG-2026-00030",
-    "PG-2026-00033",
-    "PG-2026-00052",
-    "PG-2026-00054",
-    "PG-2026-00058",
-    "PG-2026-00059",
-    "PG-2026-00072",
+    "PG-2026-00008",
+    "PG-2026-00022",
+    "PG-2026-00024",
+    "PG-2026-00025",
+    "PG-2026-00032",
+    "PG-2026-00038",
+    "PG-2026-00049",
+    "PG-2026-00056",
+    "RB/2025/0005",
     "RB/2026/0003",
     "RB/2026/0005",
-    "RB/2026/0009",
-    "RB/2026/0013",
-    "RB/2026/0015",
+    "RB/2026/0010",
+    "RB/2026/0017",
     "RB/2026/0019",
-    "RB/2026/0030",
-    "RB/2026/0037",
-    "RB/2026/0042",
-    "RB/2026/0050",
-    "RB/2026/0066",
-    "RB/2026/0069",
+    "RB/2026/0021",
+    "RB/2026/0028",
+    "RB/2026/0029",
+    "RB/2026/0031",
+    "RB/2026/0054",
+    "RB/2026/0056",
+    "RB/2026/0059",
     "RB/2026/0070",
-    "SERO/2026/001",
     "SERO/2026/003",
-    "WRO/2026/001",
-    "WRO/2026/004"
+    "SERO/2026/005",
+    "SERO/2026/009",
+    "SERO/2026/010",
+    "SERO/2026/011",
+    "WRO/2026/002",
+    "WRO/2026/007"
   ]
 }
