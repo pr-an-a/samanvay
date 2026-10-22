@@ -33,7 +33,10 @@ HONORIFICS = {"sri": "sri", "shri": "sri", "smt": "smt", "shrimati": "smt", "dr"
 TYPE_WORDS = {"institute", "college", "school", "engineering", "technology", "information",
               "management", "studies", "business", "memorial"}
 FILLER_WORDS = {"of", "and", "the"}
-STREET_ABBREVIATIONS = {"rd": "road", "st": "street"}
+# Common Indian address abbreviations; "national highway 96" / "nh96" -> "nh 96".
+STREET_ABBREVIATIONS = {"rd": "road", "st": "street", "str": "street", "strt": "street", "stn": "station",
+                        "mkt": "market", "clg": "college", "coll": "college", "marg": "road", "ngr": "nagar"}
+NUMBER_SEGMENT_RE = re.compile(r"^(?:(plot|door|survey|h)\b\D*)?(?:no\.?\s*)?(\d+[a-z]?)$")
 INITIALS_RE = re.compile(r"^(?:[a-z]\.){2,}[a-z]?\.?$")  # "s.a.m." / "s.a.m"
 PINCODE_RE = re.compile(r"\b(\d{6})\b")
 
@@ -76,22 +79,28 @@ def parse_name(raw: str) -> tuple[str | None, list[str], str | None, frozenset[s
     return honorific, core, initials, frozenset(types)
 
 
+def normalize_street(text: str) -> str:
+    text = re.sub(r"national\s+highway", "nh", text)
+    text = re.sub(r"\b([a-z]+)-?(\d+)\b", r"\1 \2", text)  # nh-96 / nh96 -> nh 96
+    return " ".join(STREET_ABBREVIATIONS.get(t, t) for t in re.findall(r"[a-z0-9]+", text))
+
+
 def parse_address(raw: str | None) -> tuple[str | None, str | None, str | None, frozenset[str]]:
+    """Split an address by the role of each comma segment (door/plot no., street, locality), not by position."""
     if not raw:
         return None, None, None, frozenset()
     text = raw.lower()
     pin = PINCODE_RE.search(text)
     text = PINCODE_RE.sub(" ", text)
-    tokens = [STREET_ABBREVIATIONS.get(t, t) for t in re.findall(r"[a-z0-9]+", text)]
+    tokens = frozenset(normalize_street(text).split())
     segments = [s for s in (seg.strip(" -") for seg in text.split(",")) if s]
-    number = street = None
-    if segments:
-        m = re.search(r"(plot|door|survey)?\D*?(\d+)", segments[0])
-        if m:
-            number = f"{m.group(1) or ''} {m.group(2)}".strip()
-    if len(segments) > 1:
-        street = " ".join(STREET_ABBREVIATIONS.get(t, t) for t in re.findall(r"[a-z0-9]+", segments[1]))
-    return number, street, pin.group(1) if pin else None, frozenset(tokens)
+    number = None
+    if segments and (m := NUMBER_SEGMENT_RE.match(segments[0])):
+        number = m.group(2)
+        segments = segments[1:]
+    # The last segment is the locality/district; anything between number and locality is the street.
+    street = normalize_street(" ".join(segments[:-1])) if len(segments) > 1 else None
+    return number, street or None, pin.group(1) if pin else None, tokens
 
 
 def profile(case: Case) -> Profile:
@@ -131,6 +140,8 @@ def initials_match(p: Profile, q: Profile) -> float | None:
     hon_letter = full.honorific[0] if full.honorific else ""
     if letters in (hon_letter + core_letters, core_letters):
         return 1.0
+    if letters[0] in "sd" and letters[1:] == core_letters:
+        return 1.0  # honorific (Sri/Smt/Dr) written in the initials but dropped from the full name
     # Merged words ("Aravalimahima"): initials appear in order inside the joined name.
     joined = "".join(full.core)
     candidates = [letters] + ([letters[1:]] if letters[0] in "sd" else [])
@@ -153,14 +164,21 @@ def honorific_match(p: Profile, q: Profile) -> float | None:
     return 1.0 if p.honorific == q.honorific else 0.0
 
 
+def same_street(a: str, b: str) -> bool:
+    # Spacing-insensitive fuzzy compare: "hill view road" == "hillview road", "nh 96 bypass road" ~ "nh 96 bypass".
+    ratio = SequenceMatcher(None, a.replace(" ", ""), b.replace(" ", "")).ratio()
+    return ratio >= CONFIG["street_match_ratio"]
+
+
 def address_similarity(p: Profile, q: Profile) -> float | None:
+    if not p.case.raw_address or not q.case.raw_address:
+        return None  # missing on one side: not evidence either way
     w = CONFIG["address_weights"]
-    parts = {
-        "number": (p.addr_number, q.addr_number),
-        "street": (p.street, q.street),
-        "pincode": (p.pincode, q.pincode),
-    }
-    scored = [(w[k], 1.0 if a == b else 0.0) for k, (a, b) in parts.items() if a and b]
+    scored = [(w[k], 1.0 if same(a, b) else 0.0) for k, a, b, same in (
+        ("number", p.addr_number, q.addr_number, str.__eq__),
+        ("street", p.street, q.street, same_street),
+        ("pincode", p.pincode, q.pincode, str.__eq__),
+    ) if a and b]
     if scored:
         return sum(wt * s for wt, s in scored) / sum(wt for wt, _ in scored)
     return jaccard(p.addr_tokens, q.addr_tokens)
@@ -213,6 +231,10 @@ def score_pair(p: Profile, q: Profile, text: TextIndex) -> dict | None:
     weights = CONFIG["weights"]
     avail = {k: v for k, v in signals.items() if v is not None}
     entity = sum(weights[k] * v for k, v in avail.items()) / sum(weights[k] for k in avail) if avail else 0.0
+    if signals["type"] is not None and signals["type"] < 1:
+        # A different kind of institution (e.g. engineering college vs business school next door) is
+        # strong evidence of a different institution, more than its share of the weighted mean.
+        entity *= 1 - CONFIG["type_mismatch_penalty"] * (1 - signals["type"])
     final = 1.0 if id_match else entity
 
     text_sim = text.similarity(a, b)

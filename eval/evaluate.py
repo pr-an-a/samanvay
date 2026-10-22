@@ -4,6 +4,9 @@ Run from backend/ after `python -m app.seed`:
     python ../eval/evaluate.py              # tune threshold on tune half, report test half
     python ../eval/evaluate.py --save       # also write the tuned threshold to matcher_config.json
     python ../eval/evaluate.py --show P031 D004
+    python ../eval/evaluate.py --fixed                # no tuning: use the config threshold
+    python ../eval/evaluate.py --half tune            # print details for the tune half (for diagnosis)
+    SAMANVAY_DB=sqlite:///./unseen43.db python ../eval/evaluate.py --truth ../eval/ground_truth_seed43.json --fixed --all
 
 Split: planted overlaps (stratified by tier) and decoys are split into tune/test halves by a hash
 of their pair_id; every other candidate pair (background negatives) by a hash of its case IDs.
@@ -122,9 +125,13 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--save", action="store_true", help="write tuned threshold to matcher_config.json")
     ap.add_argument("--show", nargs="*", default=[], help="print full score breakdowns for these pair_ids")
+    ap.add_argument("--fixed", action="store_true", help="skip tuning; use link_threshold from the config")
+    ap.add_argument("--half", choices=["test", "tune"], default="test", help="which half to report in detail")
+    ap.add_argument("--all", action="store_true", help="report on all pairs (for unseen data; implies --fixed)")
+    ap.add_argument("--truth", type=Path, default=ROOT / "eval" / "ground_truth.json")
     args = ap.parse_args()
 
-    gt = json.loads((ROOT / "eval" / "ground_truth.json").read_text())
+    gt = json.loads(args.truth.read_text())
     with SessionLocal() as db:
         all_cases = list(db.scalars(select(Case)))
         cases = {c.case_id: c for c in all_cases}
@@ -133,14 +140,22 @@ def main() -> None:
 
         tune_rows = [r for r in rows if r["half"] == "tune"]
         test_rows = [r for r in rows if r["half"] == "test"]
-        t, plateau = tune(tune_rows)
         print(f"Candidate pairs scored: {len(scored)}  (tune half rows {len(tune_rows)}, test half rows {len(test_rows)})")
-        print(f"Tuned link_threshold on TUNE half: {t}  (best-F1 plateau {plateau[0]}-{plateau[-1]}); "
-              f"config currently {CONFIG['link_threshold']}")
+        if args.fixed or args.all:
+            t = CONFIG["link_threshold"]
+            print(f"Using config link_threshold {t} (no tuning)")
+        else:
+            t, plateau = tune(tune_rows)
+            print(f"Tuned link_threshold on TUNE half: {t}  (best-F1 plateau {plateau[0]}-{plateau[-1]}); "
+                  f"config currently {CONFIG['link_threshold']}")
         m = metrics(tune_rows, t)
         print(f"Tune half: precision {m['precision']:.3f} recall {m['recall']:.3f} F1 {m['f1']:.3f}\n")
-        print("=== TEST HALF ===")
-        report(test_rows, t)
+        if args.all:
+            print("=== ALL PAIRS ===")
+            report(rows, t)
+        else:
+            print(f"=== {args.half.upper()} HALF ===")
+            report(test_rows if args.half == "test" else tune_rows, t)
 
         for pid in args.show:
             r = next(r for r in rows if r["pair_id"] == pid)
@@ -148,7 +163,7 @@ def main() -> None:
             print(describe(r))
             print(json.dumps(r["scores"], indent=2) if r["scores"] else f"not scored: {r['note']}")
 
-    if args.save:
+    if args.save and not (args.fixed or args.all):
         cfg = json.loads(CONFIG_PATH.read_text())
         cfg["link_threshold"] = t
         CONFIG_PATH.write_text(json.dumps(cfg, indent=2) + "\n")

@@ -3,11 +3,11 @@
   "ref_date": "2026-10-20",
   "institutions": 150,
   "cases": {
-    "RB": 179,
-    "PGRC": 189,
-    "REGIONAL": 132
+    "RB": 165,
+    "PGRC": 211,
+    "REGIONAL": 124
   },
   "total_cases": 500,
   "overlaps": 50,
-  "decoys": 15
+  "decoys": 25
 }

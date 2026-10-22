@@ -3,7 +3,9 @@
     "All matcher thresholds and weights live here.",
     "weights: tier-2 entity signals, combined as a weighted mean over the signals available for a pair (missing = not counted, never penalised).",
     "link_threshold is tuned on the tune half only: python ../eval/evaluate.py --save",
-    "issue weights/threshold only label a link as same/different issue; they never affect final_confidence."
+    "issue weights/threshold only label a link as same/different issue; they never affect final_confidence.",
+    "type_mismatch_penalty: entity score is multiplied by 1 - penalty * (1 - type_match).",
+    "street_match_ratio: streets count as the same when their spacing-insensitive similarity reaches this."
   ],
   "link_threshold": 0.78,
   "weights": {
@@ -19,6 +21,8 @@
     "street": 0.35,
     "pincode": 0.2
   },
+  "street_match_ratio": 0.8,
+  "type_mismatch_penalty": 0.5,
   "initials_partial_score": 0.75,
   "issue": {
     "text_weight": 0.5,

@@ -33,10 +33,19 @@ Writes a 150-institution registry and ~500 complaints split across three differe
 | `data/sources/regional_cases.csv` | Terse column names, RO/category/status codes, `dd-Mon-yyyy`, abbreviated names |
 
 `eval/ground_truth.json` lists 50 planted cross-bureau overlaps (15 easy: shared ID; 15 medium:
-no ID, clean name; 20 hard: no ID, misspelled/abbreviated/initialed name) and 15 decoy pairs
-(similar names, different institutions and districts — must not be linked). The overlap list is
+no ID, clean name; 20 hard: no ID, misspelled/abbreviated/initialed name) and 25 decoy pairs that
+must NOT be linked, all in the same region as their partner so the matcher really scores them:
+15 similar-name institutions in another district, and 10 neighbouring campuses sharing a street
+and pincode. Half the true pairs have address differences (street wording, missing door/plot
+number, pincode on one side only); 5 hard pairs have no address on one side. The overlap list is
 exhaustive: background institutions only receive complaints from one bureau, which the generator
 asserts. 40 cases are planted as old and unresolved so they breach SLA.
+
+A second dataset for unseen-data evaluation (never used for tuning):
+
+```bash
+python3 data/generate.py --seed 43 --out data/sources_seed43 --truth eval/ground_truth_seed43.json
+```
 
 ## Backend
 
@@ -73,14 +82,22 @@ Every link stores a per-signal score breakdown and human-readable reasons. All w
 thresholds are in `app/matcher_config.json`. `match_case(db, case)` matches a single new case.
 
 ```bash
-python ../eval/evaluate.py            # tune threshold on tune half, report precision/recall/F1 on test half
-python ../eval/evaluate.py --show P031 D005   # full score breakdown for given pairs
+python ../eval/evaluate.py                  # tune threshold on tune half, report test half
+python ../eval/evaluate.py --save           # ...and write the tuned threshold to the config
+python ../eval/evaluate.py --fixed          # no tuning, use the config threshold
+python ../eval/evaluate.py --half tune      # print error details for the tune half (diagnose here, not on test)
+python ../eval/evaluate.py --show P031 D005 # full score breakdown for given pairs
+
+# unseen data (seed 43), separate DB, no retuning:
+SAMANVAY_DB=sqlite:///./unseen43.db python -m app.seed --data-dir ../data/sources_seed43
+SAMANVAY_DB=sqlite:///./unseen43.db python ../eval/evaluate.py --truth ../eval/ground_truth_seed43.json --all
 ```
 
-On the synthetic test half the matcher scores precision, recall and F1 of 1.0. Treat that as an
-upper bound: the generator keeps the door/plot number and street identical across a true pair,
-and the matcher was written knowing which name variations the generator makes. Without the
-address signal, tune-half precision drops to 0.90.
+Current results (threshold 0.78): precision, recall and F1 of 1.0 on the seed-42 test half and on
+the unseen seed-43 dataset. The lowest-scoring true match is 0.875 and the highest-scoring
+non-match 0.671. Read these as an upper bound. Seed 43 comes from the same generator, so it has
+new samples but no new *kinds* of variation, and the matcher was written knowing which
+variations the generator produces. Real data will score lower.
 
 ### Demo login
 Auth is demo-grade: pick a demo user, receive a bearer token. No passwords. **Not production auth.**

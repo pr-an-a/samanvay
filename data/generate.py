@@ -16,6 +16,7 @@ institution. Background institutions receive complaints from a single bureau, an
 institutions get no background cases. This is asserted at the end of generation.
 """
 
+import argparse
 import csv
 import json
 import random
@@ -35,7 +36,8 @@ GROUND_TRUTH = ROOT / "eval" / "ground_truth.json"
 N_INSTITUTIONS = 150
 N_CASES = 500
 TIERS = {"easy": 15, "medium": 15, "hard": 20}
-N_DECOYS = 15
+N_DECOYS = 15             # similar names, different district
+N_NEIGHBOUR_DECOYS = 10   # neighbouring campuses: same street and pincode
 N_SLA_BREACH = 40
 
 rng = random.Random(SEED)
@@ -75,6 +77,17 @@ ABBREV = {
 }
 STREETS = ["Station Road", "Lakeview Road", "Temple Street", "College Road", "Ring Road",
            "Market Street", "Canal Road", "Hill View Road"]
+# How different clerks write the same street.
+STREET_VARIANTS = {
+    "Station Road": ["Stn Road", "Stn Rd", "Station Rd."],
+    "Lakeview Road": ["Lake View Road", "Lakeview Rd", "Lake View Rd"],
+    "Temple Street": ["Temple St.", "Temple Str", "Temple Strt"],
+    "College Road": ["Clg Road", "College Rd", "Coll. Road"],
+    "Ring Road": ["Ring Rd.", "Ring Rd"],
+    "Market Street": ["Mkt Street", "Mkt St", "Market St."],
+    "Canal Road": ["Canal Rd.", "Canal Rd"],
+    "Hill View Road": ["Hillview Road", "Hill View Rd", "Hillview Rd"],
+}
 
 BUREAUS = ["RB", "PGRC", "REGIONAL"]
 CATEGORIES = ["fee_refund", "faculty_shortage", "infrastructure", "admission_irregularity",
@@ -177,13 +190,20 @@ def render(hon: str, roots: list[str], kind: str) -> str:
     return " ".join(p for p in [hon, *roots, kind] if p)
 
 
-def make_address(district: str) -> str:
-    prefix = rng.choice(["Plot No.", "Survey No.", "Door No."])
-    street = rng.choice(STREETS + [f"NH-{rng.randint(10, 99)} Bypass"])
-    return f"{prefix} {rng.randint(1, 450)}, {street}, {district} - {rng.randint(100000, 999999)}"
+def make_address(district: str, street: str | None = None, pin: int | None = None) -> dict:
+    return {"prefix": rng.choice(["Plot No.", "Survey No.", "Door No."]), "number": rng.randint(1, 450),
+            "street": street or rng.choice(STREETS + [f"NH-{rng.randint(10, 99)} Bypass"]),
+            "district": district, "pin": pin or rng.randint(100000, 999999)}
 
 
-def new_institution(region=None, district=None, hon=None, roots=None, kind=None, allow_dup=False) -> dict:
+def render_address(addr: dict, street: str | None = None, number: bool = True, pin: bool = True) -> str:
+    parts = [f"{addr['prefix']} {addr['number']}"] if number else []
+    parts += [street or addr["street"], addr["district"] + (f" - {addr['pin']}" if pin else "")]
+    return ", ".join(parts)
+
+
+def new_institution(region=None, district=None, hon=None, roots=None, kind=None, allow_dup=False,
+                    addr=None) -> dict:
     region = region or rng.choice(list(REGIONS))
     district = district or rng.choice(REGIONS[region][1])
     while True:
@@ -197,8 +217,9 @@ def new_institution(region=None, district=None, hon=None, roots=None, kind=None,
         if hon is not None and roots and kind:
             raise ValueError(f"duplicate fixed name {name}")
     used_names.add(name)
+    addr = addr or make_address(district)
     inst = {"permanent_id": None, "hon": h, "roots": list(r), "kind": k, "name": name,
-            "address": make_address(district), "district": district, "region": region}
+            "addr": addr, "address": render_address(addr), "district": district, "region": region}
     institutions.append(inst)
     return inst
 
@@ -246,11 +267,19 @@ def vary(inst: dict, ops: list[str]) -> str:
     return render(hon, roots, kind)
 
 
-def vary_address(address: str) -> str:
-    out = address.replace("Road", "Rd").replace("Street", "St").replace("No. ", "")
-    if rng.random() < 0.5:
-        out = out.rsplit(" - ", 1)[0]
-    return out
+def street_variant(street: str) -> str:
+    if street.startswith("NH-"):
+        num = street[3:].split()[0]
+        return rng.choice([f"NH{num} Bypass", f"NH {num} Bypass Road", f"National Highway {num} Bypass"])
+    return rng.choice(STREET_VARIANTS[street])
+
+
+def vary_address(addr: dict) -> tuple[str, list[str]]:
+    """Realistic variation for one side of a true pair: street wording, missing door/plot no., no pincode."""
+    ops = rng.sample(["street_wording", "no_number", "pincode_one_side"], rng.choice([1, 1, 2]))
+    text = render_address(addr, street=street_variant(addr["street"]) if "street_wording" in ops else None,
+                          number="no_number" not in ops, pin="pincode_one_side" not in ops)
+    return text, ops
 
 
 def default_name(inst: dict, bureau: str) -> str:
@@ -296,7 +325,7 @@ def make_case(inst, bureau, *, age, status, category=None, has_pid=True, name=No
     case = {
         "bureau": bureau, "inst": inst, "has_pid": has_pid,
         "name": name or default_name(inst, bureau),
-        "address": address or inst["address"],
+        "address": inst["address"] if address is None else address,
         "district": inst["district"] if district else None,
         "region": inst["region"], "category": category,
         "description": describe(inst, category),
@@ -344,12 +373,18 @@ def build() -> tuple[list, list, list]:
                           ("PGRC", "RB"), ("REGIONAL", "RB"), ("REGIONAL", "PGRC")])
 
     # Planted overlaps: same institution, two different bureaus.
+    # Exact quotas: a quarter of hard pairs lack an address on one side; half of all pairs get some
+    # address difference (those plus a varied address on one side for others).
+    n_pairs, hard_start = sum(TIERS.values()), TIERS["easy"] + TIERS["medium"]
+    no_address = set(rng.sample(range(hard_start, n_pairs), TIERS["hard"] // 4))
+    varied_address = set(rng.sample([i for i in range(n_pairs) if i not in no_address], n_pairs // 2 - len(no_address)))
     overlaps = []
     for tier, n in TIERS.items():
         for _ in range(n):
+            idx = len(overlaps)
             inst = new_institution()
             (b1, b2), ((age1, st1), (age2, st2)), (cat1, cat2) = next(bureau_pairs), pair_timeline(), pair_categories()
-            info = {"tier": tier, "institution": inst, "variations": {}}
+            info = {"tier": tier, "institution": inst, "variations": {}, "address_variation": []}
             if tier == "easy":
                 kw1, kw2 = {}, {}
             elif tier == "medium":
@@ -364,20 +399,34 @@ def build() -> tuple[list, list, list]:
                 name_a, name_b = vary(inst, ops_a), vary(inst, ops_b)
                 while name_a in (name_b, inst["name"]):
                     name_a = vary(inst, ops_a + ["typo"])
-                kw1 = {"has_pid": False, "name": name_a, "address": vary_address(inst["address"])}
+                kw1 = {"has_pid": False, "name": name_a}
                 kw2 = {"has_pid": False, "name": name_b, "district": rng.random() > 0.25}
                 info["variations"] = {"a": ops_a, "b": ops_b}
+            if idx in no_address:
+                rng.choice([kw1, kw2])["address"] = ""
+                info["address_variation"] = ["address_missing_one_side"]
+            elif idx in varied_address:
+                text, info["address_variation"] = vary_address(inst["addr"])
+                rng.choice([kw1, kw2])["address"] = text
             c1 = make_case(inst, b1, age=age1, status=st1, category=cat1, **kw1)
             c2 = make_case(inst, b2, age=age2, status=st2, category=cat2, **kw2)
             overlaps.append((info, c1, c2))
 
-    # Decoys: different institutions with similar names in different districts.
+    # Decoys: different institutions, always in the same region so the matcher actually scores them.
     decoys = []
+
+    def add_decoy(a, b, variant, kind):
+        (b1, b2), ((age1, st1), (age2, st2)), (cat1, cat2) = next(bureau_pairs), pair_timeline(), pair_categories()
+        c1 = make_case(a, b1, age=age1, status=st1, category=cat1, has_pid=b1 == "RB", name=a["name"])
+        c2 = make_case(b, b2, age=age2, status=st2, category=cat2, has_pid=b2 == "RB", name=b["name"])
+        decoys.append(({"variant": variant, "kind": kind, "a": a, "b": b}, c1, c2))
+
+    # (1) Similar names in a different district of the same region.
     variants = cycle(["same_name", "different_kind", "extra_root", "honorific"])
     for _ in range(N_DECOYS):
         a = new_institution()
         variant = next(variants)
-        region = a["region"] if rng.random() < 0.5 else rng.choice([r for r in REGIONS if r != a["region"]])
+        region = a["region"]
         district = rng.choice([d for d in REGIONS[region][1] if d != a["district"]])
         hon, roots, kind = a["hon"], list(a["roots"]), a["kind"]
         if variant == "different_kind":
@@ -387,12 +436,25 @@ def build() -> tuple[list, list, list]:
         elif variant == "honorific":
             hon = "" if hon else "Sri"
         b = new_institution(region, district, hon, roots, kind, allow_dup=variant == "same_name")
-        (b1, b2), ((age1, st1), (age2, st2)), (cat1, cat2) = next(bureau_pairs), pair_timeline(), pair_categories()
-        c1 = make_case(a, b1, age=age1, status=st1, category=cat1,
-                       has_pid=b1 == "RB", name=a["name"])
-        c2 = make_case(b, b2, age=age2, status=st2, category=cat2,
-                       has_pid=b2 == "RB", name=b["name"])
-        decoys.append(({"variant": variant, "a": a, "b": b}, c1, c2))
+        add_decoy(a, b, variant, "similar_name")
+
+    # (2) Neighbouring campuses: same street, pincode and district, different institution.
+    variants = cycle(["neighbour_same_trust", "neighbour_shared_root", "neighbour_different_name"])
+    for _ in range(N_NEIGHBOUR_DECOYS):
+        a = new_institution()
+        variant = next(variants)
+        addr = dict(a["addr"], prefix=rng.choice(["Plot No.", "Survey No.", "Door No."]),
+                    number=a["addr"]["number"] + rng.randint(1, 20))
+        if variant == "neighbour_same_trust":
+            # Same founders, different kind of institution: "X Y College of Engineering" next to "X Y School of Management".
+            kinds = [k for k in KINDS if k != a["kind"] and render(a["hon"], a["roots"], k) not in used_names]
+            b = new_institution(a["region"], a["district"], a["hon"], a["roots"], rng.choice(kinds), addr=addr)
+        elif variant == "neighbour_shared_root":
+            roots = [a["roots"][0], rng.choice([r for r in ROOTS if r not in a["roots"]])]
+            b = new_institution(a["region"], a["district"], roots=roots, addr=addr)
+        else:
+            b = new_institution(a["region"], a["district"], addr=addr)
+        add_decoy(a, b, variant, "neighbour")
 
     # Background: each institution complains to exactly one "home" bureau.
     background = [new_institution() for _ in range(N_INSTITUTIONS - len(institutions))]
@@ -445,19 +507,19 @@ def pid(c: dict) -> str:
     return c["inst"]["permanent_id"] if c["has_pid"] else ""
 
 
-def write_outputs(overlaps, decoys, breaches) -> None:
-    OUT.mkdir(parents=True, exist_ok=True)
+def write_outputs(overlaps, decoys, breaches, seed: int, out: Path, truth: Path) -> None:
+    out.mkdir(parents=True, exist_ok=True)
     by_bureau = defaultdict(list)
     for c in sorted(cases, key=lambda c: c["case_id"]):
         by_bureau[c["bureau"]].append(c)
 
-    with open(OUT / "institutions.csv", "w", newline="") as f:
+    with open(out / "institutions.csv", "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["permanent_id", "name", "address", "district", "region"])
         for i in sorted(institutions, key=lambda i: i["permanent_id"]):
             w.writerow([i["permanent_id"], i["name"], i["address"], i["district"], i["region"]])
 
-    with open(OUT / "rb_cases.csv", "w", newline="") as f:
+    with open(out / "rb_cases.csv", "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["case_no", "permanent_id", "institution_name", "address", "district", "region",
                     "category", "description", "received_on", "status", "officer", "last_action",
@@ -474,18 +536,18 @@ def write_outputs(overlaps, decoys, breaches) -> None:
         grievances.append({
             "registration_no": c["case_id"],
             "aicte_id": pid(c) or (None if rng.random() < 0.8 else ""),
-            "college_name": c["name"], "college_address": c["address"],
+            "college_name": c["name"], "college_address": c["address"] or None,
             "district": c["district"], "zone": f"{c['region']} Zone",
             "grievance_type": PGRC_CATEGORY[c["category"]], "grievance_text": c["description"],
             "submitted_at": submitted.isoformat(), "current_status": PGRC_STATUS[c["status"]],
             "handled_by": c["officer"], "action_taken": c["last_action"],
             "next_step": c["next_action"] or None, "grievant_name": c["complainant"],
         })
-    with open(OUT / "pgrc_grievances.json", "w") as f:
+    with open(out / "pgrc_grievances.json", "w") as f:
         json.dump({"source": "PGRC grievance portal export", "exported_on": REF_DATE.isoformat(),
                    "grievances": grievances}, f, indent=2)
 
-    with open(OUT / "regional_cases.csv", "w", newline="") as f:
+    with open(out / "regional_cases.csv", "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["RO_REF", "INST_ID", "INST_NAME", "ADDR", "DIST", "RO", "CAT", "SUMMARY",
                     "RECD_DT", "STATUS", "DEALING_OFFR", "LAST_ACTN", "NEXT_ACTN", "CMPLT_NAME"])
@@ -497,7 +559,7 @@ def write_outputs(overlaps, decoys, breaches) -> None:
                         c["officer"], c["last_action"], c["next_action"], c["complainant"] or ""])
 
     ground_truth = {
-        "seed": SEED, "ref_date": REF_DATE.isoformat(),
+        "seed": seed, "ref_date": REF_DATE.isoformat(),
         "note": ("overlaps are exhaustive: every cross-bureau pair of cases about the same institution "
                  "is listed. decoys are pairs that must NOT be linked."),
         "overlaps": [{
@@ -506,9 +568,10 @@ def write_outputs(overlaps, decoys, breaches) -> None:
             "institution_permanent_id": info["institution"]["permanent_id"],
             "canonical_name": info["institution"]["name"],
             "name_a": c1["name"], "name_b": c2["name"], "variations": info["variations"],
+            "address_variation": info["address_variation"],
         } for n, (info, c1, c2) in enumerate(overlaps, 1)],
         "decoys": [{
-            "pair_id": f"D{n:03d}", "variant": info["variant"],
+            "pair_id": f"D{n:03d}", "kind": info["kind"], "variant": info["variant"],
             "case_a": c1["case_id"], "case_b": c2["case_id"],
             "institution_a": info["a"]["permanent_id"], "institution_b": info["b"]["permanent_id"],
             "name_a": c1["name"], "name_b": c2["name"],
@@ -516,13 +579,13 @@ def write_outputs(overlaps, decoys, breaches) -> None:
         } for n, (info, c1, c2) in enumerate(decoys, 1)],
         "sla_breach_planted": sorted(c["case_id"] for c in breaches),
     }
-    GROUND_TRUTH.parent.mkdir(parents=True, exist_ok=True)
-    GROUND_TRUTH.write_text(json.dumps(ground_truth, indent=2))
+    truth.parent.mkdir(parents=True, exist_ok=True)
+    truth.write_text(json.dumps(ground_truth, indent=2))
 
-    meta = {"seed": SEED, "ref_date": REF_DATE.isoformat(), "institutions": len(institutions),
+    meta = {"seed": seed, "ref_date": REF_DATE.isoformat(), "institutions": len(institutions),
             "cases": {b: len(by_bureau[b]) for b in BUREAUS}, "total_cases": len(cases),
             "overlaps": len(overlaps), "decoys": len(decoys)}
-    (OUT / "meta.json").write_text(json.dumps(meta, indent=2))
+    (out / "meta.json").write_text(json.dumps(meta, indent=2))
     print(json.dumps(meta))
 
 
@@ -538,7 +601,13 @@ def check_invariant(overlaps) -> None:
 
 
 if __name__ == "__main__":
+    ap = argparse.ArgumentParser(description="Generate the synthetic dataset.")
+    ap.add_argument("--seed", type=int, default=SEED)
+    ap.add_argument("--out", type=Path, default=OUT, help="directory for the source files")
+    ap.add_argument("--truth", type=Path, default=GROUND_TRUTH, help="ground truth JSON path")
+    args = ap.parse_args()
+    rng.seed(args.seed)
     overlaps, decoys, breaches = build()
     assign_ids()
     check_invariant(overlaps)
-    write_outputs(overlaps, decoys, breaches)
+    write_outputs(overlaps, decoys, breaches, args.seed, args.out, args.truth)

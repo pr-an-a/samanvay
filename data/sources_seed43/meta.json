@@ -1,0 +1,13 @@
+{
+  "seed": 43,
+  "ref_date": "2026-10-20",
+  "institutions": 150,
+  "cases": {
+    "RB": 177,
+    "PGRC": 182,
+    "REGIONAL": 141
+  },
+  "total_cases": 500,
+  "overlaps": 50,
+  "decoys": 25
+}
