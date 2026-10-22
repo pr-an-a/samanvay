@@ -68,6 +68,8 @@ export function daysAgo(isoDate) {
   return `${n} days ago`;
 }
 
+export const SLA_NOTE = "Time limits are demo settings, not official AICTE timelines.";
+
 export function isOverdue(c) {
   if (c.status === "disposed" || !c.expected_disposal_date) return false;
   return new Date(`${c.expected_disposal_date}T23:59:59`) < new Date();
@@ -86,4 +88,13 @@ export function plainAction(text) {
   if (m) return m[2] === "confirmed" ? `Confirmed as the same college as case ${m[1]}` : `Marked as a different college from case ${m[1]}`;
   // Codes as words ("Transferred to RB"), but not inside case numbers like RB/2026/0150.
   return text.replace(/^Disposed:/, "Closed:").replace(/\b(RB|PGRC|REGIONAL)\b(?![/-])/g, (c) => CODE_NAMES[c]);
+}
+
+/** Open, not yet overdue, and due within `days` days. */
+export function isDueSoon(c, days = 3) {
+  if (c.status === "disposed" || !c.expected_disposal_date || isOverdue(c)) return false;
+  const due = new Date(`${c.expected_disposal_date}T00:00:00`);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return (due - today) / 86400000 <= days;
 }

@@ -2,6 +2,7 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth";
 import { ROLES } from "../labels";
 import { useTour } from "../tour";
+import AlertsBell from "./AlertsBell";
 import TourPanel from "./TourPanel";
 
 const NAV = [
@@ -11,8 +12,12 @@ const NAV = [
   ["/cases", "All cases"],
   ["/accuracy", "How accurate is matching?"],
 ];
+const ADMIN_NAV = [
+  ["/escalations", "Escalations"],
+  ["/audit", "Audit log"],
+];
 
-export const FOOTER_TEXT = "Prototype on synthetic data. Not integrated with AICTE systems. SLA values are demo settings.";
+export const FOOTER_TEXT = "Prototype on synthetic data. Not integrated with AICTE systems. SLA values are demo settings, not official AICTE timelines.";
 
 export function Footer() {
   return <footer className="px-6 py-6 text-center text-base text-muted">{FOOTER_TEXT}</footer>;
@@ -38,6 +43,7 @@ export default function Layout() {
         <div className="mx-auto flex max-w-[1360px] flex-wrap items-center justify-between gap-6 px-8 pt-5">
           <Brand />
           <div className="flex items-center gap-5">
+            <AlertsBell />
             <div className="text-right">
               <div className="font-semibold">{user?.name}</div>
               <div className="text-base text-white/75">{ROLES[user?.role] || user?.role}</div>
@@ -57,7 +63,7 @@ export default function Layout() {
         </div>
         <nav className="mx-auto max-w-[1360px] px-6">
           <ul className="flex flex-wrap gap-2 pt-3">
-            {NAV.map(([to, label]) => (
+            {[...NAV, ...(user?.role === "ADMIN" ? ADMIN_NAV : [])].map(([to, label]) => (
               <li key={to}>
                 <NavLink
                   to={to}

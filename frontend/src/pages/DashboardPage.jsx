@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Bar, BarChart, CartesianGrid, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Bureau, Button, Card, ErrorBox, LinkStatus, Loading, MatchStrength, Status } from "../components/ui";
 import { useApi } from "../hooks";
-import { BUREAUS, plainAction } from "../labels";
+import { BUREAUS, SLA_NOTE, plainAction } from "../labels";
 
 const ACCENT = "#1f5fbf";
 const AXIS = { fill: "#46505f", fontSize: 15 };
@@ -93,7 +93,7 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
         <Kpi label="Open cases" value={s.sla.open} hint="across all bureaus" onClick={() => navigate("/cases?open=true")} />
-        <Kpi label="Overdue" value={s.sla.overdue} hint="past the demo time limit" onClick={() => navigate("/cases?overdue=true")} />
+        <Kpi label="Overdue" value={s.sla.overdue} hint="past their due date" onClick={() => navigate("/cases?overdue=true")} />
         <Kpi label="Needs your check" value={s.overlaps.suggested} hint="possible same-college matches" onClick={() => navigate("/alerts")} />
         <Kpi
           label="Coordinated this month"
@@ -159,7 +159,7 @@ export default function DashboardPage() {
           </table>
         </Card>
       </div>
-      <p className="text-base text-muted">Time limits (SLA) are demo settings, not official AICTE rules.</p>
+      <p className="text-base text-muted">{SLA_NOTE}</p>
     </div>
   );
 }

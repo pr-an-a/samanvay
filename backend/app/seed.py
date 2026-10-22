@@ -3,10 +3,11 @@
 Run from backend/: python -m app.seed [--no-shift]
 Regenerate the source files first with: python ../data/generate.py
 
-SLA days are configurable demo values, not official AICTE rules.
+SLA values are demo settings, not official AICTE timelines.
 """
 
 import argparse
+from datetime import datetime, timezone
 from pathlib import Path
 
 from .db import Base, SessionLocal, engine
@@ -36,6 +37,11 @@ def run(shift_to_today: bool = True, data_dir: Path = DATA_DIR) -> None:
         db.flush()
         counts = load_all(db, data_dir, shift_to_today=shift_to_today)
         links = run_all(db)
+        # Seeded matches are existing backlog, not news: start every bell at zero. The SLA check is
+        # left to the background job or the "Run check now" button, so the demo can show it flagging cases.
+        for user in db.query(User):
+            user.alerts_seen_at = datetime.now(timezone.utc)
+        db.commit()
     print(f"Loaded {len(USERS)} users, {len(BUREAUS) * len(SLA_DAYS)} SLA rules, {counts}")
     print(f"Matcher suggested {links} overlap links (status=suggested, awaiting officer review)")
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { api, query } from "../api";
-import { Bureau, Button, ErrorBox, Loading, OverdueTag, PageTitle, Status } from "../components/ui";
+import { Bureau, Button, ErrorBox, Loading, SlaTag, PageTitle, Status } from "../components/ui";
 import { useApi } from "../hooks";
 import { BUREAUS, CATEGORIES, REGIONS, STATUSES, formatDate } from "../labels";
 
@@ -95,7 +95,7 @@ export default function CasesPage() {
           <Select label="Status" value={filters.status} onChange={(v) => set("status", v)} options={Object.entries(STATUSES)} />
           <Select label="Region" value={filters.region} onChange={(v) => set("region", v)} options={REGIONS.map((r) => [r, r])} />
           <Select label="Topic" value={filters.category} onChange={(v) => set("category", v)} options={Object.entries(CATEGORIES)} />
-          <Select label="Time limit" value={filters.overdue} onChange={(v) => set("overdue", v)} options={[["true", "Overdue"], ["false", "Not overdue"]]} />
+          <Select label="Due date" value={filters.overdue} onChange={(v) => set("overdue", v)} options={[["true", "Overdue"], ["false", "Not overdue"]]} />
           <label className="flex flex-col gap-1.5 text-base text-ink-2">
             Received from
             <input type="date" value={filters.received_from} onChange={(e) => set("received_from", e.target.value)} className={CONTROL} />
@@ -141,7 +141,7 @@ export default function CasesPage() {
                     <td className="px-4 py-3">{CATEGORIES[c.category] || c.category}</td>
                     <td className="whitespace-nowrap px-4 py-3">
                       <Status status={c.status} />
-                      <div><OverdueTag caseItem={c} /></div>
+                      <div><SlaTag caseItem={c} /></div>
                     </td>
                     <td className="tabular whitespace-nowrap px-4 py-3">{formatDate(c.received_date)}</td>
                     <td className="whitespace-nowrap px-4 py-3">{c.complainant_name || "—"}</td>

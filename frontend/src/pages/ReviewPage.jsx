@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { api } from "../api";
 import { useAuth } from "../auth";
 import Evidence from "../components/Evidence";
-import { Bureau, Button, Card, ErrorBox, Field, LinkStatus, Loading, OverdueTag, Status, TextLink } from "../components/ui";
+import { Bureau, Button, Card, ErrorBox, Field, LinkStatus, Loading, SlaTag, Status, TextLink } from "../components/ui";
 import { useApi } from "../hooks";
 import { CATEGORIES, OFFICIAL_TITLE, PLAIN_TITLE, daysAgo, formatDate, formatDateTime, plainAction } from "../labels";
 import { useTour } from "../tour";
@@ -22,7 +22,7 @@ function CaseSide({ c }) {
         <Field label="AICTE ID">{c.institution_id ? <TextLink to={`/institutions/${c.institution_id}`}>Registered: open profile</TextLink> : "Not given"}</Field>
         <Field label="Complaint about">{CATEGORIES[c.category]}</Field>
         <Field label="Status">
-          <Status status={c.status} /> <OverdueTag caseItem={c} />
+          <Status status={c.status} /> <SlaTag caseItem={c} />
         </Field>
         <div className="sm:col-span-2"><Field label="Last action">{plainAction(c.last_action)}</Field></div>
         <div className="sm:col-span-2"><Field label="Complaint">{c.description}</Field></div>

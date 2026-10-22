@@ -21,3 +21,21 @@ export function useApi(path) {
   const reload = useCallback(() => setTick((t) => t + 1), []);
   return { ...state, reload };
 }
+
+// SLA settings rarely change; fetch once per page load and share.
+let slaSettings = null;
+export function useSlaSettings() {
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    let live = true;
+    slaSettings ??= api("/sla/settings").catch((e) => {
+      slaSettings = null;
+      throw e;
+    });
+    slaSettings.then((d) => live && setData(d)).catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, []);
+  return data;
+}

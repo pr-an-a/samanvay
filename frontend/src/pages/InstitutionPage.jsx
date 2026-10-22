@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import LinkList from "../components/LinkList";
-import { Bureau, Card, ErrorBox, Loading, OverdueTag, PageTitle, Status } from "../components/ui";
+import { Bureau, Card, ErrorBox, Loading, SlaTag, PageTitle, Status } from "../components/ui";
 import { useApi } from "../hooks";
 import { BUREAUS, CATEGORIES, bureauName, formatDate, formatDateTime, plainAction } from "../labels";
 
@@ -81,7 +81,7 @@ export default function InstitutionPage() {
                   <Bureau code={c.source_bureau} className="text-base text-ink-2" />
                 </div>
                 <div className="text-base text-ink-2">
-                  {CATEGORIES[c.category]} · <Status status={c.status} /> · received {formatDate(c.received_date)} <OverdueTag caseItem={c} />
+                  {CATEGORIES[c.category]} · <Status status={c.status} /> · received {formatDate(c.received_date)} <SlaTag caseItem={c} />
                 </div>
               </li>
             ))}

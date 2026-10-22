@@ -29,3 +29,11 @@ export function RequireAuth({ children }) {
   if (!user) return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
   return children;
 }
+
+export function AdminOnly({ children }) {
+  const { user } = useAuth();
+  if (user?.role !== "ADMIN") {
+    return <p className="text-xl text-ink-2">Only administrators can see this page. Use “Switch user” to sign in as the Administrator.</p>;
+  }
+  return children;
+}

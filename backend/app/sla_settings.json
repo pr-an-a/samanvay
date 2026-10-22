@@ -1,0 +1,9 @@
+{
+  "_notes": [
+    "SLA and escalation values are demo settings, not official AICTE timelines.",
+    "Per-bureau, per-category SLA days live in the sla_rules table (seeded by app/seed.py)."
+  ],
+  "due_soon_days": 3,
+  "escalate_after_days_overdue": 14,
+  "check_interval_minutes": 5
+}

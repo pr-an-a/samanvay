@@ -3,14 +3,16 @@ import "@fontsource/inter/600.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AuthProvider, RequireAuth } from "./auth";
+import { AdminOnly, AuthProvider, RequireAuth } from "./auth";
 import Layout from "./components/Layout";
 import "./index.css";
 import AccuracyPage from "./pages/AccuracyPage";
 import AlertsPage from "./pages/AlertsPage";
+import AuditPage from "./pages/AuditPage";
 import CaseDetailPage from "./pages/CaseDetailPage";
 import CasesPage from "./pages/CasesPage";
 import DashboardPage from "./pages/DashboardPage";
+import EscalationsPage from "./pages/EscalationsPage";
 import InstitutionPage from "./pages/InstitutionPage";
 import LoginPage from "./pages/LoginPage";
 import NewComplaintPage from "./pages/NewComplaintPage";
@@ -39,6 +41,8 @@ createRoot(document.getElementById("root")).render(
               <Route path="links/:id" element={<ReviewPage />} />
               <Route path="new" element={<NewComplaintPage />} />
               <Route path="accuracy" element={<AccuracyPage />} />
+              <Route path="escalations" element={<AdminOnly><EscalationsPage /></AdminOnly>} />
+              <Route path="audit" element={<AdminOnly><AuditPage /></AdminOnly>} />
               <Route path="*" element={<p className="text-xl">This page does not exist.</p>} />
             </Route>
           </Routes>

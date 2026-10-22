@@ -9,7 +9,8 @@ from sqlalchemy.orm import Session
 
 from .ingest.common import REGION_BY_CODE
 from .ingest.loader import DEFAULT_SLA_DAYS
-from .models import Bureau, Case, CaseEvent, CaseStatus, Institution, Role, SLARule, User
+from . import audit
+from .models import AuditAction, Bureau, Case, CaseEvent, CaseStatus, Institution, Role, SLARule, User
 
 OVERLAP_ALERT_TITLE = "Potential Overlapping Cases – Coordination Required"
 CODE_BY_REGION = {region: code for code, region in REGION_BY_CODE.items()}
@@ -116,5 +117,7 @@ def create_case(db: Session, body, user: User) -> Case:
     db.add(case)
     db.flush()
     db.add(CaseEvent(case_id=case.id, actor=user.name, bureau=bureau, action="Complaint registered"))
+    audit.record(db, user, AuditAction.complaint_registered,
+                 f"Registered a new complaint about {case.raw_institution_name}", case.case_id, case_pk=case.id)
     db.flush()  # the caller commits, together with any overlap links
     return case

@@ -93,6 +93,21 @@ bureaus share one timeline. Reseed (`python -m app.seed`) to run it again from s
 
 Rebuild the accuracy page data after matcher changes: `python ../eval/build_results.py` (from `backend/`).
 
+### Time limits, alerts, escalation and audit
+- **Time-limit (SLA) check:** a background job runs every few minutes (APScheduler) and marks
+  open cases *Due soon* (due within 3 days) or *Overdue*. Each case raises one alert per change.
+  "Run check now" in the alerts bell does the same on demand. Due dates are recomputed from the
+  `sla_rules` table, so changing a rule takes effect on the next check.
+- **Alerts bell:** due-soon and overdue cases, plus new "needs your check" matches for the
+  signed-in officer's bureau (all bureaus for Admin). The count shows only new alerts; opening
+  the bell clears it. Seeding starts every bell at zero and leaves the first check to the job or button.
+- **Escalations** (Admin only): open cases overdue by more than 14 days. Change the threshold on the
+  page. Escalating sets the status to escalated and records a case event and an audit entry.
+- **Audit log** (Admin only, read-only): every new complaint, confirm, reject and escalation, with
+  who, what, when and the note. Filter by action and date. There are no update or delete endpoints.
+- Settings are in `app/sla_settings.json`: due-soon days, escalation threshold, check interval.
+  **All time limits are demo settings, not official AICTE timelines.**
+
 ### Overlap matcher
 `app/matcher.py` suggests links between cases from different bureaus (at least one open),
 blocked by region. Dates are never used.

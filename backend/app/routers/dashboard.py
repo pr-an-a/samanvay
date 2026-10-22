@@ -51,7 +51,7 @@ def stats(db: Session = Depends(get_db)) -> dict:
                             for b in Bureau],
         "ageing_open": {name: ageing.get(name, 0) for name, _, _ in AGEING_BUCKETS},
         "sla": {"open": len(open_cases), "overdue": len(overdue), "within_sla": len(open_cases) - len(overdue),
-                "note": "SLA days are configurable demo values, not official AICTE rules."},
+                "note": "SLA values are demo settings, not official AICTE timelines."},
         "overlaps": {s.value: links.get(s.value, 0) for s in LinkStatus},
         "coordinated_this_month": coordinated,
         "by_region": [{"region": r, **v} for r, v in sorted(by_region.items())],

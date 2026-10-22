@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { BUREAUS, LINK_STATUS, STATUSES, isOverdue, percent } from "../labels";
+import { useSlaSettings } from "../hooks";
+import { BUREAUS, LINK_STATUS, STATUSES, isDueSoon, isOverdue, percent } from "../labels";
 
 export function PageTitle({ children, sub, actions }) {
   return (
@@ -45,9 +46,12 @@ export function Status({ status }) {
   return <span className="whitespace-nowrap text-ink-2">{STATUSES[status] || status}</span>;
 }
 
-export function OverdueTag({ caseItem }) {
-  if (!isOverdue(caseItem)) return null;
-  return <span className="whitespace-nowrap font-semibold text-late">Overdue</span>;
+/** "Overdue" or "Due soon" against the demo time limits (not official AICTE timelines). */
+export function SlaTag({ caseItem }) {
+  const settings = useSlaSettings();
+  if (isOverdue(caseItem)) return <span className="whitespace-nowrap font-semibold text-late">Overdue</span>;
+  if (isDueSoon(caseItem, settings?.due_soon_days ?? 3)) return <span className="whitespace-nowrap font-semibold text-amber">Due soon</span>;
+  return null;
 }
 
 export function LinkStatus({ status }) {

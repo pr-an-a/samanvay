@@ -5,6 +5,7 @@ from pathlib import Path
 # Point the app at a throwaway database before anything imports app.db.
 _tmp = tempfile.mkdtemp(prefix="samanvay-test-")
 os.environ["SAMANVAY_DB"] = f"sqlite:///{_tmp}/test.db"
+os.environ["SAMANVAY_SCHEDULER"] = "0"  # tests run the SLA check explicitly
 
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402

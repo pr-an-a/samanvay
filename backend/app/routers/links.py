@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session
 
 from ..auth import OFFICER_ROLES, get_current_user, require_roles
 from ..db import get_db
-from ..models import CaseEvent, CaseLink, LinkStatus, User, utcnow
+from .. import audit
+from ..models import AuditAction, CaseEvent, CaseLink, LinkStatus, User, utcnow
 from ..privacy import link_out
 from ..schemas import CaseLinkOut, LinkReviewIn
 
@@ -48,6 +49,13 @@ def review(db: Session, link_id: int, user: User, new_status: LinkStatus, remark
             action=f"Overlap with {other.case_id} {new_status.value}",
             remarks=remarks,
         ))
+    pair = f"{link.case_a.case_id}, {link.case_b.case_id}"
+    if new_status == LinkStatus.confirmed:
+        audit.record(db, user, AuditAction.link_confirmed, f"Confirmed {pair} as the same college", pair,
+                     link_id=link.id, remarks=remarks)
+    else:
+        audit.record(db, user, AuditAction.link_rejected, f"Marked {pair} as different colleges", pair,
+                     link_id=link.id, remarks=remarks)
     db.commit()
     db.refresh(link)
     return link

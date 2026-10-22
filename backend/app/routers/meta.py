@@ -17,5 +17,5 @@ def health():
 
 @router.get("/sla-rules", response_model=list[SLARuleOut], dependencies=[Depends(get_current_user)])
 def list_sla_rules(db: Session = Depends(get_db)):
-    """Demo SLA values only — not official AICTE rules."""
+    """SLA values are demo settings, not official AICTE timelines."""
     return db.scalars(select(SLARule).order_by(SLARule.bureau, SLARule.category)).all()

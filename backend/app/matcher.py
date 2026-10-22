@@ -21,6 +21,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from .audit import notify_link
 from .models import Case, CaseLink, CaseStatus
 
 CONFIG_PATH = Path(__file__).with_name("matcher_config.json")
@@ -335,6 +336,7 @@ def _suggest(db: Session, a: Case, b: Case, scores: dict, existing: set) -> Case
         return None  # never re-suggest a pair an officer already reviewed
     link = CaseLink(case_a_id=key[0], case_b_id=key[1], scores=scores)
     db.add(link)
+    notify_link(db, link)
     existing.add(key)
     return link
 

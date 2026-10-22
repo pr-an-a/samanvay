@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import LinkList from "../components/LinkList";
-import { Bureau, Card, ErrorBox, Field, Loading, OverdueTag, PageTitle, Status, TextLink } from "../components/ui";
+import { Bureau, Card, ErrorBox, Field, Loading, SlaTag, PageTitle, Status, TextLink } from "../components/ui";
 import { useApi } from "../hooks";
 import { CATEGORIES, formatDate, formatDateTime, plainAction } from "../labels";
 
@@ -29,10 +29,10 @@ export default function CaseDetailPage() {
             </Field>
             <Field label="Topic">{CATEGORIES[c.category] || c.category}</Field>
             <Field label="Status">
-              <Status status={c.status} /> <OverdueTag caseItem={c} />
+              <Status status={c.status} /> <SlaTag caseItem={c} />
             </Field>
             <Field label="Received">{formatDate(c.received_date)}</Field>
-            <Field label="Expected to close by (demo time limit)">{formatDate(c.expected_disposal_date)}</Field>
+            <Field label="Due date (demo setting, not an official AICTE timeline)">{formatDate(c.expected_disposal_date)}</Field>
             <Field label="Officer">{c.assigned_officer}</Field>
             <Field label="Last action">{plainAction(c.last_action)}</Field>
             <Field label="Next step">{plainAction(c.next_action)}</Field>
