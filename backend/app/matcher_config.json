@@ -1,0 +1,28 @@
+{
+  "_notes": [
+    "All matcher thresholds and weights live here.",
+    "weights: tier-2 entity signals, combined as a weighted mean over the signals available for a pair (missing = not counted, never penalised).",
+    "link_threshold is tuned on the tune half only: python ../eval/evaluate.py --save",
+    "issue weights/threshold only label a link as same/different issue; they never affect final_confidence."
+  ],
+  "link_threshold": 0.78,
+  "weights": {
+    "name": 0.35,
+    "address": 0.25,
+    "type": 0.15,
+    "district": 0.15,
+    "honorific": 0.05,
+    "region": 0.05
+  },
+  "address_weights": {
+    "number": 0.45,
+    "street": 0.35,
+    "pincode": 0.2
+  },
+  "initials_partial_score": 0.75,
+  "issue": {
+    "text_weight": 0.5,
+    "category_weight": 0.5,
+    "same_issue_threshold": 0.6
+  }
+}

@@ -57,6 +57,31 @@ the SLA picture stable whatever day you demo.
 If dependency wheels fail to install on your Python version, create the venv with
 `python3.12 -m venv .venv` instead.
 
+### Overlap matcher
+`app/matcher.py` suggests links between cases from different bureaus (at least one open),
+blocked by region. Dates are never used.
+
+1. **Permanent ID**: same ID means same institution; different IDs are never linked.
+2. **Entity resolution** when an ID is missing: normalised name (abbreviations expanded, merged
+   words handled), initials vs name words, institution type, honorific, address (door/plot no.,
+   street, pincode), district and region. Weighted mean over the signals that are present;
+   missing fields are not penalised.
+3. **Issue similarity** (TF-IDF on descriptions + category) labels a suggested link
+   "same issue" / "different issue". It never decides whether two cases are the same institution.
+
+Every link stores a per-signal score breakdown and human-readable reasons. All weights and
+thresholds are in `app/matcher_config.json`. `match_case(db, case)` matches a single new case.
+
+```bash
+python ../eval/evaluate.py            # tune threshold on tune half, report precision/recall/F1 on test half
+python ../eval/evaluate.py --show P031 D005   # full score breakdown for given pairs
+```
+
+On the synthetic test half the matcher scores precision, recall and F1 of 1.0. Treat that as an
+upper bound: the generator keeps the door/plot number and street identical across a true pair,
+and the matcher was written knowing which name variations the generator makes. Without the
+address signal, tune-half precision drops to 0.90.
+
 ### Demo login
 Auth is demo-grade: pick a demo user, receive a bearer token. No passwords. **Not production auth.**
 

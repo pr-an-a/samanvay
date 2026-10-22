@@ -10,6 +10,7 @@ import argparse
 
 from .db import Base, SessionLocal, engine
 from .ingest.loader import load_all
+from .matcher import run_all
 from .models import SLARule, User
 
 # Demo SLA days per category, applied to every bureau (edit per bureau in the sla_rules table).
@@ -33,7 +34,9 @@ def run(shift_to_today: bool = True) -> None:
         db.add_all(SLARule(bureau=b, category=c, days=d) for b in BUREAUS for c, d in SLA_DAYS.items())
         db.flush()
         counts = load_all(db, shift_to_today=shift_to_today)
+        links = run_all(db)
     print(f"Loaded {len(USERS)} users, {len(BUREAUS) * len(SLA_DAYS)} SLA rules, {counts}")
+    print(f"Matcher suggested {links} overlap links (status=suggested, awaiting officer review)")
 
 
 if __name__ == "__main__":

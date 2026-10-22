@@ -25,6 +25,11 @@ that an officer confirms or rejects.
 - `/data` — `generate.py` (fixed seed, stdlib only) writes `data/sources/` (registry + 3 bureau exports).
 - `/eval` — `ground_truth.json` (planted overlaps by tier + decoys); matcher evaluation.
 
+Matcher: `app/matcher.py` (3 tiers: ID / entity resolution / issue similarity), all weights and
+thresholds in `app/matcher_config.json`. Tune `link_threshold` only on the tune half via
+`eval/evaluate.py --save`; never adjust weights by looking at test-half results. Never use dates
+as a matching signal. Tier 3 (issue) must not influence `final_confidence`.
+
 Ingestion adapters normalise fields but keep institution name/address verbatim; reconciling
 names is the matcher's job. Ground truth overlaps are exhaustive (background institutions get
 complaints from one bureau only); keep that invariant if you change the generator.
