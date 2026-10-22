@@ -301,7 +301,7 @@ def reasons(p: Profile, q: Profile, s: dict) -> list[str]:
     else:
         out.append(f"District {'matches' if s['district_match'] else 'differs'} ({a.district} / {b.district})")
     out.append(f"Issue: category {'matches' if s['category_match'] else 'differs'} "
-               f"({a.category} / {b.category}), description similarity {s['text_similarity']:.2f}"
+               f"({a.category.replace('_', ' ')} / {b.category.replace('_', ' ')}), description similarity {s['text_similarity']:.2f}"
                + (f" -> {s['issue_label']}" if s["issue_label"] else " (no link suggested, so no issue label)"))
     return out
 

@@ -14,7 +14,7 @@ institution, with a score breakdown, for an officer to confirm or reject.
 | Folder | Purpose |
 |---|---|
 | `backend/` | FastAPI + SQLite (SQLAlchemy) API |
-| `frontend/` | React (Vite) + Tailwind + Recharts dashboard — *coming next* |
+| `frontend/` | React (Vite) + Tailwind + Recharts dashboard |
 | `data/` | Synthetic data generator (`generate.py`) and its output (`sources/`) |
 | `eval/` | `ground_truth.json` (planted overlaps + decoys); matcher evaluation — *coming next* |
 
@@ -65,6 +65,31 @@ the SLA picture stable whatever day you demo.
 
 If dependency wheels fail to install on your Python version, create the venv with
 `python3.12 -m venv .venv` instead.
+
+## Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev          # http://localhost:5173  (needs the backend on :8000; /api is proxied to it)
+```
+
+Use `npm run dev` or `./node_modules/.bin/vite`, not a bare `npx vite`. If the project's Vite
+isn't installed, `npx` fetches a different major version that ignores `vite.config.js`, so the
+`/api` proxy stops working.
+
+Screens: login (demo roles), dashboard (KPI cards link to filtered cases), cases (search,
+filters, CSV export), case detail, institution profile (unified cross-bureau timeline), overlap
+review (side-by-side cases, score bars, reasons, confirm/reject with remarks), new complaint
+(with "Load demo complaint"), and matcher accuracy (from `eval/results.json`).
+
+**Demo walk-through:** sign in as *PGRC officer*, go to **New complaint**, click **Load demo
+complaint**, then **Save**. The "Potential Overlapping Cases – Coordination Required" banner shows
+RB/2026/0150 with its last action and the evidence. **Open overlap review**, add a remark and
+**Confirm**. The institution profile then shows both bureaus' cases on one timeline. Reseed
+(`python -m app.seed`) to run the demo again from scratch.
+
+Rebuild the accuracy page data after matcher changes: `python ../eval/build_results.py` (from `backend/`).
 
 ### Overlap matcher
 `app/matcher.py` suggests links between cases from different bureaus (at least one open),

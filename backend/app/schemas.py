@@ -106,6 +106,7 @@ class CaseLinkOut(ORM):
     scores: dict
     status: str
     reviewed_by: int | None
+    reviewer_name: str | None = None
     reviewed_at: datetime | None
     created_at: datetime
 

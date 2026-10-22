@@ -121,6 +121,27 @@ def report(rows: list[dict], t: float) -> None:
         print(f"  {r['pair_id'] or '-'} [{r['label']}] conf={r['conf']:.3f}\n    {describe(r)}\n    {key_scores(r['scores'])}")
 
 
+def summarize(rows: list[dict], t: float) -> dict:
+    """Machine-readable version of report(), for the frontend's accuracy page."""
+    m = metrics(rows, t)
+    ds = [r for r in rows if r["label"] == "decoy"]
+    bg = [r for r in rows if r["label"] == "background"]
+    brief = lambda r: {"pair_id": r["pair_id"], "label": r["label"], "confidence": round(r["conf"], 3),  # noqa: E731
+                       "case_a": r["a"].case_id, "case_b": r["b"].case_id,
+                       "name_a": r["a"].raw_institution_name, "name_b": r["b"].raw_institution_name}
+    return {
+        "threshold": t,
+        "precision": round(m["precision"], 3), "recall": round(m["recall"], 3), "f1": round(m["f1"], 3),
+        "tp": m["tp"], "fp": m["fp"], "fn": m["fn"],
+        "tiers": {tier: {"found": sum(r["conf"] >= t for r in rows if r["label"] == tier),
+                         "total": sum(r["label"] == tier for r in rows)} for tier in TIERS},
+        "decoys": {"rejected": sum(r["conf"] < t for r in ds), "total": len(ds)},
+        "background": {"pairs": len(bg), "false_positives": sum(r["conf"] >= t for r in bg)},
+        "misses": [brief(r) for r in rows if r["positive"] and r["conf"] < t],
+        "false_positives": [brief(r) for r in rows if not r["positive"] and r["conf"] >= t],
+    }
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--save", action="store_true", help="write tuned threshold to matcher_config.json")
@@ -129,6 +150,7 @@ def main() -> None:
     ap.add_argument("--half", choices=["test", "tune"], default="test", help="which half to report in detail")
     ap.add_argument("--all", action="store_true", help="report on all pairs (for unseen data; implies --fixed)")
     ap.add_argument("--truth", type=Path, default=ROOT / "eval" / "ground_truth.json")
+    ap.add_argument("--json-out", type=Path, help="also write the reported half's summary as JSON")
     args = ap.parse_args()
 
     gt = json.loads(args.truth.read_text())
@@ -150,12 +172,11 @@ def main() -> None:
                   f"config currently {CONFIG['link_threshold']}")
         m = metrics(tune_rows, t)
         print(f"Tune half: precision {m['precision']:.3f} recall {m['recall']:.3f} F1 {m['f1']:.3f}\n")
-        if args.all:
-            print("=== ALL PAIRS ===")
-            report(rows, t)
-        else:
-            print(f"=== {args.half.upper()} HALF ===")
-            report(test_rows if args.half == "test" else tune_rows, t)
+        reported = rows if args.all else test_rows if args.half == "test" else tune_rows
+        print("=== ALL PAIRS ===" if args.all else f"=== {args.half.upper()} HALF ===")
+        report(reported, t)
+        if args.json_out:
+            args.json_out.write_text(json.dumps(summarize(reported, t), indent=2) + "\n")
 
         for pid in args.show:
             r = next(r for r in rows if r["pair_id"] == pid)

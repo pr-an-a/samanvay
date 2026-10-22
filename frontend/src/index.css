@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+/* Light, high-contrast theme sized for a projector. Colours follow the dataviz reference palette. */
+@theme {
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --color-page: #f4f5f7;
+  --color-surface: #ffffff;
+  --color-ink: #0b0b0b;
+  --color-ink-2: #3f3e3b;
+  --color-muted: #5f5e5a;
+  --color-line: #d9d8d2;
+  --color-grid: #e1e0d9;
+  --color-axis: #c3c2b7;
+
+  --color-brand: #184f95;
+  --color-brand-dark: #0d366b;
+  --color-brand-wash: #e8f0fb;
+
+  /* Bureau identity (categorical slots 1-3). Always shown with a text label. */
+  --color-rb: #2a78d6;
+  --color-pgrc: #eb6834;
+  --color-regional: #1baf7a;
+
+  /* Status (reserved): always paired with an icon and a label. */
+  --color-good: #0ca30c;
+  --color-good-text: #006300;
+  --color-warning: #fab219;
+  --color-critical: #d03b3b;
+  --color-critical-wash: #fdecec;
+  --color-alert-wash: #fff6e0;
+}
+
+html {
+  font-size: 18px; /* everything in rem scales up for projector viewing */
+}
+
+body {
+  background: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 2px;
+}

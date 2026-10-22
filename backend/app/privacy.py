@@ -26,4 +26,5 @@ def case_out(case: Case, user: User) -> CaseOut:
 def link_out(link: CaseLink, user: User) -> CaseLinkOut:
     out = CaseLinkOut.model_validate(link)
     out.case_a, out.case_b = case_out(link.case_a, user), case_out(link.case_b, user)
+    out.reviewer_name = link.reviewer.name if link.reviewer else None
     return out

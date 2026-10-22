@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from . import models  # noqa: F401  (registers tables on Base.metadata)
 from .db import Base, engine
-from .routers import alerts, auth, cases, dashboard, institutions, links, meta, reports
+from .routers import alerts, auth, cases, dashboard, demo, institutions, links, meta, reports
 
 
 @asynccontextmanager
@@ -24,5 +24,5 @@ app.add_middleware(
 )
 
 for r in (meta.router, auth.router, cases.router, links.router, institutions.router, alerts.router,
-          dashboard.router, reports.router):
+          dashboard.router, reports.router, demo.router):
     app.include_router(r)

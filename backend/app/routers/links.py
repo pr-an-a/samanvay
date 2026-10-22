@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from ..auth import OFFICER_ROLES, get_current_user, require_roles
@@ -12,12 +12,22 @@ router = APIRouter(prefix="/links", tags=["links"])
 
 
 @router.get("", response_model=list[CaseLinkOut])
-def list_links(status: LinkStatus | None = None, db: Session = Depends(get_db),
+def list_links(status: LinkStatus | None = None, case_pk: int | None = None, db: Session = Depends(get_db),
                user: User = Depends(get_current_user)):
     q = select(CaseLink).order_by(CaseLink.created_at.desc(), CaseLink.id.desc())
     if status:
         q = q.where(CaseLink.status == status.value)
+    if case_pk is not None:
+        q = q.where(or_(CaseLink.case_a_id == case_pk, CaseLink.case_b_id == case_pk))
     return [link_out(l, user) for l in db.scalars(q)]
+
+
+@router.get("/{link_id}", response_model=CaseLinkOut)
+def get_link(link_id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    link = db.get(CaseLink, link_id)
+    if link is None:
+        raise HTTPException(404, "Link not found")
+    return link_out(link, user)
 
 
 def review(db: Session, link_id: int, user: User, new_status: LinkStatus, remarks: str | None) -> CaseLink:
