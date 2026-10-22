@@ -19,13 +19,19 @@ that an officer confirms or rejects.
 - Frontend: React (Vite) + Tailwind + Recharts.
 
 ## Layout
-- `/backend` — FastAPI app (`app/main.py`), models (`app/models.py`), routers (`app/routers/`), seed (`app/seed.py`).
+- `/backend` — FastAPI app (`app/main.py`), models (`app/models.py`), routers (`app/routers/`),
+  source adapters (`app/ingest/`), reset + load script (`app/seed.py`).
 - `/frontend` — React dashboard.
-- `/data` — synthetic data generation.
-- `/eval` — evaluation of the overlap matcher against labelled synthetic pairs.
+- `/data` — `generate.py` (fixed seed, stdlib only) writes `data/sources/` (registry + 3 bureau exports).
+- `/eval` — `ground_truth.json` (planted overlaps by tier + decoys); matcher evaluation.
+
+Ingestion adapters normalise fields but keep institution name/address verbatim; reconciling
+names is the matcher's job. Ground truth overlaps are exhaustive (background institutions get
+complaints from one bureau only); keep that invariant if you change the generator.
 
 ## Run
 ```bash
+python3 data/generate.py   # only if the generator changed
 cd backend
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt

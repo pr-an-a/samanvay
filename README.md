@@ -15,8 +15,28 @@ institution, with a score breakdown, for an officer to confirm or reject.
 |---|---|
 | `backend/` | FastAPI + SQLite (SQLAlchemy) API |
 | `frontend/` | React (Vite) + Tailwind + Recharts dashboard — *coming next* |
-| `data/` | Synthetic data generator — *coming next* |
-| `eval/` | Matcher evaluation — *coming next* |
+| `data/` | Synthetic data generator (`generate.py`) and its output (`sources/`) |
+| `eval/` | `ground_truth.json` (planted overlaps + decoys); matcher evaluation — *coming next* |
+
+## Synthetic data
+
+```bash
+python3 data/generate.py          # fixed seed: same output every run
+```
+
+Writes a 150-institution registry and ~500 complaints split across three differently-shaped exports:
+
+| File | Format quirks |
+|---|---|
+| `data/sources/rb_cases.csv` | `dd-mm-yyyy`, permanent_id mostly filled |
+| `data/sources/pgrc_grievances.json` | ISO datetimes, `college_name`, `aicte_id` often null |
+| `data/sources/regional_cases.csv` | Terse column names, RO/category/status codes, `dd-Mon-yyyy`, abbreviated names |
+
+`eval/ground_truth.json` lists 50 planted cross-bureau overlaps (15 easy: shared ID; 15 medium:
+no ID, clean name; 20 hard: no ID, misspelled/abbreviated/initialed name) and 15 decoy pairs
+(similar names, different institutions and districts — must not be linked). The overlap list is
+exhaustive: background institutions only receive complaints from one bureau, which the generator
+asserts. 40 cases are planted as old and unresolved so they breach SLA.
 
 ## Backend
 
@@ -25,9 +45,14 @@ cd backend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python -m app.seed                # resets samanvay.db with demo data
+python -m app.seed                # resets samanvay.db: demo users, demo SLA rules, all three exports
 uvicorn app.main:app --reload     # API docs: http://localhost:8000/docs
 ```
+
+`app/ingest/` holds one adapter per export (field mapping, dates, codes) feeding a common
+`NormalizedCase`; institution names and addresses are kept verbatim for the matcher. The loader
+shifts dates so the generator's reference date becomes today (`--no-shift` to disable), keeping
+the SLA picture stable whatever day you demo.
 
 If dependency wheels fail to install on your Python version, create the venv with
 `python3.12 -m venv .venv` instead.
