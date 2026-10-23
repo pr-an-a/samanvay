@@ -91,3 +91,21 @@ body {
   outline: 3px solid var(--color-ink);
   outline-offset: 2px;
 }
+
+/* Video mode (press V): hide admin-only clutter, leave room for the caption bar, outline what is being discussed. */
+html[data-video="on"] [data-admin-only],
+html[data-video="on"] [data-video-hide] {
+  display: none !important;
+}
+html[data-video="on"] main {
+  padding-bottom: 8rem;
+}
+.video-highlight {
+  outline: 3px solid rgb(110 78 16 / 0.35);
+  outline-offset: 6px;
+  border-radius: 14px;
+  transition: outline-color 0.3s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .connector-line, .bar-grow { transition: none !important; }
+}

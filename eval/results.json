@@ -1,5 +1,5 @@
 {
-  "generated_on": "2026-10-22",
+  "generated_on": "2026-10-23",
   "earlier_note": "On the first, easier version of the data (identical addresses on both sides of a true pair), the step-3 matcher scored 1.0. Making the data realistic exposed the bugs below.",
   "before_fixes_test_half": {
     "source": "eval/evaluate.py --fixed, step-3 matcher (commit 6f54f86), step-3b data, threshold 0.78",
@@ -127,6 +127,87 @@
     "misses": [],
     "false_positives": [],
     "source": "eval/evaluate.py --all on seed-43 data, no retuning"
+  },
+  "baselines": {
+    "note": "Same pairs for every method. 'All overlaps' counts every planted overlap; the threshold was tuned on half of them, so the held-out test half is shown too.",
+    "seed42": {
+      "all": {
+        "overlaps": 50,
+        "non_overlap_pairs": 4630,
+        "methods": {
+          "id_only": {
+            "found": 15,
+            "false_positives": 0
+          },
+          "exact_name": {
+            "found": 22,
+            "false_positives": 4
+          },
+          "samanvay": {
+            "found": 50,
+            "false_positives": 0
+          }
+        }
+      },
+      "test_half": {
+        "overlaps": 24,
+        "non_overlap_pairs": 2337,
+        "methods": {
+          "id_only": {
+            "found": 7,
+            "false_positives": 0
+          },
+          "exact_name": {
+            "found": 10,
+            "false_positives": 2
+          },
+          "samanvay": {
+            "found": 24,
+            "false_positives": 0
+          }
+        }
+      },
+      "threshold": 0.78
+    },
+    "unseen_seed43": {
+      "all": {
+        "overlaps": 50,
+        "non_overlap_pairs": 4587,
+        "methods": {
+          "id_only": {
+            "found": 15,
+            "false_positives": 0
+          },
+          "exact_name": {
+            "found": 23,
+            "false_positives": 4
+          },
+          "samanvay": {
+            "found": 50,
+            "false_positives": 0
+          }
+        }
+      },
+      "test_half": {
+        "overlaps": 24,
+        "non_overlap_pairs": 2329,
+        "methods": {
+          "id_only": {
+            "found": 7,
+            "false_positives": 0
+          },
+          "exact_name": {
+            "found": 9,
+            "false_positives": 2
+          },
+          "samanvay": {
+            "found": 24,
+            "false_positives": 0
+          }
+        }
+      },
+      "threshold": 0.78
+    }
   },
   "caveats": [
     "All of this data is synthetic, made by our own generator. Real complaints will be messier, so expect lower scores.",

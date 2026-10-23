@@ -27,6 +27,7 @@ from sqlalchemy import select  # noqa: E402
 from app.db import SessionLocal  # noqa: E402
 from app.matcher import CONFIG, CONFIG_PATH, score_candidates  # noqa: E402
 from app.models import Case  # noqa: E402
+from app.stress import normalise_name  # noqa: E402
 
 TIERS = ["easy", "medium", "hard"]
 GRID = [round(0.40 + 0.01 * i, 2) for i in range(60)]
@@ -142,6 +143,24 @@ def summarize(rows: list[dict], t: float) -> dict:
     }
 
 
+def baselines(rows: list[dict], t: float) -> dict:
+    """Samanvay against two simpler ways to find the same college, on the same pairs, computed here, not typed in.
+
+    id_only:    both cases carry the same AICTE permanent ID.
+    exact_name: both cases have the same institution name after ignoring case and punctuation.
+    A false positive is a pair that is NOT the same college (decoys and ordinary background pairs) that the method links.
+    """
+    methods = {
+        "id_only": lambda r: bool(r["a"].institution_id and r["a"].institution_id == r["b"].institution_id),
+        "exact_name": lambda r: normalise_name(r["a"].raw_institution_name) == normalise_name(r["b"].raw_institution_name),
+        "samanvay": lambda r: r["conf"] >= t,
+    }
+    pos = [r for r in rows if r["positive"]]
+    neg = [r for r in rows if not r["positive"]]
+    return {"overlaps": len(pos), "non_overlap_pairs": len(neg),
+            "methods": {k: {"found": sum(map(f, pos)), "false_positives": sum(map(f, neg))} for k, f in methods.items()}}
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--save", action="store_true", help="write tuned threshold to matcher_config.json")
@@ -149,6 +168,7 @@ def main() -> None:
     ap.add_argument("--fixed", action="store_true", help="skip tuning; use link_threshold from the config")
     ap.add_argument("--half", choices=["test", "tune"], default="test", help="which half to report in detail")
     ap.add_argument("--all", action="store_true", help="report on all pairs (for unseen data; implies --fixed)")
+    ap.add_argument("--baselines-out", type=Path, help="write the Samanvay-vs-simple-methods comparison (all pairs, and test half) as JSON")
     ap.add_argument("--truth", type=Path, default=ROOT / "eval" / "ground_truth.json")
     ap.add_argument("--json-out", type=Path, help="also write the reported half's summary as JSON")
     args = ap.parse_args()
@@ -177,6 +197,10 @@ def main() -> None:
         report(reported, t)
         if args.json_out:
             args.json_out.write_text(json.dumps(summarize(reported, t), indent=2) + "\n")
+
+        if args.baselines_out:
+            args.baselines_out.write_text(json.dumps({"all": baselines(rows, t), "test_half": baselines(test_rows, t),
+                                                      "threshold": t}, indent=2) + "\n")
 
         for pid in args.show:
             r = next(r for r in rows if r["pair_id"] == pid)

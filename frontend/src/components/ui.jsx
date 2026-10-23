@@ -14,9 +14,9 @@ export function PageTitle({ children, sub, actions }) {
   );
 }
 
-export function Card({ title, sub, children, className = "", actions }) {
+export function Card({ title, sub, children, className = "", actions, ...rest }) {
   return (
-    <section className={`rounded-xl border border-line bg-surface p-5 ${className}`}>
+    <section className={`rounded-xl border border-line bg-surface p-5 ${className}`} {...rest}>
       {(title || actions) && (
         <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
           <div>

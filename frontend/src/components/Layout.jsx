@@ -3,6 +3,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth";
 import { useApi } from "../hooks";
 import { ROLES } from "../labels";
+import { CaptionBar, useVideo } from "../video";
 import { useTour } from "../tour";
 import AlertsBell from "./AlertsBell";
 import Icon from "./icons";
@@ -10,9 +11,11 @@ import TourPanel from "./TourPanel";
 
 const NAV = [
   ["/", "Overview", "overview"],
+  ["/without-with", "Without / With", "compare"],
   ["/alerts", "Needs check", "check"],
   ["/new", "Register", "register"],
   ["/cases", "All cases", "cases"],
+  ["/stress", "Stress test", "stress"],
   ["/accuracy", "Accuracy", "accuracy"],
 ];
 const ADMIN_NAV = [
@@ -68,6 +71,7 @@ export default function Layout() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { data: stats, reload } = useApi("/dashboard/stats");
+  const video = useVideo();
   const isAdmin = user?.role === "ADMIN";
 
   // Keep the "Needs check" count current as the officer moves around.
@@ -86,13 +90,22 @@ export default function Layout() {
             <NavItem key={to} to={to} label={label} icon={icon} count={to === "/alerts" ? stats?.overlaps.suggested : 0} />
           ))}
           {isAdmin && (
-            <>
+            <div data-admin-only>
               <div className="px-3 pb-1 pt-5 text-sm text-ink-2">Admin</div>
               {ADMIN_NAV.map(([to, label, icon]) => <NavItem key={to} to={to} label={label} icon={icon} />)}
-            </>
+            </div>
           )}
         </nav>
         <div className="border-t border-line px-2 pt-4">
+          <button
+            type="button"
+            data-video-hide
+            onClick={video.toggle}
+            aria-pressed={video.on}
+            className="mb-3 flex w-full items-center justify-between rounded-lg border border-line bg-surface px-3 py-1.5 text-base text-ink hover:border-ink"
+          >
+            Video mode <kbd className="rounded border border-line bg-sand px-1.5 text-sm text-ink-2">V</kbd>
+          </button>
           <div className="font-semibold text-ink">{user?.name}</div>
           <div className="text-base text-ink-2">{ROLES[user?.role] || user?.role}</div>
           <button
@@ -138,6 +151,7 @@ export default function Layout() {
           )}
         </main>
         <Footer />
+        <CaptionBar />
       </div>
     </div>
   );

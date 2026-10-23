@@ -35,7 +35,7 @@ export default function CoordinationNotes({ links, notes, onPosted }) {
     try {
       await api(`/links/${chosen.id}/notes`, { method: "POST", body: { body: body.trim() } });
       const other = involved(chosen).find((b) => b !== user.bureau);
-      tour.reach(5, { otherBureau: other });
+      tour.reach(6, { otherBureau: other });
       setBody("");
       onPosted();
     } catch (err) {
@@ -46,7 +46,7 @@ export default function CoordinationNotes({ links, notes, onPosted }) {
   }
 
   return (
-    <Card title="Coordination notes" sub="Short notes between the bureaus on this college. They cannot be edited or deleted, and each one is in the audit log.">
+    <Card data-tour-target="notes" title="Coordination notes" sub="Short notes between the bureaus on this college. They cannot be edited or deleted, and each one is in the audit log.">
       {notes.length === 0 ? (
         <p className="text-base text-ink-2">No notes yet.</p>
       ) : (

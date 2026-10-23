@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from . import models  # noqa: F401  (registers tables on Base.metadata)
 from .db import Base, SessionLocal, engine
-from .routers import alerts, audit_log, auth, cases, dashboard, demo, institutions, links, meta, notes, notifications, reports, sla
+from .routers import alerts, audit_log, auth, cases, dashboard, demo, institutions, links, meta, notes, notifications, reports, sla, video
 from .sla import SETTINGS, demo_mode, run_sla_check
 
 
@@ -50,5 +50,5 @@ app.add_middleware(
 )
 
 for r in (meta.router, auth.router, cases.router, links.router, institutions.router, alerts.router,
-          dashboard.router, reports.router, demo.router, notifications.router, sla.router, audit_log.router, notes.router):
+          dashboard.router, reports.router, demo.router, notifications.router, sla.router, audit_log.router, notes.router, video.router):
     app.include_router(r)

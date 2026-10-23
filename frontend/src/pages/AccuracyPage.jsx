@@ -1,5 +1,54 @@
+import { useEffect, useState } from "react";
 import { Card, ErrorBox, Loading, PageTitle } from "../components/ui";
 import { useApi } from "../hooks";
+
+const METHODS = [
+  ["id_only", "AICTE ID only", "Needs the ID on both complaints", "bg-chart-sand"],
+  ["exact_name", "Exact name", "Same name, ignoring capitals and punctuation", "bg-chart-taupe"],
+  ["samanvay", "Samanvay", "Name, address, district and more, with a score breakdown", "bg-ink"],
+];
+
+/** Horizontal bars that grow when the page appears. All numbers come from eval/results.json (computed, not typed). */
+function Baselines({ data }) {
+  const [grown, setGrown] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setGrown(true), 150);
+    return () => clearTimeout(t);
+  }, []);
+  const b = data.baselines.seed42;
+  const all = b.all, half = b.test_half;
+  return (
+    <Card data-tour-target="baseline" title="Samanvay compared with simpler methods" sub="The same pairs of cases for every method.">
+      <p className="text-xl font-semibold">Overlaps found, out of {all.overlaps} real same-college pairs</p>
+      <ul className="mt-4 space-y-5">
+        {METHODS.map(([key, label, help, colour], i) => {
+          const m = all.methods[key];
+          return (
+            <li key={key}>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+                <span className="text-lg font-semibold">{label} <span className="text-base font-normal text-muted">{help}</span></span>
+                <span className="tabular text-lg"><span className="font-semibold">Found {m.found} of {all.overlaps}</span> · {m.false_positives} wrong {m.false_positives === 1 ? "match" : "matches"}</span>
+              </div>
+              <div className="mt-1.5 h-5 w-full overflow-hidden rounded-full bg-sand" role="img" aria-label={`${label} found ${m.found} of ${all.overlaps}`}>
+                <div
+                  className={`bar-grow h-5 rounded-full ${colour}`}
+                  style={{ width: grown ? `${(m.found / all.overlaps) * 100}%` : "0%", transition: `width 1200ms ease-out ${i * 200}ms` }}
+                />
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      <p className="mt-5 text-base text-ink-2">
+        Wrong matches are counted over the {all.non_overlap_pairs.toLocaleString("en-IN")} pairs that are not the same college (look-alikes and every other pair compared).
+        On the held-out test half alone ({half.overlaps} pairs, never used to set the threshold): AICTE ID only {half.methods.id_only.found}, exact name {half.methods.exact_name.found}, Samanvay {half.methods.samanvay.found}.
+      </p>
+      <p className="mt-2 text-base text-muted">
+        Synthetic data made by our own generator, with mistakes we designed. Real complaints will be messier, so expect lower scores for Samanvay too.
+      </p>
+    </Card>
+  );
+}
 
 const COLUMNS = [
   ["before_fixes_test_half", "Before fixes", "test set"],
@@ -28,6 +77,8 @@ export default function AccuracyPage() {
   return (
     <div className="space-y-6">
       <PageTitle sub="We tested the matching on made-up complaints where we know the right answer.">How accurate is matching?</PageTitle>
+
+      <Baselines data={data} />
 
       <Card>
         <div className="overflow-x-auto">

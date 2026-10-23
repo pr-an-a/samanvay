@@ -85,7 +85,7 @@ export default function AlertsBell() {
   const items = data?.items ?? [];
 
   return (
-    <div ref={box} className="relative">
+    <div ref={box} className="relative" data-tour-target="bell">
       <button
         type="button"
         onClick={toggle}
@@ -206,7 +206,7 @@ export default function AlertsBell() {
             )}
             {error && <p className="text-base text-late">{error.message}</p>}
             {settings && !settings.automatic_checks && (
-              <p className="text-sm text-ink-2">Demo mode: checks run only when you press “Run check now”.</p>
+              <p data-admin-only className="text-sm text-ink-2">Demo mode: checks run only when you press “Run check now”.</p>
             )}
             <p className="text-sm text-muted">{SLA_NOTE}</p>
           </div>

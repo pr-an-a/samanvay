@@ -44,7 +44,7 @@ export default function ReviewPage() {
   const [actionError, setActionError] = useState(null);
 
   useEffect(() => {
-    if (link?.status === "suggested") tour.reach(3);
+    if (link?.status === "suggested") tour.reach(4);
   }, [link?.status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const institutionId = link && (link.case_a.institution_id || link.case_b.institution_id);
@@ -54,7 +54,7 @@ export default function ReviewPage() {
     setActionError(null);
     try {
       await api(`/links/${id}/${action}`, { method: "POST", body: { remarks: remarks.trim() || null } });
-      if (action === "confirm") tour.reach(4, { timelineUrl: institutionId ? `/institutions/${institutionId}` : null });
+      if (action === "confirm") tour.reach(5, { timelineUrl: institutionId ? `/institutions/${institutionId}` : null });
       reload();
     } catch (e) {
       setActionError(e);
@@ -85,7 +85,7 @@ export default function ReviewPage() {
           <Evidence link={link} />
         </Card>
 
-        <Card title="Your decision" className="lg:col-span-2">
+        <Card data-tour-target="decision" title="Your decision" className="lg:col-span-2">
           {link.status === "suggested" ? (
             <>
               <label className="block text-base text-ink-2" htmlFor="remarks">Note for both bureaus (optional)</label>

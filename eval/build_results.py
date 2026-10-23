@@ -54,17 +54,19 @@ def run(env_db: str, *args: str) -> None:
     subprocess.run([sys.executable, *args], cwd=BACKEND, env=env, check=True, stdout=subprocess.DEVNULL)
 
 
-def evaluate(data_dir: str, truth: str, extra: list[str]) -> dict:
+def evaluate(data_dir: str, truth: str, extra: list[str]) -> tuple[dict, dict]:
+    """(summary, baselines) for one dataset, from a throwaway database."""
     with tempfile.TemporaryDirectory() as tmp:
-        db, out = f"sqlite:///{tmp}/eval.db", Path(tmp) / "summary.json"
+        db, out, base = f"sqlite:///{tmp}/eval.db", Path(tmp) / "summary.json", Path(tmp) / "baselines.json"
         run(db, "-m", "app.seed", "--data-dir", str(ROOT / data_dir))
-        run(db, str(ROOT / "eval" / "evaluate.py"), "--truth", str(ROOT / "eval" / truth), "--json-out", str(out), *extra)
-        return json.loads(out.read_text())
+        run(db, str(ROOT / "eval" / "evaluate.py"), "--truth", str(ROOT / "eval" / truth), "--json-out", str(out),
+            "--baselines-out", str(base), *extra)
+        return json.loads(out.read_text()), json.loads(base.read_text())
 
 
 def main() -> None:
-    after = evaluate("data/sources", "ground_truth.json", ["--fixed"])
-    unseen = evaluate("data/sources_seed43", "ground_truth_seed43.json", ["--all"])
+    after, base42 = evaluate("data/sources", "ground_truth.json", ["--fixed"])
+    unseen, base43 = evaluate("data/sources_seed43", "ground_truth_seed43.json", ["--all"])
     results = {
         "generated_on": date.today().isoformat(),
         "earlier_note": ("On the first, easier version of the data (identical addresses on both sides of a true "
@@ -72,6 +74,11 @@ def main() -> None:
         "before_fixes_test_half": BEFORE_FIXES_TEST_HALF,
         "after_fixes_test_half": dict(after, source="eval/evaluate.py --fixed, seed-42 test half"),
         "unseen_seed43": dict(unseen, source="eval/evaluate.py --all on seed-43 data, no retuning"),
+        "baselines": {
+            "note": ("Same pairs for every method. 'All overlaps' counts every planted overlap; the threshold was tuned on "
+                     "half of them, so the held-out test half is shown too."),
+            "seed42": base42, "unseen_seed43": base43,
+        },
         "caveats": CAVEATS,
     }
     (ROOT / "eval" / "results.json").write_text(json.dumps(results, indent=2) + "\n")

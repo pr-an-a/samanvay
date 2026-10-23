@@ -92,7 +92,7 @@ export default function NewComplaintPage() {
     try {
       const res = await api("/cases", { method: "POST", body });
       setResult(res);
-      if (res.overlap_alerts.length) tour.reach(2);
+      if (res.overlap_alerts.length) tour.reach(3);
       setForm({ ...EMPTY, source_bureau: user?.bureau || "" });
       setNote(null);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -105,7 +105,7 @@ export default function NewComplaintPage() {
 
   return (
     <div>
-      {result && result.overlap_alerts.length > 0 && <MatchBanner result={result} />}
+      {result && result.overlap_alerts.length > 0 && <div data-tour-target="overlap-banner"><MatchBanner result={result} /></div>}
       {result && result.overlap_alerts.length === 0 && (
         <div role="status" className="mb-6 rounded-xl border border-line bg-surface p-5 text-lg">
           <span className="font-semibold text-ok">✓ Saved as {result.case.case_id}.</span> No other bureau is handling this college.{" "}
@@ -127,7 +127,7 @@ export default function NewComplaintPage() {
       {note && <p className="mb-6 rounded-lg bg-sand px-4 py-3 text-lg text-ink">{note}</p>}
       <div className="mb-6"><ErrorBox error={error} /></div>
 
-      <Card>
+      <Card data-tour-target="complaint-form">
         <form onSubmit={submit} className="grid gap-5 md:grid-cols-2">
           <Label text="Registering bureau">
             {isAdmin ? (

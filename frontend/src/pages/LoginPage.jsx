@@ -39,7 +39,7 @@ export default function LoginPage() {
     const officer = users.find((u) => u.role === "PGRC_OFFICER");
     signIn(officer, () => {
       tour.start();
-      navigate("/new");
+      navigate("/without-with");
     });
   }
 

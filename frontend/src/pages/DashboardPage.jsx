@@ -208,7 +208,7 @@ export default function DashboardPage() {
       </Card>
 
       <p className="text-base text-ink-2">{SLA_NOTE}</p>
-      <DemoReset />
+      <div data-admin-only><DemoReset /></div>
     </div>
   );
 }
