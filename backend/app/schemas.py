@@ -140,7 +140,30 @@ class SLARuleOut(ORM):
     days: int
 
 
+class NoteIn(BaseModel):
+    body: str = Field(min_length=1, max_length=500)
+
+    @field_validator("body")
+    @classmethod
+    def not_blank(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError("A note cannot be empty")
+        return v
+
+
+class NoteOut(ORM):
+    id: int
+    link_id: int
+    author: str
+    bureau: str
+    body: str
+    timestamp: datetime
+
+
 class InstitutionDetail(InstitutionOut):
+    summary: str
     cases: list[CaseOut]
+    notes: list[NoteOut]
     timeline: list[TimelineEntry]
     links: list[CaseLinkOut]

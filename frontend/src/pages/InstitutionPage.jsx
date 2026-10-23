@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+import CoordinationNotes from "../components/CoordinationNotes";
 import LinkList from "../components/LinkList";
 import { Bureau, Card, ErrorBox, Loading, SlaTag, PageTitle, Status } from "../components/ui";
 import { useApi } from "../hooks";
@@ -6,7 +7,7 @@ import { BUREAUS, CATEGORIES, bureauName, formatDate, formatDateTime, plainActio
 
 export default function InstitutionPage() {
   const { id } = useParams();
-  const { data: inst, error, loading } = useApi(`/institutions/${id}`);
+  const { data: inst, error, loading, reload } = useApi(`/institutions/${id}`);
 
   if (error) return <ErrorBox error={error} />;
   if (loading || !inst) return <Loading />;
@@ -19,7 +20,8 @@ export default function InstitutionPage() {
       <PageTitle sub={`${inst.address} · AICTE permanent ID ${inst.permanent_id}`}>{inst.name}</PageTitle>
 
       <Card>
-        <p className="text-lg">
+        <p className="text-lg font-semibold">{inst.summary}</p>
+        <p className="mt-3 text-lg">
           {bureaus.length > 1 ? (
             <>
               <span className="font-semibold">{bureaus.map(bureauName).join(" and ")}</span> are both working on this college.
@@ -42,6 +44,10 @@ export default function InstitutionPage() {
           added.
         </p>
       </Card>
+
+      {inst.links.some((l) => l.status === "confirmed") && (
+        <CoordinationNotes links={inst.links.filter((l) => l.status === "confirmed")} notes={inst.notes} onPosted={reload} />
+      )}
 
       <Card title="Shared timeline" sub="Every action on this college, from every bureau, in date order.">
         <ol className="@container space-y-1">

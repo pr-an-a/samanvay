@@ -9,6 +9,7 @@ const ACTIONS = {
   link_confirmed: "Confirmed same college",
   link_rejected: "Marked different colleges",
   case_escalated: "Escalated",
+  note_posted: "Coordination note",
 };
 const CONTROL = "rounded-lg border border-line bg-surface px-3 py-2 text-base text-ink";
 

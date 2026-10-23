@@ -1,13 +1,16 @@
+from datetime import date
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
 from ..db import get_db
-from ..models import Case, CaseLink, Institution, LinkStatus, User
+from ..models import Case, CaseLink, CoordinationNote, Institution, LinkStatus, User
 from ..privacy import case_out, link_out
-from ..schemas import InstitutionDetail, InstitutionOut, TimelineEntry
+from ..schemas import InstitutionDetail, InstitutionOut, NoteOut, TimelineEntry
 from ..services import utc_naive
+from ..summary import college_summary
 
 router = APIRouter(prefix="/institutions", tags=["institutions"])
 
@@ -52,8 +55,13 @@ def institution_detail(inst_id: int, db: Session = Depends(get_db), user: User =
                        via_confirmed_link=c.id in via_link)
          for c in cases for e in c.events),
         key=lambda t: (utc_naive(t.timestamp), t.case_pk))
+    confirmed = touching(db, member_ids, LinkStatus.confirmed) if member_ids else []
+    notes = db.scalars(select(CoordinationNote).where(CoordinationNote.link_id.in_([l.id for l in confirmed]))
+                       .order_by(CoordinationNote.timestamp, CoordinationNote.id)) if confirmed else []
     return InstitutionDetail(
         **InstitutionOut.model_validate(inst).model_dump(),
+        summary=college_summary(cases, [(t.timestamp, t.action, t.actor_bureau) for t in timeline], date.today()),
+        notes=[NoteOut.model_validate(n) for n in notes],
         cases=[case_out(c, user) for c in cases],
         timeline=timeline,
         links=[link_out(l, user) for l in touching(db, member_ids)] if member_ids else [],

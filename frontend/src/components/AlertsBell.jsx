@@ -10,6 +10,7 @@ const SECTIONS = [
   ["overdue", "Overdue"],
   ["due_soon", "Due soon"],
   ["needs_check", "Needs your check"],
+  ["note", "Notes from other bureaus"],
 ];
 const POLL_MS = 60_000;
 const CAP = 20; // keep the badge readable: "20+" rather than "87"
@@ -143,6 +144,7 @@ export default function AlertsBell() {
             ) : (
               <p className="text-base text-ink-2">
                 {data.counts.overdue} overdue · {data.counts.due_soon} due soon · {data.counts.needs_check} need your check
+                {data.counts.note > 0 && <> · {data.counts.note} note{data.counts.note === 1 ? "" : "s"}</>}
               </p>
             )}
           </div>
@@ -158,7 +160,7 @@ export default function AlertsBell() {
                     {list.slice(0, 8).map((i) => (
                       <li key={i.id}>
                         <Link
-                          to={i.kind === "needs_check" ? `/links/${i.link_id}` : `/cases/${i.case_pk}`}
+                          to={i.kind === "needs_check" || i.kind === "note" ? `/links/${i.link_id}` : `/cases/${i.case_pk}`}
                           onClick={() => setOpen(false)}
                           className="flex gap-3 py-2.5 text-base hover:underline"
                         >
@@ -171,7 +173,7 @@ export default function AlertsBell() {
                       </li>
                     ))}
                   </ul>
-                  {data.counts[kind] > Math.min(list.length, 8) && (
+                  {kind !== "note" && data.counts[kind] > Math.min(list.length, 8) && (
                     <Link
                       to={kind === "needs_check" ? "/alerts" : kind === "overdue" ? "/cases?overdue=true" : "/cases?open=true"}
                       onClick={() => setOpen(false)}

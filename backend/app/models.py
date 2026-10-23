@@ -158,6 +158,7 @@ class AlertKind(str, Enum):
     due_soon = "due_soon"
     overdue = "overdue"
     needs_check = "needs_check"
+    note = "note"
 
 
 class Alert(Base):
@@ -182,6 +183,7 @@ class AuditAction(str, Enum):
     link_confirmed = "link_confirmed"
     link_rejected = "link_rejected"
     case_escalated = "case_escalated"
+    note_posted = "note_posted"
 
 
 class AuditLog(Base):
@@ -200,3 +202,16 @@ class AuditLog(Base):
     case_pk: Mapped[int | None] = mapped_column(ForeignKey("cases.id"))
     link_id: Mapped[int | None] = mapped_column(ForeignKey("case_links.id"))
     remarks: Mapped[str | None] = mapped_column(Text)
+
+
+class CoordinationNote(Base):
+    """A short note between the bureaus of a confirmed match. Append-only: never update or delete rows."""
+
+    __tablename__ = "coordination_notes"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    link_id: Mapped[int] = mapped_column(ForeignKey("case_links.id"), index=True)
+    author: Mapped[str] = mapped_column(String(100))
+    bureau: Mapped[str] = mapped_column(String(16))  # the author's bureau, or "ADMIN"
+    body: Mapped[str] = mapped_column(String(500))
+    timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

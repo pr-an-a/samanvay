@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api } from "../api";
 import { useAuth } from "../auth";
+import CoordinationNotes from "../components/CoordinationNotes";
 import Evidence from "../components/Evidence";
 import { Bureau, Button, Card, ErrorBox, Field, LinkStatus, Loading, SlaTag, Status, TextLink } from "../components/ui";
 import { useApi } from "../hooks";
@@ -36,6 +37,8 @@ export default function ReviewPage() {
   const { user } = useAuth();
   const tour = useTour();
   const { data: link, error, loading, reload } = useApi(`/links/${id}`);
+  const confirmed = link?.status === "confirmed";
+  const { data: notes, reload: reloadNotes } = useApi(confirmed ? `/links/${id}/notes` : null);
   const [remarks, setRemarks] = useState("");
   const [busy, setBusy] = useState(false);
   const [actionError, setActionError] = useState(null);
@@ -119,6 +122,7 @@ export default function ReviewPage() {
           <div className="mt-4"><ErrorBox error={actionError} /></div>
         </Card>
       </div>
+      {confirmed && <CoordinationNotes links={[link]} notes={notes ?? []} onPosted={reloadNotes} />}
       <p className="text-base text-muted">Match found {formatDate(link.created_at)}.</p>
     </div>
   );

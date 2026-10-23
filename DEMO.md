@@ -25,10 +25,20 @@ Everything works offline: no internet is needed once `./start.sh` has run once o
 | 1:25 | **Check and confirm** | "Nothing is merged automatically. An officer looks at both cases side by side and decides." |
 | 1:40 | Type a short note, then **Yes, same college** | "The decision and the note are recorded on both cases and in the audit log." |
 | 1:55 | **See the shared timeline** (in the side panel) | "Now the college has one timeline. Both bureaus see each other's actions, so neither acts blind." |
-| 2:15 | **Finish tour** → Overview | "The overview leads with the colleges where two bureaus are active right now." |
-| 2:25 | **Switch user → Administrator**. Bell → **Run check now**. | "It also watches deadlines. This check flags overdue and due-soon cases for each bureau. These time limits are demo settings, not official AICTE timelines." |
+| 2:05 | At the top of the college page, point at the one-line summary. | "A plain summary built from the data: bureaus involved, open cases, how long the oldest has waited, and the last action." |
+| 2:10 | Type a note (e.g. *We've issued a show-cause notice. Please hold your reply.*), **Post note** (guided demo step 5). Then **Show the Regulation Bureau's bell** in the side panel, and click the bell. | "The officers can leave each other short notes, which can't be edited or deleted. The other bureau's bell rings straight away: *Grievance Cell left a note on …*." |
+| 2:25 | **Finish tour** → Overview. **Switch user → Administrator**. Bell → **Run check now**. | "It also watches deadlines. This check flags overdue and due-soon cases for each bureau. These time limits are demo settings, not official AICTE timelines." |
 | 2:40 | **Escalations**, then **Audit log** | "Long-overdue cases can be escalated, and every decision is logged: who, what, when, and why." |
 | 2:50 | **How accurate is matching?** (optional) | "We tested the matching on labelled, made-up data. It's honest about its limits: this is a prototype on synthetic data." |
+
+## Coordination notes (guided demo step 5)
+
+After **Yes, same college**, the match page and the college page show a **Coordination notes** box.
+Officers of the two bureaus involved (and the Administrator) can post a short note; nobody else can.
+Each note shows the bureau, the officer's name and the time, and is recorded in the audit log.
+Notes can't be edited or deleted. Posting a note rings the **other** bureau's bell.
+In the guided demo, posting a note moves it to step 5; **Show the Regulation Bureau's bell** signs you in as that
+officer so you can open the bell and see the note.
 
 ## The 30-second version
 

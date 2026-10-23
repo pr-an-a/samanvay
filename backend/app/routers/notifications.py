@@ -21,6 +21,8 @@ def current_alerts(db: Session, user: User) -> list[Alert]:
     for a in db.scalars(q):
         if a.kind == AlertKind.needs_check.value:
             live = a.link is not None and a.link.status == LinkStatus.suggested.value
+        elif a.kind == AlertKind.note.value:
+            live = True  # a note is news until the bell is opened; it does not expire
         else:
             live = a.case is not None and a.case.sla_state == a.kind
         if live:
@@ -55,7 +57,7 @@ def notifications(limit: int = 60, db: Session = Depends(get_db), user: User = D
         })
     by_bureau: dict[str, dict] = {}
     for a in alerts:
-        row = by_bureau.setdefault(a.bureau, {"overdue": 0, "due_soon": 0, "needs_check": 0, "new": 0})
+        row = by_bureau.setdefault(a.bureau, {"overdue": 0, "due_soon": 0, "needs_check": 0, "note": 0, "new": 0})
         row[a.kind] += 1
         row["new"] += is_new(a, user)
     return {"unseen": sum(is_new(a, user) for a in alerts), "counts": counts, "by_bureau": by_bureau,

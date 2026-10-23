@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 
-// Guided demo: four steps, advanced by the pages themselves as the viewer acts.
+// Guided demo: five steps, advanced by the pages themselves as the viewer acts.
 export const TOUR_STEPS = [
   {
     title: "A new complaint arrives",
@@ -20,6 +20,11 @@ export const TOUR_STEPS = [
   {
     title: "Both bureaus share one timeline",
     body: "The college now has one timeline with both bureaus’ actions, so neither acts without knowing what the other has done.",
+    hint: "Add a note for the other bureau below the decision, then click “Post note”.",
+  },
+  {
+    title: "The other bureau’s bell rings",
+    body: "The note is saved in the audit log and the other bureau gets an alert. Neither bureau can edit or delete it later.",
     hint: null,
   },
 ];
@@ -48,6 +53,8 @@ export function TourProvider({ children }) {
     start: () => save({ active: true, step: 1, timelineUrl: null }),
     end: () => save({ active: false, step: 1, timelineUrl: null }),
     /** Move forward to step n (never backwards); no-op when the tour is off. */
+    /** Remember something without moving the step (e.g. that the presenter switched user). */
+    patch: (extra) => tour.active && save({ ...tour, ...extra }),
     reach: (n, extra = {}) => {
       if (tour.active && n > tour.step) save({ ...tour, ...extra, step: n });
     },
