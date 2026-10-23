@@ -15,3 +15,9 @@ video/voice_test/
 video/.venv/
 video/voices/
 video/node_modules/
+video/voice_test2/
+video/.venv-kokoro/
+video/kokoro-venv/
+video/models/
+video/*.onnx
+video/*.pt

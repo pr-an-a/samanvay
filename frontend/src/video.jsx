@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useAuth } from "./auth";
+import { ROLES } from "./labels";
 import { useLocation } from "react-router-dom";
 import { stepCaption, useTour } from "./tour";
 
@@ -44,6 +46,14 @@ export function VideoProvider({ children }) {
     }
   });
   const [override, setOverride] = useState(null);
+  // The video recorder (sessionStorage "samanvay.rec") sets these: the spoken sentence, and who we are watching.
+  const [subtitle, setSubtitle] = useState("");
+  const [persona, setPersona] = useState(undefined); // undefined = the signed-in user; null = nobody
+  useEffect(() => {
+    window.__setSubtitle = setSubtitle;
+    window.__setPersona = setPersona;
+    return () => { delete window.__setSubtitle; delete window.__setPersona; };
+  }, []);
 
   const toggle = () =>
     setOn((v) => {
@@ -57,6 +67,7 @@ export function VideoProvider({ children }) {
 
   useEffect(() => {
     document.documentElement.dataset.video = on ? "on" : "off";
+    document.documentElement.dataset.rec = (() => { try { return sessionStorage.getItem("samanvay.rec") === "1" ? "1" : "0"; } catch { return "0"; } })();
   }, [on]);
 
   useEffect(() => {
@@ -67,7 +78,7 @@ export function VideoProvider({ children }) {
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
-  return <VideoContext.Provider value={{ on, toggle, override, setOverride }}>{children}</VideoContext.Provider>;
+  return <VideoContext.Provider value={{ on, toggle, override, setOverride, subtitle, persona }}>{children}</VideoContext.Provider>;
 }
 
 export const useVideo = () => useContext(VideoContext);
@@ -81,15 +92,34 @@ export function useVideoCaption(caption, target) {
   }, [caption, target, setOverride]);
 }
 
+const recording = () => { try { return sessionStorage.getItem("samanvay.rec") === "1"; } catch { return false; } };
+
+/** Top-left, in video mode: who we are watching ("Priya · Grievance Cell officer"). */
+function PersonaLabel() {
+  const { on, persona } = useVideo();
+  const { user } = useAuth();
+  const { pathname } = useLocation();
+  const text = persona !== undefined ? persona : user && pathname !== "/login" && pathname !== "/story" ? `${user.name.split(" ")[0]} · ${ROLES[user.role] || user.role}` : null;
+  if (!on || !text) return null;
+  return (
+    <div data-persona className="fixed left-3 top-2 z-[70] rounded-full bg-ink px-4 py-1.5 text-lg font-semibold text-white shadow-lg" style={{ borderLeft: "5px solid var(--color-accent-line, #e8967a)" }}>
+      {text}
+    </div>
+  );
+}
+
 export function CaptionBar() {
-  const { on, override } = useVideo();
+  const { on, override, subtitle } = useVideo();
   const tour = useTour();
   const { pathname } = useLocation();
-  const current = override || (tour.active ? stepCaption(tour) : { caption: routeCaption(pathname), target: null });
+  const rec = recording();
+  // While recording, the bar shows the sentence being spoken, nothing else.
+  const current = rec ? { caption: subtitle, target: null }
+    : override || (tour.active ? stepCaption(tour) : { caption: routeCaption(pathname), target: null });
 
   // Soft outline on the element being discussed. Polled because it may appear later (e.g. after "Register").
   useEffect(() => {
-    if (!on || !current.target) return;
+    if (!on || !current.target || rec) return;
     let scrolled = false;
     const mark = () => {
       document.querySelectorAll("[data-tour-target]").forEach((el) => {
@@ -111,17 +141,23 @@ export function CaptionBar() {
       clearInterval(t);
       document.querySelectorAll(".video-highlight").forEach((el) => el.classList.remove("video-highlight"));
     };
-  }, [on, current.target]);
+  }, [on, current.target, rec]);
 
-  if (!on || !current.caption) return null;
+  if (!on) return null;
   return (
-    <div
-      role="status"
-      aria-live="polite"
-      className="fixed inset-x-0 bottom-0 z-[70] flex justify-center bg-ink px-10 py-5 text-center font-semibold leading-snug text-white shadow-2xl"
-      style={{ fontSize: "28px" }}
-    >
-      <span className="max-w-5xl">{current.caption}</span>
-    </div>
+    <>
+      <PersonaLabel />
+      {current.caption && (
+        <div
+          role="status"
+          aria-live="polite"
+          data-caption-bar
+          className="fixed inset-x-0 bottom-0 z-[70] flex justify-center bg-ink px-10 py-4 text-center font-semibold leading-snug text-white shadow-2xl"
+          style={{ fontSize: rec ? "26px" : "28px" }}
+        >
+          <span className="max-w-5xl">{current.caption}</span>
+        </div>
+      )}
+    </>
   );
 }

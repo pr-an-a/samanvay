@@ -3,7 +3,7 @@
 **The idea in one line:** officers don't need another dashboard. Samanvay checks across bureaus at the moment
 they're about to act.
 
-The video is made by a script, not by hand: `node video/build.mjs` reseeds the data, writes the voiceover with Piper,
+The video is made by a script, not by hand: `node video/build.mjs` reseeds the data, writes the voiceover (Kokoro `af_heart`, set in `video/config.json`; it waits there for `voice_confirmed`),
 records every section in the real app (video mode, 1920×1080), and assembles `video/out/samanvay_demo_draft.mp4`.
 The exact voiceover lines, their target lengths and where every spoken number comes from are in
 [`video/VOICEOVER.md`](video/VOICEOVER.md) (generated). This page is the plan and the human-run version.
@@ -13,21 +13,12 @@ text is on screen before the sentence is spoken. If the screen disagrees, the bu
 
 ## The flow
 
-| # | Scene | Screen | What happens | Spoken numbers (source) |
-|---|---|---|---|---|
-| T | Title card | Charcoal card | Samanvay · SIH26264 · Team First Commit · VNR VJIET | none |
-| 1 | **Illustrative scenario** (label on screen) | `/story` | Ananya's college withholds her original certificates; she complains to the Grievance Cell; the Regulation Bureau is already acting on the same college. Two files, one college, no connection | none |
-| 2 | Without / With | `/without-with` | Two bureau inboxes; **Turn on Samanvay** draws the matches | matches and how many have no AICTE ID (`/demo/without-with`) |
-| 3 | The pre-action check | Case `PG-2026-00169` | An officer types a request for Ananya's certificate records; the check panel shows the official alert **"Potential Overlapping Cases – Coordination Required"** and that the Regulation Bureau already asked | days since the other bureau asked (`/cases/{id}/actions/check`) |
-| 4 | Coordinate | Check panel → Regulation Bureau inbox | A note instead of a duplicate request; the other bureau's bell rings and the note waits at the top of their inbox | none |
-| 5 | One merged timeline | College page | Two bureau threads join into one shared timeline | none |
-| 6 | Reports | `/reports` | KPIs count up; open vs overdue by bureau; ageing chart | none |
-| 7 | Stress test | `/stress` | Twenty ways to write one college's name through the real matcher; misses shown in red | totals from `/demo/stress-test` |
-| 8 | Baselines and accuracy | `/accuracy` | Bars: AICTE ID only, exact name, Samanvay on 50 planted overlaps; and a second dataset the matcher was never tuned on | `eval/results.json` (`baselines.seed42`, `baselines.unseen_seed43`) |
-| 9 | How it works | `/how-it-works` | AICTE ID match; fuzzy name and address matching; description similarity; rule-based clash checks; explainable rules, no black-box AI | none |
-| 10 | Inbox, privacy, deadlines | Inbox → case page (hidden complainant name) → Administrator bell | One coordination inbox; the other bureau sees "A*** R***"; "Run check now" | none |
-| 11 | Close | Inbox | "Samanvay checks across bureaus at the moment an officer is about to act." | none |
-| E | End card | Charcoal card | Key numbers and "Prototype on synthetic data. Not integrated with AICTE systems." | same sources |
+The video is **10 scenes in 6 chapters** (each chapter opens with a 2-second card): 1 The problem (Ananya, illustrative) · 2 Finding the same college
+(Without / With) · 3 Stopping a duplicate request (the pre-action check, coordinating, the other bureau's inbox and the merged timeline) · 4 Does it work?
+(stress test, accuracy with the second dataset) · 5 How it works · 6 Built for officers (Reports, inbox and privacy). A top-left label says who we are
+watching, the bottom bar is the subtitle for the sentence being spoken, and the guided-demo side panel is hidden.
+The full script, shot list, and the self-review are in [`video/SHOTLIST.md`](video/SHOTLIST.md); the generated lines and the numbers' sources are in
+[`video/VOICEOVER.md`](video/VOICEOVER.md); subtitles are `video/out/samanvay_demo.srt`.
 
 ## Run it by hand (the guided demo)
 

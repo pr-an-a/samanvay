@@ -126,7 +126,7 @@ export default function Layout() {
           <AlertsBell />
         </header>
         <main className="mx-auto w-full max-w-[1200px] flex-1 px-8 py-6">
-          {tour.active ? (
+          {tour.active && !video.on ? (
             // The guided-demo panel gets its own column so it never covers a button.
             <div className="flex items-start gap-8">
               <div className="min-w-0 flex-1">

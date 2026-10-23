@@ -81,7 +81,7 @@ export default function StoryPage() {
               <text x="650" y="130" textAnchor="middle" fontSize="13" fill="#cfc6b8" fontFamily="Inter, sans-serif">no connection</text>
             </g>
           </svg>
-          <p className="font-display mt-1 min-h-[2.4em] text-center text-3xl font-semibold leading-snug">{LINES[beat]}</p>
+          <p data-rec-hide className="font-display mt-1 min-h-[2.4em] text-center text-3xl font-semibold leading-snug">{LINES[beat]}</p>
         </section>
         <p className="mt-3 text-center text-base text-muted">Illustrative scenario: invented for this demo, not a real case or person.</p>
         <div className="mt-5 flex justify-center">

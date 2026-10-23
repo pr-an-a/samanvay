@@ -165,3 +165,9 @@ html[data-video="on"] main {
   .thread-loop { stroke-dashoffset: 0; }
 }
 .video-highlight { scroll-margin-top: 1.5rem; }
+
+/* Recording (video/record.mjs): a gentle pulse on what is about to be clicked, and sit the sidebar below the persona label. */
+html[data-video="on"] .sticky.top-0.flex.h-screen { padding-top: 3.2rem; }
+html[data-rec="1"] [data-rec-hide] { display: none !important; }
+@keyframes __pulse { 0% { box-shadow: 0 0 0 0 rgb(232 150 122 / 0.85); } 70% { box-shadow: 0 0 0 14px rgb(232 150 122 / 0); } 100% { box-shadow: 0 0 0 0 rgb(232 150 122 / 0); } }
+.__pulse { animation: __pulse 0.5s ease-out 1; outline: 3px solid rgb(232 150 122 / 0.9); outline-offset: 3px; border-radius: 10px; }

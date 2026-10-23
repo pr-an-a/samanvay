@@ -1,15 +1,37 @@
 {
   "voice": {
-    "name": "en_US-ryan-high",
-    "model": "voices/en_US-ryan-high.onnx",
-    "length_scale": 1.08,
-    "noise_scale": 0.6,
-    "noise_w_scale": 0.7,
+    "engine": "kokoro",
+    "name": "af_heart",
+    "lang_code": "a",
+    "repo_id": "hexgrad/Kokoro-82M",
+    "speed": 0.9,
+    "sample_rate": 24000,
+    "python": "voice_test2/kokoro-venv/bin/python",
     "sentence_gap_seconds": 0.25,
     "say_as": {
       "AICTE": "A I C T E",
       "ID": "I D",
-      "AI": "A I"
+      "AI": "A I",
+      "Samanvay": "Sum-un-vai",
+      "Ananya": "Ununya"
+    },
+    "pronunciation": {
+      "Samanvay": "Sum-un-vai",
+      "Ananya": "Ununya"
+    },
+    "voice_confirmed": true,
+    "previous_piper": {
+      "name": "en_US-ryan-high",
+      "model": "voices/en_US-ryan-high.onnx",
+      "length_scale": 1.08,
+      "noise_scale": 0.6,
+      "noise_w_scale": 0.7,
+      "sentence_gap_seconds": 0.25,
+      "say_as": {
+        "AICTE": "A I C T E",
+        "ID": "I D",
+        "AI": "A I"
+      }
     }
   },
   "title_card": {
@@ -31,19 +53,20 @@
     "video_offset_seconds": 0.137
   },
   "pacing": {
-    "lead_in_seconds": 0.5,
-    "tail_hold_seconds": 0.6,
+    "lead_in_seconds": 0.3,
+    "tail_hold_seconds": 0.4,
     "important_hold_seconds": 1.0,
     "typing_ms_per_char": [
-      45,
-      85
-    ]
+      26,
+      46
+    ],
+    "tail_hold_seconds_final": 0.8
   },
   "assemble": {
-    "crossfade_seconds": 0.4,
+    "crossfade_seconds": 0.3,
     "loudness_lufs": -16,
     "target_seconds": 210,
-    "max_seconds": 235
+    "max_seconds": 239
   },
   "app": {
     "base_url": "http://localhost:5173",

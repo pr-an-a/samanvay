@@ -2,7 +2,7 @@
 import { chromium } from "playwright";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { cfg, ROOT, OUT, ensureDir, readJson } from "./lib.mjs";
+import { cfg, script, ROOT, OUT, ensureDir, readJson } from "./lib.mjs";
 
 const FONTS = join(ROOT, "frontend", "node_modules", "@fontsource");
 const css = `
@@ -39,6 +39,17 @@ const html = {
     </div>
     <div class="foot">${cfg.end_card.disclaimer}</div>`,
 };
+// Chapter cards ("3 · Stopping a duplicate request") and transition cards ("Meanwhile, at the Regulation Bureau…")
+const chapter = (label) => {
+  const [n, ...rest] = label.split(" · ");
+  return `<style>${css}</style>${mark.replace('width="120" height="120"', 'width="84" height="84"')}
+    <div style="font-size:30px;letter-spacing:.22em;color:#e0c9b4;text-transform:uppercase;margin-bottom:26px">Chapter ${n}</div>
+    <h1 style="font-size:104px;max-width:1500px;text-align:center;line-height:1.08">${rest.join(" · ")}</h1>`;
+};
+const transition = (text) => `<style>${css}</style>${mark.replace('width="120" height="120"', 'width="84" height="84"')}
+  <h1 style="font-size:92px;font-style:italic;font-weight:400;max-width:1500px;text-align:center;line-height:1.15">${text}</h1>`;
+script.cards.chapters.forEach((label, i) => { html[`chapter_${i + 1}`] = chapter(label); });
+script.sections.filter((s) => s.transition).forEach((s) => { html[`transition_${s.id}`] = transition(s.transition); });
 ensureDir(join(OUT, "cards"));
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
