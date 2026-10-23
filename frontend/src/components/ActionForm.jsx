@@ -10,7 +10,7 @@ import { Button, Card, ErrorBox } from "./ui";
 
 const INPUT = "w-full rounded-lg border border-line bg-surface px-3 py-2 text-lg text-ink";
 const NEEDS_ASKING = ["seek_reply", "request_documents", "show_cause"];
-const DEMO_EXAMPLE = { kind: "seek_reply", asking_for: "Laboratory equipment list and the latest inspection report" };
+const DEMO_EXAMPLE = { kind: "seek_reply", asking_for: "Register of original certificates held and the reason they are withheld" };
 
 /** "New action" on a case. Before anything is saved, Samanvay checks it against the same college's cases at other bureaus. */
 export default function ActionForm({ caseItem, links = [], onSaved }) {
@@ -95,7 +95,7 @@ export default function ActionForm({ caseItem, links = [], onSaved }) {
           <label className="flex flex-col gap-1.5 text-base text-ink-2">
             Asking for{NEEDS_ASKING.includes(form.kind) ? <span className="text-muted"> (required)</span> : <span className="text-muted"> (optional)</span>}
             <input value={form.asking_for} onChange={set("asking_for")} required={NEEDS_ASKING.includes(form.kind)} maxLength={300} className={INPUT}
-              placeholder="e.g. Laboratory equipment list and inspection report" />
+              placeholder="e.g. Register of certificates held and the reason" />
           </label>
         )}
         <div className="flex items-center justify-between gap-4 md:col-span-2">

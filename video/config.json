@@ -1,0 +1,52 @@
+{
+  "voice": {
+    "name": "en_US-ryan-high",
+    "model": "voices/en_US-ryan-high.onnx",
+    "length_scale": 1.08,
+    "noise_scale": 0.6,
+    "noise_w_scale": 0.7,
+    "sentence_gap_seconds": 0.25,
+    "say_as": {
+      "AICTE": "A I C T E",
+      "ID": "I D",
+      "AI": "A I"
+    }
+  },
+  "title_card": {
+    "product": "Samanvay",
+    "code": "SIH26264",
+    "team": "Team First Commit",
+    "college": "VNR VJIET",
+    "seconds": 3
+  },
+  "end_card": {
+    "seconds": 4,
+    "disclaimer": "Prototype on synthetic data. Not integrated with AICTE systems."
+  },
+  "capture": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 25,
+    "page_zoom": 1.2,
+    "video_offset_seconds": 0.137
+  },
+  "pacing": {
+    "lead_in_seconds": 0.5,
+    "tail_hold_seconds": 0.6,
+    "important_hold_seconds": 1.0,
+    "typing_ms_per_char": [
+      45,
+      85
+    ]
+  },
+  "assemble": {
+    "crossfade_seconds": 0.4,
+    "loudness_lufs": -16,
+    "target_seconds": 210,
+    "max_seconds": 235
+  },
+  "app": {
+    "base_url": "http://localhost:5173",
+    "api": "http://localhost:5173/api"
+  }
+}

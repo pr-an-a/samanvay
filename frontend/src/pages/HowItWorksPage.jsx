@@ -7,7 +7,7 @@ const bold = (t) => <span className="font-semibold text-ink">{t}</span>;
 /** Two bureau threads join, then one thread runs through the four steps. */
 function Flow() {
   const on = useOn();
-  const labels = ["Find the college", "Show the evidence", "Check before acting", "A person decides"];
+  const labels = ["AICTE ID match", "Fuzzy name + address", "Description similarity", "Clash rules"];
   const xs = [330, 500, 670, 840];
   return (
     <svg viewBox="0 0 1000 96" className="h-24 w-full" role="img" aria-label="Four steps along one thread">
@@ -33,10 +33,10 @@ export default function HowItWorksPage() {
   if (!data) return <Loading />;
   const s = data.clash_settings;
   const steps = [
-    ["1", "Find the same college", <>Even with no AICTE ID, Samanvay compares the college {bold("name")} (spelling, initials, abbreviations), {bold("address")}, {bold("district")} and type. If both complaints carry the same AICTE ID, that settles it. Different IDs are never linked.</>],
-    ["2", "Show the evidence", <>Every suggested match comes with a {bold("score breakdown")}: what matched, what did not, and what was missing. Dates are never used to decide a match.</>],
-    ["3", "Check before you act", <>When an officer is about to send an action, Samanvay checks the cases an officer has confirmed as the same college, with plain rules (no AI): {bold("duplicate effort")}, a similar request within {s.duplicate_days} days; {bold("conflicting action")}, such as closing while another bureau has escalated or issued a show-cause notice (within {s.conflict_days} days), or transferring to a bureau already on the college; {bold("waiting on each other")}, both cases quiet for {s.idle_days} days. These windows are demo settings, not official AICTE rules.</>],
-    ["4", "A person decides", <>Nothing is merged or sent automatically. The officer can {bold("coordinate")} (a note that rings the other bureau’s bell), {bold("send anyway")} with a reason, or cancel. Every decision, note and override is in the audit log, which cannot be edited.</>],
+    ["1", "AICTE ID match", <>When both complaints carry the same {bold("AICTE ID")}, that settles it. Different IDs are never linked.</>],
+    ["2", "Fuzzy name and address matching", <>With no ID, Samanvay compares {bold("names and addresses")} even when they use initials, abbreviations, merged words or spelling slips, and checks the district and the type of college.</>],
+    ["3", "Description similarity", <>It compares what the complaints say, to tell whether two cases are about the {bold("same issue")}. It never decides whether two colleges are the same.</>],
+    ["4", "Rule-based clash checks", <>Before an action goes out: {bold("duplicate effort")}, a similar request within {s.duplicate_days} days; {bold("conflicting action")}, such as closing while another bureau has escalated or issued a show-cause notice (within {s.conflict_days} days), or transferring to a bureau already on the college; {bold("waiting on each other")}, both cases quiet for {s.idle_days} days. Demo settings, not official AICTE rules.</>],
   ];
   return (
     <div className="space-y-6">
@@ -59,8 +59,9 @@ export default function HowItWorksPage() {
         <div className="flex items-start gap-4">
           <span className="mt-1 text-white"><ThreadMark size={28} /></span>
           <div>
-            <h2 className="font-display text-2xl font-semibold">Privacy by design</h2>
+            <h2 className="font-display text-2xl font-semibold">Explainable rules, no black-box AI. A person decides.</h2>
             <p className="mt-1 text-lg text-[#e9e2d6]">
+              Every match shows its score breakdown. Nothing is merged or sent automatically, and every decision, note and override is in the audit log.
               All data here is synthetic. A bureau sees complainant names only on its own cases: other bureaus see them hidden (R*** K***).
               There are no phone numbers or emails, and complainant names are never logged. Sign-in is demo-grade, not production authentication.
             </p>

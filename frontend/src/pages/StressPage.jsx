@@ -65,7 +65,7 @@ export default function StressPage() {
         <table className="w-full">
           <thead className="bg-sand text-left text-base text-ink-2">
             <tr>
-              <th className="px-5 py-2 font-normal">Name as written</th>
+              <th className="px-5 py-1.5 font-normal">Name as written</th>
               <th className="px-3 py-3 font-normal">What is different</th>
               <th className="px-3 py-3 font-semibold text-ink">Samanvay</th>
               <th className="px-3 py-3 font-normal">Exact name</th>
@@ -78,18 +78,18 @@ export default function StressPage() {
               return (
                 <tr key={r.name + r.what} ref={i === shown - 1 ? newest : null}
                   className={`scroll-mb-32 border-t border-line transition-colors duration-300 ${on && !r.samanvay ? "bg-late-wash" : ""}`}>
-                  <td className="px-5 py-1.5 text-base font-semibold">{r.name}</td>
-                  <td className="px-3 py-1.5 text-base text-ink-2">{r.what}{!r.district_given && " (no district)"}</td>
-                  <td className="tabular whitespace-nowrap px-3 py-1.5 text-base"><Mark ok={r.samanvay} shown={on}>{percent(r.strength)} match</Mark></td>
-                  <td className="whitespace-nowrap px-3 py-1.5 text-base"><Mark ok={r.exact_name} shown={on}>{r.exact_name ? "found" : "missed"}</Mark></td>
-                  <td className="whitespace-nowrap px-3 py-1.5 text-base"><Mark ok={r.id_only} shown={on}>{r.id_only ? "found" : "missed"}</Mark></td>
+                  <td className="px-5 py-1 text-base font-semibold">{r.name}</td>
+                  <td className="px-3 py-1 text-base text-ink-2">{r.what}{!r.district_given && " (no district)"}</td>
+                  <td className="tabular whitespace-nowrap px-3 py-1 text-base"><Mark ok={r.samanvay} shown={on}>{percent(r.strength)} match</Mark></td>
+                  <td className="whitespace-nowrap px-3 py-1 text-base"><Mark ok={r.exact_name} shown={on}>{r.exact_name ? "found" : "missed"}</Mark></td>
+                  <td className="whitespace-nowrap px-3 py-1 text-base"><Mark ok={r.id_only} shown={on}>{r.id_only ? "found" : "missed"}</Mark></td>
                 </tr>
               );
             })}
           </tbody>
           <tfoot className="border-t-2 border-line bg-sand text-base">
             <tr>
-              <td className="px-5 py-3 font-semibold" colSpan={2}>{shown ? (done ? "Final score" : "Running score") : "Press Run"}</td>
+              <td className="px-5 py-2 font-semibold" colSpan={2}>{shown ? (done ? "Final score" : "Running score") : "Press Run"}</td>
               <td className="tabular px-3 py-3 font-semibold">{shown ? `${tally("samanvay")} of ${rows.length}` : ""}</td>
               <td className="tabular px-3 py-3">{shown ? `${tally("exact_name")} of ${rows.length}` : ""}</td>
               <td className="tabular px-3 py-3">{shown ? `${tally("id_only")} of ${rows.length}` : ""}</td>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth";
 import { Footer, Logo } from "../components/Layout";
 import { ThreadsHero } from "../components/threads";
@@ -61,7 +61,8 @@ export default function LoginPage() {
             {users && (
               <div className="mt-7 flex flex-wrap items-center gap-4">
                 <Button size="lg" className="!bg-[#fbf9f5] !text-ink" onClick={startTour} disabled={busy}>Start guided demo</Button>
-                <span className="text-base text-[#cfc6b8]">About 2½ minutes</span>
+                <span className="text-base text-[#cfc6b8]">About 3½ minutes</span>
+                <Link to="/story" className="text-base text-[#e9e2d6] underline decoration-white/30 underline-offset-4 hover:decoration-white">Watch the story first</Link>
               </div>
             )}
           </div>

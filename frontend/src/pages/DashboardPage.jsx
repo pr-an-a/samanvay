@@ -61,7 +61,7 @@ export default function DashboardPage() {
     <div className="space-y-8">
       <PageTitle sub="Numbers and charts for the whole picture. The day-to-day work is in the Inbox.">Reports</PageTitle>
 
-      <div className="grid grid-cols-2 gap-5 xl:grid-cols-4">
+      <div data-tour-target="reports-kpis" className="grid grid-cols-2 gap-5 xl:grid-cols-4">
         <Kpi icon="folder" value={s.sla.open} label="Open cases" onClick={() => navigate("/cases?open=true")} />
         <Kpi icon="clock" value={s.sla.overdue} label="Overdue" tone="clay" onClick={() => navigate("/cases?overdue=true")} />
         <Kpi icon="link" value={s.overlaps.suggested} label="Needs your check" tone="ochre" onClick={() => navigate("/alerts")} />

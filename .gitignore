@@ -8,3 +8,10 @@ dist/
 .DS_Store
 .vite/
 .run/
+
+# demo video: generated output, voice experiments, local tooling and the 120 MB voice model
+video/out/
+video/voice_test/
+video/.venv/
+video/voices/
+video/node_modules/

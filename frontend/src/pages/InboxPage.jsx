@@ -38,7 +38,19 @@ function Task({ t, i }) {
           </div>
           <h3 className="font-display mt-1.5 text-2xl font-semibold leading-snug">{t.college}</h3>
           <p className="text-lg">{t.title}</p>
-          <p className="text-base text-ink-2">{t.detail}</p>
+          {t.names && (
+            <p className="text-base">
+              <span className="text-muted">Written as:</span> {t.names[0]} <span aria-hidden className="text-muted">↔</span> {t.names[1]}
+            </p>
+          )}
+          <p className="text-base text-ink-2">
+            {t.tier && (
+              <span className={`mr-2 rounded-full px-2 py-0.5 text-sm ${t.tier === "id" ? "bg-sand text-ink-2" : "bg-amber-wash text-amber"}`}>
+                {t.tier === "id" ? "Same AICTE ID" : "Matched without AICTE ID"}
+              </span>
+            )}
+            {t.detail}
+          </p>
         </div>
         <span aria-hidden className="self-center text-xl text-ink-2 transition-transform group-hover:translate-x-1">→</span>
       </Link>

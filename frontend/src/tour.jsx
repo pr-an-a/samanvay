@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 
-// Guided demo: eleven steps. Some advance as the viewer acts on the page, the rest with the panel's "Next" button.
+// Guided demo: twelve steps. Some advance as the viewer acts on the page, the rest with the panel's "Next" button.
 // caption: the one line shown in video mode. captionAfter: the line once the step's own action is done.
 // target / targetAfter: data-tour-target of the element to highlight in video mode.
 export const TOUR_STEPS = [
@@ -16,9 +16,9 @@ export const TOUR_STEPS = [
   },
   {
     title: "An officer drafts a request",
-    body: "A Grievance Cell officer is about to ask a college for its laboratory report. Nothing has been sent.",
+    body: "A Grievance Cell officer is about to ask Ananya’s college for her certificate records. Nothing has been sent.",
     hint: "Click “Use demo example”, then “Check and send”.",
-    caption: "A Grievance Cell officer is about to ask a college for its lab report.",
+    caption: "A Grievance Cell officer is about to ask the college for her certificate records.",
     target: "new-action",
     go: "case",
   },
@@ -52,6 +52,14 @@ export const TOUR_STEPS = [
     go: "institution",
   },
   {
+    title: "Reports for senior officers",
+    body: "One dashboard for every bureau’s pending, ageing and overdue cases together. Time limits are demo settings.",
+    hint: null,
+    caption: "One dashboard: every bureau’s pending, ageing and overdue cases together.",
+    target: "reports-kpis",
+    go: "/reports",
+  },
+  {
     title: "Stress test: twenty ways to spell one college",
     body: "Samanvay’s real matcher runs on twenty ways a complainant might write one college’s name. Two simpler methods run alongside it.",
     hint: "Click “Run”. Failures are shown, not hidden.",
@@ -69,9 +77,9 @@ export const TOUR_STEPS = [
   },
   {
     title: "How it works",
-    body: "Find the same college, show the evidence, check before acting, and leave the decision to a person.",
+    body: "AICTE ID match, fuzzy name and address matching, description similarity, and rule-based clash checks. Explainable rules, no black-box AI.",
     hint: null,
-    caption: "Match the college. Show the evidence. Check before acting. A person decides.",
+    caption: "ID match, fuzzy names, description similarity, clash rules. Explainable, no black-box AI.",
     target: "how-steps",
     go: "/how-it-works",
   },

@@ -21,6 +21,7 @@ import InstitutionPage from "./pages/InstitutionPage";
 import LoginPage from "./pages/LoginPage";
 import NewComplaintPage from "./pages/NewComplaintPage";
 import ReviewPage from "./pages/ReviewPage";
+import StoryPage from "./pages/StoryPage";
 import StressPage from "./pages/StressPage";
 import WithoutWithPage from "./pages/WithoutWithPage";
 import { TourProvider } from "./tour";
@@ -34,6 +35,7 @@ createRoot(document.getElementById("root")).render(
           <VideoProvider>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/story" element={<StoryPage />} />
             <Route
               element={
                 <RequireAuth>

@@ -46,10 +46,24 @@ def saved_sessions() -> list[tuple[str, str, str | None]]:
 DEMO_RB_CASE, DEMO_PGRC_CASE = "RB/2026/0138", "PG-2026-00169"
 
 
+def demo_story_prepare(db) -> None:
+    """The demo college as the video tells it (run BEFORE the matcher, so the match is real): a student, Ananya,
+    complains to the Grievance Cell that her college withholds her original certificates, writing its name with
+    a spelling slip and no AICTE ID; the Regulation Bureau already has a case on the same college."""
+    pg = db.query(Case).filter_by(case_id=DEMO_PGRC_CASE).one()
+    rb = db.query(Case).filter_by(case_id=DEMO_RB_CASE).one()
+    pg.raw_institution_name = "Shri Megha Saraswathi Inst. of Tech."
+    pg.complainant_name = "Ananya Rao"  # fictional
+    pg.category = rb.category = "certificate_withholding"
+    pg.description = "Original certificates withheld after course completion; the college has given no written reason."
+    rb.description = "Complaint that original certificates of passed-out students are being held back; scrutiny of the college's certificate-release practice."
+    db.flush()
+
+
 def demo_story(db, users: list[User]) -> None:
     """Back-story for the demo college, written as history so the pre-action check triggers reliably:
     the Grievance Cell officer already confirmed the two cases are the same college 10 days ago, and the
-    Regulation Bureau asked the college for its lab inspection report 6 days ago. (Demo data: the confirmation
+    Regulation Bureau asked the college for its certificate register 6 days ago. (Demo data: the confirmation
     is attributed to the demo Grievance Cell officer. The matcher itself never confirms anything.)"""
     rb = db.query(Case).filter_by(case_id=DEMO_RB_CASE).one()
     pg = db.query(Case).filter_by(case_id=DEMO_PGRC_CASE).one()
@@ -58,7 +72,7 @@ def demo_story(db, users: list[User]) -> None:
     a, b = sorted((rb, pg), key=lambda c: c.id)
     link = db.query(CaseLink).filter_by(case_a_id=a.id, case_b_id=b.id).one()
     link.status, link.reviewed_by, link.reviewed_at = LinkStatus.confirmed.value, officer.id, now - timedelta(days=10)
-    remark = "Same college. Let us coordinate on the lab inspection."
+    remark = "Same college. Let us coordinate on the certificate complaint."
     for case, other in ((rb, pg), (pg, rb)):
         db.add(CaseEvent(case_id=case.id, actor=officer.name, bureau="PGRC", action=f"Overlap with {other.case_id} confirmed",
                          remarks=remark, timestamp=now - timedelta(days=10)))
@@ -66,7 +80,7 @@ def demo_story(db, users: list[User]) -> None:
     db.add(AuditLog(timestamp=now - timedelta(days=10), action=AuditAction.link_confirmed.value, actor_name=officer.name,
                     actor_role=officer.role, actor_bureau="PGRC", summary=f"Confirmed {pair} as the same college",
                     case_refs=pair, link_id=link.id, remarks=remark))
-    asked = "Latest laboratory inspection report and equipment list"
+    asked = "Register of original certificates held and fee receipts"
     db.add(CaseEvent(case_id=rb.id, actor="R. Bhatt", bureau="RB", action="Documents requested from institution",
                      kind="request_documents", asking_for=asked, timestamp=now - timedelta(days=6)))
     rb.last_action, rb.next_action = "Documents requested from institution", "Await documents"
@@ -86,6 +100,8 @@ def run(shift_to_today: bool = True, data_dir: Path = DATA_DIR, with_demo_story:
         by_role = {(u.role, u.bureau): u.id for u in users}
         db.add_all(AuthToken(token=t, user_id=by_role[(role, bureau)]) for t, role, bureau in sessions
                    if (role, bureau) in by_role)
+        if with_demo_story:
+            demo_story_prepare(db)
         links = run_all(db)
         if with_demo_story:
             demo_story(db, users)

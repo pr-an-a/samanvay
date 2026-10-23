@@ -57,13 +57,14 @@ export default function WithoutWithPage() {
   const measure = useCallback(() => {
     if (!box.current || !data) return;
     const origin = box.current.getBoundingClientRect();
+    const z = origin.width / box.current.offsetWidth || 1; // 1 normally; not 1 when the page is CSS-zoomed (the video recorder zooms it)
     setLines(
       data.pairs.flatMap((p) => {
         const l = refs.current[`L${p.key}`], r = refs.current[`R${p.key}`];
         if (!l || !r) return [];
         const a = l.getBoundingClientRect(), b = r.getBoundingClientRect();
-        const x1 = a.right - origin.left, y1 = a.top + a.height / 2 - origin.top;
-        const x2 = b.left - origin.left, y2 = b.top + b.height / 2 - origin.top;
+        const x1 = (a.right - origin.left) / z, y1 = (a.top + a.height / 2 - origin.top) / z;
+        const x2 = (b.left - origin.left) / z, y2 = (b.top + b.height / 2 - origin.top) / z;
         return [{ ...p, x1, y1, x2, y2, len: Math.hypot(x2 - x1, y2 - y1) * 1.15 }];
       }),
     );
@@ -140,10 +141,10 @@ export default function WithoutWithPage() {
         ))}
       </div>
 
-      <p className="font-display mt-4 px-4 pb-1 text-center text-3xl font-semibold leading-snug">{on ? AFTER : BEFORE}</p>
+      <p data-video-hide className="font-display mt-4 px-4 pb-1 text-center text-3xl font-semibold leading-snug">{on ? AFTER : BEFORE}</p>
       </div>
       <p className="text-center text-base text-muted">
-        Real cases from the demo data (all synthetic). The “New today” complaint is the prepared demo complaint. A match is only a suggestion until an officer confirms it.
+        Real cases from the demo data (all synthetic). A match is only a suggestion until an officer confirms it.
       </p>
     </div>
   );

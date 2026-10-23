@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
 import { useTour } from "../tour";
-import { BUREAUS, bureauName, formatDateTime } from "../labels";
+import { BUREAUS, OFFICIAL_TITLE, bureauName, formatDateTime } from "../labels";
 import { Bureau, Button, ErrorBox } from "./ui";
 import { ThreadMark, useOn } from "./threads";
 
@@ -88,6 +88,7 @@ export default function CheckPanel({ caseItem, draft, clashes, onClose, onSent }
           <h2 id="check-title" className="font-display mt-2 text-4xl font-semibold leading-tight">
             Before you send: {first.headline}
           </h2>
+          <p className="mt-1.5 text-lg font-semibold text-[#f0c987]">{OFFICIAL_TITLE}</p>
         </header>
 
         <div className="space-y-5 px-7 py-6">

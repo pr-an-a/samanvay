@@ -53,7 +53,10 @@ def test_without_with_has_three_real_pairs(client, headers):
         assert all("complainant_name" not in c for c in body[side])
     by_pair = {k: (next(c for c in body["rb"] if c["pair"] == k), next(c for c in body["pgrc"] if c["pair"] == k)) for k in "ABC"}
     assert all(a["college"] != b["college"] for a, b in by_pair.values())  # spelt differently on each side
-    assert by_pair["A"][0]["case_id"] == "RB/2026/0150" and by_pair["A"][1]["incoming"]
+    # pair A is the demo college: Ananya's Grievance Cell complaint (misspelt name) and the Regulation Bureau's case
+    assert (by_pair["A"][0]["case_id"], by_pair["A"][1]["case_id"]) == ("RB/2026/0138", "PG-2026-00169")
+    assert by_pair["A"][1]["college"] == "Shri Megha Saraswathi Inst. of Tech."
+    assert [p["tier"] for p in body["pairs"]].count("entity") == 2 and [p["label"] for p in body["pairs"]].count("Matched without AICTE ID") == 2
 
 
 def test_baseline_counts_are_computed_from_the_pairs():

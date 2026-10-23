@@ -95,11 +95,11 @@ def pg_pk(client, headers):
 
 def test_check_finds_the_seeded_duplicate_and_saves_nothing(client, headers, pg_pk):
     before = len(client.get(f"/cases/{pg_pk}/events", headers=headers["PGRC"]).json())
-    r = act(client, headers, "PGRC", pg_pk, kind="seek_reply", asking_for="Laboratory equipment list and inspection report")
+    r = act(client, headers, "PGRC", pg_pk, kind="seek_reply", asking_for="Register of original certificates held and the reason")
     body = r.json()
     assert r.status_code == 200 and types(body["clashes"]) == ["duplicate_effort"]
     other = body["clashes"][0]["other"]
-    assert other["bureau"] == "RB" and other["days_ago"] == 6 and "inspection report" in other["asking_for"]
+    assert other["bureau"] == "RB" and other["days_ago"] == 6 and "certificates" in other["asking_for"]
     assert body["checked"] == [{"case_id": "RB/2026/0138", "bureau": "RB"}]
     assert len(client.get(f"/cases/{pg_pk}/events", headers=headers["PGRC"]).json()) == before
 
@@ -136,7 +136,7 @@ def test_coordinating_posts_a_note_rings_the_bell_and_is_audited(client, headers
 
 
 def test_sending_over_a_clash_needs_a_reason_and_is_audited(client, headers, pg_pk):
-    body = {"kind": "seek_reply", "asking_for": "Laboratory equipment list"}
+    body = {"kind": "seek_reply", "asking_for": "Register of original certificates held"}
     r = client.post(f"/cases/{pg_pk}/actions", headers=headers["PGRC"], json=body)
     assert r.status_code == 409 and r.json()["detail"]["clashes"][0]["type"] == "duplicate_effort"
     assert client.post(f"/cases/{pg_pk}/actions", headers=headers["PGRC"], json={**body, "override_reason": "no"}).status_code == 409
@@ -154,7 +154,7 @@ def test_sending_over_a_clash_needs_a_reason_and_is_audited(client, headers, pg_
 
 def test_clash_free_action_is_saved_straight_away(client, headers):
     rb_pk = client.get("/cases?q=RB/2026/0138", headers=headers["RB"]).json()[0]["id"]
-    r = client.post(f"/cases/{rb_pk}/actions", headers=headers["RB"], json={"kind": "show_cause", "asking_for": "Explanation for the lab shortfall"})
+    r = client.post(f"/cases/{rb_pk}/actions", headers=headers["RB"], json={"kind": "show_cause", "asking_for": "Explanation for withholding certificates"})
     assert r.status_code == 201 and r.json()["clashes"] == []
 
 
@@ -190,3 +190,14 @@ def test_inbox_lists_new_matches_and_only_the_users_bureau(client, headers):
     reg = client.get("/inbox", headers=headers["REGIONAL"]).json()
     assert all("REGIONAL" in t["bureaus"] for t in reg["tasks"])
     assert client.get("/inbox").status_code == 401
+
+
+def test_inbox_new_matches_are_varied_and_explained(client, headers):
+    rows = [t for t in client.get("/inbox", headers=headers["ADMIN"]).json()["tasks"] if t["kind"] == "new_match"]
+    assert len(rows) >= 3
+    first = rows[:2]
+    assert {t["tier"] for t in first} == {"entity", "id"}  # one of each kind first, not look-alikes
+    assert all(t["names"][0] != t["names"][1] for t in first)  # the picked ones are written differently
+    for t in rows:
+        assert t["detail"].endswith(".") and 0 < t["strength"] <= 1
+    assert len({t["detail"] for t in rows}) > 1

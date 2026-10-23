@@ -17,6 +17,7 @@ function Baselines({ data }) {
   }, []);
   const b = data.baselines.seed42;
   const all = b.all, half = b.test_half;
+  const u = data.baselines.unseen_seed43.all.methods;
   return (
     <Card data-tour-target="baseline" title="Samanvay compared with simpler methods" sub="The same pairs of cases for every method.">
       <p className="text-xl font-semibold">Overlaps found, out of {all.overlaps} real same-college pairs</p>
@@ -43,7 +44,12 @@ function Baselines({ data }) {
         Wrong matches are counted over the {all.non_overlap_pairs.toLocaleString("en-IN")} pairs that are not the same college (look-alikes and every other pair compared).
         On the held-out test half alone ({half.overlaps} pairs, never used to set the threshold): AICTE ID only {half.methods.id_only.found}, exact name {half.methods.exact_name.found}, Samanvay {half.methods.samanvay.found}.
       </p>
-      <p className="mt-2 text-base text-muted">
+      <p className="mt-3 rounded-lg bg-sand px-4 py-3 text-lg" data-testid="second-dataset">
+        <span className="font-semibold">A second dataset the matcher was never tuned on</span> (new colleges and complaints, same kinds of mistakes):
+        Samanvay found <span className="font-semibold">{u.samanvay.found} of {data.baselines.unseen_seed43.all.overlaps}</span> with {u.samanvay.false_positives} wrong {u.samanvay.false_positives === 1 ? "match" : "matches"}.
+        AICTE ID only found {u.id_only.found}; exact name found {u.exact_name.found}, with {u.exact_name.false_positives} wrong.
+      </p>
+      <p className="mt-2 text-base text-muted" data-testid="caveat">
         Synthetic data made by our own generator, with mistakes we designed. Real complaints will be messier, so expect lower scores for Samanvay too.
       </p>
     </Card>

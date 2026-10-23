@@ -9,10 +9,11 @@ const VideoContext = createContext({ on: false, toggle() {}, setCaption() {} });
 
 // Captions for people who open a screen without the guided demo.
 const ROUTE_CAPTIONS = {
+  "/story": "Illustrative scenario: a student’s complaint, and another bureau already acting.",
   "/login": "Officers don’t need another dashboard. Samanvay checks across bureaus at the moment they’re about to act.",
   "/": "Your coordination inbox: what needs agreeing with another bureau.",
-  "/reports": "Reports: the numbers and charts, away from the daily work.",
-  "/how-it-works": "Match the college. Show the evidence. Check before acting. A person decides.",
+  "/reports": "One dashboard: every bureau’s pending, ageing and overdue cases together.",
+  "/how-it-works": "ID match, fuzzy names, description similarity, clash rules. Explainable, no black-box AI.",
   "/alerts": "Matches waiting for an officer to check.",
   "/new": "Register a complaint: Samanvay checks the other bureaus’ cases at once.",
   "/cases": "Every case from every bureau, in one list.",
@@ -97,7 +98,10 @@ export function CaptionBar() {
         // Bring the element into view once, so a long page does not hide what the caption is about.
         if (hit && !scrolled) {
           scrolled = true;
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          const r = el.getBoundingClientRect();
+          const bar = document.querySelector("[role=status][aria-live]");
+          const limit = bar ? bar.getBoundingClientRect().top : innerHeight;
+          if (r.top < 0 || r.bottom > limit) el.scrollIntoView({ behavior: "smooth", block: r.height > limit * 0.6 ? "start" : "center" });
         }
       });
     };

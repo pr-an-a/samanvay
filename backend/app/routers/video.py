@@ -1,6 +1,5 @@
 """Data for the video-demo screens: the Without/With picture and the stress test."""
 
-import json
 from difflib import SequenceMatcher
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -10,12 +9,9 @@ from sqlalchemy.orm import Session
 from .. import clash, stress
 from ..auth import get_current_user
 from ..db import get_db
-from ..matcher import TextIndex, profile, score_pair
 from ..models import Bureau, Case, CaseLink, CaseStatus, LinkStatus
-from .demo import REPO
 
 router = APIRouter(tags=["demo"], dependencies=[Depends(get_current_user)])
-DEMO_RB_CASE = "RB/2026/0150"
 FILLERS = 3  # unmatched cases per inbox, so each side has about six
 
 
@@ -34,24 +30,24 @@ def name_similarity(link: CaseLink) -> float:
 
 @router.get("/demo/without-with")
 def without_with(db: Session = Depends(get_db)) -> dict:
-    """Two bureau inboxes with three matching pairs. The demo pair is the prepared complaint against its real RB case;
-    the other two are real matches from the data, one with and one without an AICTE ID, picked for the biggest
-    difference in spelling. Nothing is invented: every pair is something the matcher finds."""
+    """Two bureau inboxes with three matching pairs. Pair A is the demo college (Ananya's complaint and the Regulation
+    Bureau's case); the other two are real matches from the data, one with and one without an AICTE ID, picked for the
+    biggest difference in spelling. Nothing is invented: every pair is a link the matcher found."""
+    from ..seed import DEMO_PGRC_CASE, DEMO_RB_CASE
     demo_rb = db.scalar(select(Case).where(Case.case_id == DEMO_RB_CASE))
-    if demo_rb is None:
+    demo_pg = db.scalar(select(Case).where(Case.case_id == DEMO_PGRC_CASE))
+    if demo_rb is None or demo_pg is None:
         raise HTTPException(404, "Demo case not found: reseed the data")
-    demo = {k: v for k, v in json.loads((REPO / "data" / "demo_complaint.json").read_text()).items() if not k.startswith("_")}
-    incoming = Case(
-        id=-1, case_id="New complaint", source_bureau="PGRC", institution_id=None, raw_institution_name=demo["raw_institution_name"],
-        raw_address=demo["raw_address"], district=demo["district"], region=demo["region"], category=demo["category"],
-        description=demo["description"], status="pending", received_date=demo_rb.received_date)
-    scores = score_pair(profile(incoming), profile(demo_rb), TextIndex([incoming, demo_rb]))
-    pairs = [{"key": "A", "label": pair_label(scores["match_tier"]), "tier": scores["match_tier"], "strength": scores["final_confidence"]}]
-    rb, pg = [card(demo_rb, "A")], [card(incoming, "A", incoming=True)]
+    demo_link = db.scalar(select(CaseLink).where(CaseLink.case_a_id == min(demo_rb.id, demo_pg.id), CaseLink.case_b_id == max(demo_rb.id, demo_pg.id)))
+    if demo_link is None:
+        raise HTTPException(404, "Demo match not found: reseed the data")
+    pairs = [{"key": "A", "label": pair_label(demo_link.scores["match_tier"]), "tier": demo_link.scores["match_tier"],
+              "strength": demo_link.scores["final_confidence"]}]
+    rb, pg = [card(demo_rb, "A")], [card(demo_pg, "A")]
 
     links = [l for l in db.scalars(select(CaseLink).where(CaseLink.status != LinkStatus.rejected.value).order_by(CaseLink.id))
              if {l.case_a.source_bureau, l.case_b.source_bureau} == {Bureau.RB.value, Bureau.PGRC.value}
-             and DEMO_RB_CASE not in (l.case_a.case_id, l.case_b.case_id)]
+             and l.id != demo_link.id]
     for tier, key in (("entity", "B"), ("id", "C")):
         pool = sorted((l for l in links if l.scores["match_tier"] == tier), key=lambda l: (name_similarity(l), l.id))
         if pool:

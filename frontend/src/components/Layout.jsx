@@ -74,6 +74,7 @@ export default function Layout() {
   // Keep the "Needs check" count current as the officer moves around.
   useEffect(() => {
     reload();
+    window.scrollTo(0, 0); // a new page starts at its top
   }, [pathname, reload]);
 
   return (

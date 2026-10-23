@@ -69,7 +69,7 @@ export default function TourPanel() {
               : `Click “Show the ${bureauName(other)}’s bell” to sign in as them.`}
           </p>
         )}
-        {step === 10 && tour.switchedTo === "ADMIN" && (
+        {step === 11 && tour.switchedTo === "ADMIN" && (
           <p className="rounded-lg bg-sand px-3 py-2 text-base text-ink">You are now the Administrator. Open the bell and click “Run check now”.</p>
         )}
 
@@ -87,11 +87,12 @@ export default function TourPanel() {
               <Button variant={tour.switchedTo === other ? "primary" : "secondary"} onClick={() => next()}>Next: the merged timeline</Button>
             </>
           )}
-          {step === 6 && <Button onClick={() => next()}>Next: stress test</Button>}
-          {step === 7 && <Button variant="secondary" onClick={() => next()}>Next: simpler methods</Button>}
-          {step === 8 && <Button onClick={() => next()}>Next: how it works</Button>}
-          {step === 9 && <Button onClick={() => next()}>Next: inbox and deadlines</Button>}
-          {step === 10 && (
+          {step === 6 && <Button onClick={() => next()}>Next: reports</Button>}
+          {step === 7 && <Button variant="secondary" onClick={() => next()}>Next: stress test</Button>}
+          {step === 8 && <Button variant="secondary" onClick={() => next()}>Next: simpler methods</Button>}
+          {step === 9 && <Button onClick={() => next()}>Next: how it works</Button>}
+          {step === 10 && <Button onClick={() => next()}>Next: inbox and deadlines</Button>}
+          {step === 11 && (
             <>
               {tour.switchedTo !== "ADMIN" && (
                 <Button onClick={() => signInAs((u) => u.role === "ADMIN", { switchedTo: "ADMIN" })}>Sign in as Administrator</Button>
