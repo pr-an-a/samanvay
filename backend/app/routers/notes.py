@@ -21,6 +21,21 @@ def get_link_or_404(db: Session, link_id: int) -> CaseLink:
     return link
 
 
+def add_note(db: Session, link: CaseLink, user: User, text: str) -> CoordinationNote:
+    """Append a note, audit it and ring the other bureau's bell. The caller commits."""
+    if link.status != LinkStatus.confirmed.value:
+        raise HTTPException(409, "Notes can only be posted once an officer has confirmed the match")
+    involved = {link.case_a.source_bureau, link.case_b.source_bureau}
+    if user.role != Role.ADMIN.value and user.bureau not in involved:
+        raise HTTPException(403, "Only the bureaus involved in this match (and the Administrator) can post notes")
+    note = CoordinationNote(link_id=link.id, author=user.name, bureau=user.bureau or "ADMIN", body=text)
+    db.add(note)
+    pair = f"{link.case_a.case_id}, {link.case_b.case_id}"
+    audit.record(db, user, AuditAction.note_posted, f"Left a coordination note on {pair}", pair, link_id=link.id, remarks=text)
+    audit.notify_note(db, link, user, BUREAU_NAMES[note.bureau])
+    return note
+
+
 @router.get("", response_model=list[NoteOut])
 def list_notes(link_id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     get_link_or_404(db, link_id)
@@ -32,17 +47,7 @@ def list_notes(link_id: int, db: Session = Depends(get_db), user: User = Depends
 def post_note(link_id: int, body: NoteIn, db: Session = Depends(get_db),
               user: User = Depends(require_roles(*OFFICER_ROLES))):
     link = get_link_or_404(db, link_id)
-    if link.status != LinkStatus.confirmed.value:
-        raise HTTPException(409, "Notes can only be posted once an officer has confirmed the match")
-    involved = {link.case_a.source_bureau, link.case_b.source_bureau}
-    if user.role != Role.ADMIN.value and user.bureau not in involved:
-        raise HTTPException(403, "Only the bureaus involved in this match (and the Administrator) can post notes")
-    note = CoordinationNote(link_id=link.id, author=user.name, bureau=user.bureau or "ADMIN", body=body.body)
-    db.add(note)
-    pair = f"{link.case_a.case_id}, {link.case_b.case_id}"
-    audit.record(db, user, AuditAction.note_posted, f"Left a coordination note on {pair}", pair,
-                 link_id=link.id, remarks=body.body)
-    audit.notify_note(db, link, user, BUREAU_NAMES[note.bureau])
+    note = add_note(db, link, user, body.body)
     db.commit()
     db.refresh(note)
     return note

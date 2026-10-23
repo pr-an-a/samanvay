@@ -97,6 +97,8 @@ class CaseEventOut(ORM):
     action: str
     remarks: str | None
     timestamp: datetime
+    kind: str | None = None
+    asking_for: str | None = None
 
 
 class CaseLinkOut(ORM):
@@ -127,6 +129,8 @@ class TimelineEntry(BaseModel):
     action: str
     remarks: str | None
     via_confirmed_link: bool
+    kind: str | None = None
+    asking_for: str | None = None
 
 
 class LinkReviewIn(BaseModel):
@@ -138,6 +142,21 @@ class SLARuleOut(ORM):
     bureau: str
     category: str
     days: int
+
+
+class ActionIn(BaseModel):
+    """A new action on a case. `asking_for` is what the officer is asking the college (or another bureau) for."""
+    kind: str
+    asking_for: str | None = Field(default=None, max_length=300)
+    transfer_to: str | None = None
+    remarks: str | None = Field(default=None, max_length=500)
+    override_reason: str | None = Field(default=None, max_length=500)
+
+
+class CoordinateIn(BaseModel):
+    link_id: int
+    body: str = Field(min_length=1, max_length=500)
+    kind: str
 
 
 class NoteIn(BaseModel):

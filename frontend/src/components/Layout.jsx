@@ -7,16 +7,18 @@ import { CaptionBar, useVideo } from "../video";
 import { useTour } from "../tour";
 import AlertsBell from "./AlertsBell";
 import Icon from "./icons";
+import { ThreadMark } from "./threads";
 import TourPanel from "./TourPanel";
 
 const NAV = [
-  ["/", "Overview", "overview"],
-  ["/without-with", "Without / With", "compare"],
-  ["/alerts", "Needs check", "check"],
+  ["/", "Inbox", "inbox"],
+  ["/cases", "Cases", "cases"],
   ["/new", "Register", "register"],
-  ["/cases", "All cases", "cases"],
+  ["/without-with", "Without / With", "compare"],
   ["/stress", "Stress test", "stress"],
   ["/accuracy", "Accuracy", "accuracy"],
+  ["/how-it-works", "How it works", "how"],
+  ["/reports", "Reports", "overview"],
 ];
 const ADMIN_NAV = [
   ["/escalations", "Escalations", "escalate"],
@@ -32,17 +34,12 @@ export function Footer({ width = "max-w-[1200px]" }) {
 export function Logo() {
   return (
     <div className="flex items-center gap-3">
-      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-ink text-white">
-        <Icon name="logo" size={18} />
+      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-ink">
+        <ThreadMark size={20} />
       </span>
-      <span className="text-xl font-semibold text-ink">Samanvay</span>
+      <span className="font-display text-2xl font-semibold text-ink">Samanvay</span>
     </div>
   );
-}
-
-function greeting() {
-  const h = new Date().getHours();
-  return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
 }
 
 function NavItem({ to, label, icon, count }) {
@@ -57,7 +54,7 @@ function NavItem({ to, label, icon, count }) {
       <Icon name={icon} size={16} />
       <span className="flex-1 whitespace-nowrap">{label}</span>
       {count > 0 && (
-        <span className="tabular rounded-full bg-amber-wash px-2 py-0.5 text-sm text-amber" aria-label={`${count} need your check`}>
+        <span className="tabular rounded-full bg-amber-wash px-2 py-0.5 text-sm text-amber" aria-label={`${count} need your attention`}>
           {count}
         </span>
       )}
@@ -70,7 +67,7 @@ export default function Layout() {
   const tour = useTour();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { data: stats, reload } = useApi("/dashboard/stats");
+  const { data: inbox, reload } = useApi("/inbox");
   const video = useVideo();
   const isAdmin = user?.role === "ADMIN";
 
@@ -87,7 +84,7 @@ export default function Layout() {
         </div>
         <nav className="mt-6 flex-1 space-y-1" aria-label="Main">
           {NAV.map(([to, label, icon]) => (
-            <NavItem key={to} to={to} label={label} icon={icon} count={to === "/alerts" ? stats?.overlaps.suggested : 0} />
+            <NavItem key={to} to={to} label={label} icon={icon} count={to === "/" ? inbox?.tasks.filter((t) => t.priority < 3).length : 0} />
           ))}
           {isAdmin && (
             <div data-admin-only>
@@ -124,17 +121,7 @@ export default function Layout() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="mx-auto flex w-full max-w-[1200px] items-start justify-between gap-6 px-8 pt-6">
-          {pathname === "/" ? (
-            // The greeting belongs to the overview; other pages start with their own title.
-            <div>
-              <div className="text-3xl font-semibold text-ink">
-                {greeting()}, {user?.name?.split(" ")[0]}
-              </div>
-              <div className="mt-1 text-lg text-ink-2">{ROLES[user?.role] || user?.role}</div>
-            </div>
-          ) : (
-            <div />
-          )}
+          <p className="pt-2 text-base italic text-ink-2 font-display">Checks across bureaus before you act.</p>
           <AlertsBell />
         </header>
         <main className="mx-auto w-full max-w-[1200px] flex-1 px-8 py-6">
@@ -142,12 +129,12 @@ export default function Layout() {
             // The guided-demo panel gets its own column so it never covers a button.
             <div className="flex items-start gap-8">
               <div className="min-w-0 flex-1">
-                <Outlet />
+                <div key={pathname} className="page-enter"><Outlet /></div>
               </div>
               <TourPanel />
             </div>
           ) : (
-            <Outlet />
+            <div key={pathname} className="page-enter"><Outlet /></div>
           )}
         </main>
         <Footer />

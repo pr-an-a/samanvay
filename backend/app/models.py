@@ -92,6 +92,9 @@ class CaseEvent(Base):
     action: Mapped[str] = mapped_column(String(100))
     remarks: Mapped[str | None] = mapped_column(Text)
     timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    # Set for actions sent through the "New action" form; older records only have the free text in `action`.
+    kind: Mapped[str | None] = mapped_column(String(24))
+    asking_for: Mapped[str | None] = mapped_column(String(300))
 
     case: Mapped[Case] = relationship(back_populates="events")
 
@@ -184,6 +187,9 @@ class AuditAction(str, Enum):
     link_rejected = "link_rejected"
     case_escalated = "case_escalated"
     note_posted = "note_posted"
+    action_taken = "action_taken"
+    action_overridden = "action_overridden"
+    clash_prevented = "clash_prevented"
 
 
 class AuditLog(Base):

@@ -30,6 +30,11 @@ thresholds in `app/matcher_config.json`. Tune `link_threshold` only on the tune 
 `eval/evaluate.py --save`; never adjust weights by looking at test-half results. Never use dates
 as a matching signal. Tier 3 (issue) must not influence `final_confidence`.
 
+Pre-action check: `app/clash.py` (pure rules, no AI) + `app/clash_config.json` (demo windows, not official rules), run by
+`app/routers/actions.py` before an action is saved; it only ever coordinates, warns, or records an audited override.
+`app.seed` also writes a back-story for the demo college (a backdated confirmation attributed to the demo officer, and a
+recent RB request) so the check fires in the guided demo; evaluation seeds with `--bare` to skip it.
+
 Ingestion adapters normalise fields but keep institution name/address verbatim; reconciling
 names is the matcher's job. Ground truth overlaps are exhaustive (background institutions get
 complaints from one bureau only); keep that invariant if you change the generator.

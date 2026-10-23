@@ -16,6 +16,8 @@
 */
 @theme {
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Headlines and key moments: a soft, characterful serif (bundled locally, no internet needed). */
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
 
   --color-page: #fbf9f5;
   --color-sand: #f5f1ea;
@@ -46,6 +48,10 @@
   --color-regional: #7a8450;
   --color-regional-chip: #eceedf;
   --color-regional-ink: #4a5230;
+
+  --color-moment: #26221e; /* charcoal panel for the most important moments */
+  --color-moment-2: #3a342d;
+  --color-thread-light: #e8c9b8;
 
   --color-chart-sand: #d8d0c3;
   --color-chart-taupe: #bfb3a3;
@@ -109,3 +115,53 @@ html[data-video="on"] main {
 @media (prefers-reduced-motion: reduce) {
   .connector-line, .bar-grow { transition: none !important; }
 }
+
+/* ---------- Identity: threads joining ---------- */
+
+/* The charcoal "moment" panel: the check panel's header, the Without / With stage, the login hero. */
+.moment {
+  background: var(--color-moment);
+  color: #fbf9f5;
+  background-image: radial-gradient(120% 90% at 100% 0%, rgb(181 101 74 / 0.16), transparent 55%),
+    radial-gradient(90% 80% at 0% 100%, rgb(91 107 122 / 0.22), transparent 60%);
+}
+
+.font-display {
+  font-feature-settings: "ss01";
+  letter-spacing: -0.01em;
+}
+
+/* Threads draw themselves: set pathLength="1" on the path. */
+.thread-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+/* Motion is subtle and quick (150-400ms) and only for people who have not asked for less. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes slide-up { from { opacity: 0; transform: translateY(28px) scale(0.985); } to { opacity: 1; transform: none; } }
+  @keyframes dim { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes page { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes thread-loop {
+    0% { stroke-dashoffset: 1; opacity: 1; }
+    38% { stroke-dashoffset: 0; opacity: 1; }
+    82% { stroke-dashoffset: 0; opacity: 1; }
+    100% { stroke-dashoffset: 0; opacity: 0; }
+  }
+  @keyframes pulse-dot { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+
+  .anim-rise { animation: rise 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .anim-slide { animation: slide-up 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+  .anim-dim { animation: dim 220ms ease-out both; }
+  .page-enter { animation: page 220ms ease-out both; }
+  .thread-draw.on { animation: draw 700ms 150ms cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+  .thread-loop { animation: thread-loop 5.2s ease-in-out infinite; }
+  .pulse-dot { animation: pulse-dot 2.6s ease-in-out infinite; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .thread-draw { stroke-dashoffset: 0; }
+  .thread-loop { stroke-dashoffset: 0; }
+}
+.video-highlight { scroll-margin-top: 1.5rem; }

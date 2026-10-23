@@ -1,9 +1,10 @@
 import { Link, useParams } from "react-router-dom";
 import CoordinationNotes from "../components/CoordinationNotes";
+import ThreadTimeline from "../components/ThreadTimeline";
 import LinkList from "../components/LinkList";
 import { Bureau, Card, ErrorBox, Loading, SlaTag, PageTitle, Status } from "../components/ui";
 import { useApi } from "../hooks";
-import { BUREAUS, CATEGORIES, bureauName, formatDate, formatDateTime, plainAction } from "../labels";
+import { CATEGORIES, bureauName, formatDate } from "../labels";
 
 export default function InstitutionPage() {
   const { id } = useParams();
@@ -45,37 +46,13 @@ export default function InstitutionPage() {
         </p>
       </Card>
 
+      <Card data-tour-target="timeline" title="Shared timeline" sub="Each bureau has its own thread. Once an officer confirms it is the same college, the threads join into one.">
+        <ThreadTimeline entries={inst.timeline} />
+      </Card>
+
       {inst.links.some((l) => l.status === "confirmed") && (
         <CoordinationNotes links={inst.links.filter((l) => l.status === "confirmed")} notes={inst.notes} onPosted={reload} />
       )}
-
-      <Card title="Shared timeline" sub="Every action on this college, from every bureau, in date order.">
-        <ol className="@container space-y-1">
-          {inst.timeline.map((t, i) => (
-            <li
-              key={i}
-              className="grid gap-1 border-l-4 py-3 pl-5 @3xl:grid-cols-[12rem_14rem_1fr] @3xl:gap-6"
-              style={{ borderColor: BUREAUS[t.case_bureau]?.color }}
-            >
-              <div className="tabular text-base text-muted">{formatDateTime(t.timestamp)}</div>
-              <div className="flex flex-wrap gap-x-3 text-base @3xl:block">
-                <Bureau code={t.case_bureau} />
-                <div>
-                  <Link to={`/cases/${t.case_pk}`} className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink">{t.case_id}</Link>
-                </div>
-              </div>
-              <div>
-                <div className="text-lg font-semibold">{plainAction(t.action)}</div>
-                <div className="text-base text-ink-2">
-                  {t.actor}
-                  {t.remarks && <> · “{t.remarks}”</>}
-                </div>
-                {t.via_confirmed_link && <div className="text-base text-ok">✓ Added because an officer confirmed it is the same college</div>}
-              </div>
-            </li>
-          ))}
-        </ol>
-      </Card>
 
       <div className="grid gap-5 lg:grid-cols-2">
         <Card title={`Cases (${inst.cases.length})`}>

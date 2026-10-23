@@ -9,7 +9,10 @@ const VideoContext = createContext({ on: false, toggle() {}, setCaption() {} });
 
 // Captions for people who open a screen without the guided demo.
 const ROUTE_CAPTIONS = {
-  "/": "Overview: the colleges where two bureaus are active right now.",
+  "/login": "Officers don’t need another dashboard. Samanvay checks across bureaus at the moment they’re about to act.",
+  "/": "Your coordination inbox: what needs agreeing with another bureau.",
+  "/reports": "Reports: the numbers and charts, away from the daily work.",
+  "/how-it-works": "Match the college. Show the evidence. Check before acting. A person decides.",
   "/alerts": "Matches waiting for an officer to check.",
   "/new": "Register a complaint: Samanvay checks the other bureaus’ cases at once.",
   "/cases": "Every case from every bureau, in one list.",
@@ -21,8 +24,9 @@ const ROUTE_CAPTIONS = {
 };
 
 function routeCaption(pathname) {
-  if (pathname.startsWith("/links/")) return "Compare the two cases, then decide.";
+  if (pathname.startsWith("/links/")) return "Both bureaus’ cases, one timeline, and the notes between them.";
   if (pathname.startsWith("/institutions/")) return "One college, one timeline, across bureaus.";
+  if (pathname.startsWith("/cases/")) return "Every action is checked against other bureaus before it is sent.";
   return ROUTE_CAPTIONS[pathname] || null;
 }
 
@@ -85,9 +89,18 @@ export function CaptionBar() {
   // Soft outline on the element being discussed. Polled because it may appear later (e.g. after "Register").
   useEffect(() => {
     if (!on || !current.target) return;
-    const mark = () =>
-      document.querySelectorAll("[data-tour-target]").forEach((el) =>
-        el.classList.toggle("video-highlight", el.dataset.tourTarget === current.target));
+    let scrolled = false;
+    const mark = () => {
+      document.querySelectorAll("[data-tour-target]").forEach((el) => {
+        const hit = el.dataset.tourTarget === current.target;
+        el.classList.toggle("video-highlight", hit);
+        // Bring the element into view once, so a long page does not hide what the caption is about.
+        if (hit && !scrolled) {
+          scrolled = true;
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    };
     mark();
     const t = setInterval(mark, 300);
     return () => {
@@ -101,7 +114,7 @@ export function CaptionBar() {
     <div
       role="status"
       aria-live="polite"
-      className="fixed inset-x-0 bottom-0 z-50 flex justify-center bg-ink px-10 py-5 text-center font-semibold leading-snug text-white shadow-2xl"
+      className="fixed inset-x-0 bottom-0 z-[70] flex justify-center bg-ink px-10 py-5 text-center font-semibold leading-snug text-white shadow-2xl"
       style={{ fontSize: "28px" }}
     >
       <span className="max-w-5xl">{current.caption}</span>

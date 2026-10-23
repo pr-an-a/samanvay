@@ -58,7 +58,7 @@ def evaluate(data_dir: str, truth: str, extra: list[str]) -> tuple[dict, dict]:
     """(summary, baselines) for one dataset, from a throwaway database."""
     with tempfile.TemporaryDirectory() as tmp:
         db, out, base = f"sqlite:///{tmp}/eval.db", Path(tmp) / "summary.json", Path(tmp) / "baselines.json"
-        run(db, "-m", "app.seed", "--data-dir", str(ROOT / data_dir))
+        run(db, "-m", "app.seed", "--bare", "--data-dir", str(ROOT / data_dir))
         run(db, str(ROOT / "eval" / "evaluate.py"), "--truth", str(ROOT / "eval" / truth), "--json-out", str(out),
             "--baselines-out", str(base), *extra)
         return json.loads(out.read_text()), json.loads(base.read_text())

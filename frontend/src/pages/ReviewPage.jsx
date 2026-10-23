@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api } from "../api";
 import { useAuth } from "../auth";
 import CoordinationNotes from "../components/CoordinationNotes";
 import Evidence from "../components/Evidence";
+import ThreadTimeline from "../components/ThreadTimeline";
+import { MatchThread } from "../components/threads";
 import { Bureau, Button, Card, ErrorBox, Field, LinkStatus, Loading, SlaTag, Status, TextLink } from "../components/ui";
 import { useApi } from "../hooks";
 import { CATEGORIES, OFFICIAL_TITLE, PLAIN_TITLE, daysAgo, formatDate, formatDateTime, plainAction } from "../labels";
-import { useTour } from "../tour";
 
 function CaseSide({ c }) {
   return (
@@ -35,17 +36,13 @@ function CaseSide({ c }) {
 export default function ReviewPage() {
   const { id } = useParams();
   const { user } = useAuth();
-  const tour = useTour();
   const { data: link, error, loading, reload } = useApi(`/links/${id}`);
   const confirmed = link?.status === "confirmed";
   const { data: notes, reload: reloadNotes } = useApi(confirmed ? `/links/${id}/notes` : null);
+  const { data: timeline } = useApi(`/links/${id}/timeline`);
   const [remarks, setRemarks] = useState("");
   const [busy, setBusy] = useState(false);
   const [actionError, setActionError] = useState(null);
-
-  useEffect(() => {
-    if (link?.status === "suggested") tour.reach(4);
-  }, [link?.status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const institutionId = link && (link.case_a.institution_id || link.case_b.institution_id);
 
@@ -54,7 +51,6 @@ export default function ReviewPage() {
     setActionError(null);
     try {
       await api(`/links/${id}/${action}`, { method: "POST", body: { remarks: remarks.trim() || null } });
-      if (action === "confirm") tour.reach(5, { timelineUrl: institutionId ? `/institutions/${institutionId}` : null });
       reload();
     } catch (e) {
       setActionError(e);
@@ -70,10 +66,15 @@ export default function ReviewPage() {
     <div className="space-y-8">
       <div>
         <div className="mb-2"><LinkStatus status={link.status} /></div>
-        <h1 className="text-3xl font-semibold">Is this the same college?</h1>
+        <h1 className="font-display text-3xl font-semibold">{confirmed ? "Coordination: one college, two bureaus" : "Is this the same college?"}</h1>
         <p className="mt-1 text-lg font-semibold text-amber">{OFFICIAL_TITLE}</p>
-        <p className="mt-2 text-lg text-ink-2">{PLAIN_TITLE}. Compare the two cases, then decide.</p>
+        <p className="mt-2 text-lg text-ink-2">
+          {confirmed ? "Both bureaus’ cases, one timeline and the notes between you." : `${PLAIN_TITLE}. Compare the two cases, then decide.`}
+        </p>
       </div>
+
+      <div className="px-[8%]"><MatchThread left={link.case_a.source_bureau} right={link.case_b.source_bureau}
+        label={`${link.status === "rejected" ? "Not the same college" : "Same college"} · ${Math.round(link.scores.final_confidence * 100)}% match`} /></div>
 
       <div className="grid gap-5 lg:grid-cols-2">
         <CaseSide c={link.case_a} />
@@ -122,6 +123,12 @@ export default function ReviewPage() {
           <div className="mt-4"><ErrorBox error={actionError} /></div>
         </Card>
       </div>
+      {timeline && (
+        <Card data-tour-target="timeline" title={confirmed ? "Shared timeline" : "What each bureau has done"}
+          sub={confirmed ? "The two bureaus’ threads join where an officer confirmed the match." : "Two separate threads until an officer confirms the match."}>
+          <ThreadTimeline entries={timeline} />
+        </Card>
+      )}
       {confirmed && <CoordinationNotes links={[link]} notes={notes ?? []} onPosted={reloadNotes} />}
       <p className="text-base text-muted">Match found {formatDate(link.created_at)}.</p>
     </div>

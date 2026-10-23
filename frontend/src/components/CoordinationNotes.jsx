@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { api } from "../api";
 import { useAuth } from "../auth";
-import { useTour } from "../tour";
 import { Bureau, Button, Card, ErrorBox } from "./ui";
 import { bureauName, formatDateTime } from "../labels";
 
@@ -18,7 +17,6 @@ export const canPost = (user, link) => user?.role === "ADMIN" || involved(link).
  */
 export default function CoordinationNotes({ links, notes, onPosted }) {
   const { user } = useAuth();
-  const tour = useTour();
   const postable = links.filter((l) => canPost(user, l));
   const [linkId, setLinkId] = useState(postable[0]?.id);
   const [body, setBody] = useState("");
@@ -34,8 +32,6 @@ export default function CoordinationNotes({ links, notes, onPosted }) {
     setError(null);
     try {
       await api(`/links/${chosen.id}/notes`, { method: "POST", body: { body: body.trim() } });
-      const other = involved(chosen).find((b) => b !== user.bureau);
-      tour.reach(6, { otherBureau: other });
       setBody("");
       onPosted();
     } catch (err) {

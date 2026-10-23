@@ -52,7 +52,7 @@ def institution_detail(inst_id: int, db: Session = Depends(get_db), user: User =
     timeline = sorted(
         (TimelineEntry(timestamp=e.timestamp, case_pk=c.id, case_id=c.case_id, case_bureau=c.source_bureau,
                        actor=e.actor, actor_bureau=e.bureau, action=e.action, remarks=e.remarks,
-                       via_confirmed_link=c.id in via_link)
+                       via_confirmed_link=c.id in via_link, kind=e.kind, asking_for=e.asking_for)
          for c in cases for e in c.events),
         key=lambda t: (utc_naive(t.timestamp), t.case_pk))
     confirmed = touching(db, member_ids, LinkStatus.confirmed) if member_ids else []

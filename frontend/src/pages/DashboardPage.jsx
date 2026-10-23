@@ -1,10 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Bar, BarChart, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import DemoReset from "../components/DemoReset";
 import Icon from "../components/icons";
-import { Bureau, Card, ErrorBox, Loading, MatchRing, Status } from "../components/ui";
+import CountUp from "../components/CountUp";
+import { Card, ErrorBox, Loading, PageTitle } from "../components/ui";
 import { useApi } from "../hooks";
-import { BUREAUS, SLA_NOTE, daysAgo, plainAction } from "../labels";
+import { BUREAUS, SLA_NOTE } from "../labels";
 
 // Chart colours: sand and taupe for normal values, clay only for the oldest / overdue.
 const SAND = "#d8d0c3";
@@ -26,67 +27,9 @@ function Kpi({ icon, value, label, tone = "neutral", onClick }) {
       <span className={`flex h-11 w-11 items-center justify-center rounded-full ${t.circle}`}>
         <Icon name={icon} size={18} />
       </span>
-      <div className={`tabular mt-3 text-4xl font-semibold ${t.value}`}>{value.toLocaleString("en-IN")}</div>
+      <div className={`font-display mt-3 text-4xl font-semibold ${t.value}`}><CountUp value={value} /></div>
       <div className="mt-1 text-lg text-ink-2">{label}</div>
     </button>
-  );
-}
-
-/** One side of a match: the case as its bureau sees it. */
-function CaseMini({ c }) {
-  const line =
-    c.status === "escalated" || c.status === "transferred" ? (
-      <Status status={c.status} />
-    ) : c.status === "pending" ? (
-      <span className="text-ink-2">New {daysAgo(c.received_date)}</span>
-    ) : (
-      <span className="text-ink-2">{plainAction(c.last_action)}</span>
-    );
-  return (
-    <div className="rounded-lg border border-l-4 border-line bg-surface px-4 py-3" style={{ borderLeftColor: BUREAUS[c.source_bureau]?.color }}>
-      <Bureau code={c.source_bureau} />
-      <div className="mt-2 text-lg text-ink">{c.case_id}</div>
-      <div className="mt-0.5 text-base">{line}</div>
-    </div>
-  );
-}
-
-function Connector() {
-  return (
-    <span aria-hidden className="hidden items-center @min-[50rem]:flex">
-      <span className="h-0.5 w-3 bg-chart-taupe" />
-      <span className="h-4 w-4 rounded border-2 border-chart-taupe" />
-      <span className="h-0.5 w-3 bg-chart-taupe" />
-    </span>
-  );
-}
-
-function CoordinationCard({ item }) {
-  const [a, b] = item.cases;
-  return (
-    <Link
-      to={`/links/${item.link_id}`}
-      aria-label={`${item.college_name}: ${item.status === "suggested" ? "needs your check" : "confirmed"}`}
-      className="flex flex-col gap-3 rounded-xl border border-line bg-sand/50 p-4 hover:border-ink @min-[50rem]:grid @min-[50rem]:grid-cols-[1fr_auto_1.15fr_auto_1fr_auto] @min-[50rem]:items-center @min-[50rem]:gap-3"
-    >
-      <div className="order-2 @min-[50rem]:order-none"><CaseMini c={a} /></div>
-      <Connector />
-      <div className="order-1 flex flex-col items-center gap-2 text-center @min-[50rem]:order-none">
-        <Icon name="college" size={18} className="text-ink-2" />
-        <div className="text-lg text-ink">{item.college_name}</div>
-        {item.match_tier === "id" ? (
-          <span className="rounded-full bg-sand px-2.5 py-0.5 text-sm text-ink-2">Same AICTE ID</span>
-        ) : (
-          <span className="rounded-full bg-amber-wash px-2.5 py-0.5 text-sm text-amber">Matched without AICTE ID</span>
-        )}
-      </div>
-      <Connector />
-      <div className="order-3 @min-[50rem]:order-none"><CaseMini c={b} /></div>
-      <div className="order-4 flex items-center gap-4 @min-[50rem]:order-none @min-[50rem]:flex-col @min-[50rem]:gap-1 @min-[50rem]:pl-2">
-        <MatchRing value={item.match_strength} />
-        <span className="text-base text-ink-2">{item.status === "suggested" ? "Check now →" : "Confirmed ✓"}</span>
-      </div>
-    </Link>
   );
 }
 
@@ -102,7 +45,6 @@ function AgeTooltip({ active, payload, label }) {
 export default function DashboardPage() {
   const navigate = useNavigate();
   const { data: s, error, loading } = useApi("/dashboard/stats");
-  const { data: colleges } = useApi("/dashboard/coordination?limit=5");
 
   if (error) return <ErrorBox error={error} />;
   if (loading || !s) return <Loading />;
@@ -117,36 +59,14 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <p className="-mt-4 max-w-4xl text-lg text-ink-2">
-        Different AICTE bureaus can act on the same college without knowing it. Samanvay spots this and warns officers before
-        duplicate or conflicting action.
-      </p>
+      <PageTitle sub="Numbers and charts for the whole picture. The day-to-day work is in the Inbox.">Reports</PageTitle>
 
       <div className="grid grid-cols-2 gap-5 xl:grid-cols-4">
         <Kpi icon="folder" value={s.sla.open} label="Open cases" onClick={() => navigate("/cases?open=true")} />
         <Kpi icon="clock" value={s.sla.overdue} label="Overdue" tone="clay" onClick={() => navigate("/cases?overdue=true")} />
         <Kpi icon="link" value={s.overlaps.suggested} label="Needs your check" tone="ochre" onClick={() => navigate("/alerts")} />
-        <Kpi icon="done" value={s.coordinated_this_month} label="Coordinated this month" onClick={() => navigate("/alerts?status=confirmed")} />
+        <Kpi icon="done" value={s.clashes_prevented} label="Clashes prevented" onClick={() => navigate("/audit?action=clash_prevented")} />
       </div>
-
-      <section>
-        <div className="mb-4 flex items-end justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold text-ink">Colleges needing coordination</h2>
-            <p className="mt-1 text-base text-ink-2">Two bureaus are working on the same college right now. Open a match to check it.</p>
-          </div>
-          <Link to="/alerts" className="text-base text-ink underline decoration-line underline-offset-4 hover:decoration-ink">See all</Link>
-        </div>
-        {!colleges ? (
-          <Loading />
-        ) : colleges.length === 0 ? (
-          <Card><p className="text-lg text-ink-2">No college is being handled by two bureaus right now.</p></Card>
-        ) : (
-          <div className="@container space-y-3">
-            {colleges.map((c) => <CoordinationCard key={c.link_id} item={c} />)}
-          </div>
-        )}
-      </section>
 
       <div className="grid gap-5 lg:grid-cols-2">
         <Card title="How long open cases have waited">

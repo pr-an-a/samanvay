@@ -2,10 +2,12 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth";
 import { Footer, Logo } from "../components/Layout";
+import { ThreadsHero } from "../components/threads";
 import { Bureau, Button, ErrorBox, Loading } from "../components/ui";
 import { useApi } from "../hooks";
 import { ROLES } from "../labels";
 import { useTour } from "../tour";
+import { CaptionBar } from "../video";
 
 const ROLE_HELP = {
   RB_OFFICER: "Handles approvals and regulatory action.",
@@ -45,37 +47,33 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="mx-auto w-full max-w-5xl px-8 pt-6">
+      <header className="mx-auto w-full max-w-6xl px-8 pt-6">
         <Logo />
       </header>
-      <main className="mx-auto w-full max-w-5xl flex-1 px-8 py-6">
-        <h1 className="max-w-3xl text-hero font-semibold">
-          Spot when two AICTE bureaus are acting on the same college.
-        </h1>
-        <p className="mt-3 max-w-3xl text-xl text-ink-2">
-          Different bureaus can act on the same college without knowing it. Samanvay spots this and warns officers before
-          duplicate or conflicting action.
-        </p>
+      <main className="mx-auto w-full max-w-6xl flex-1 px-8 py-6">
+        <section className="moment anim-rise grid items-center gap-6 overflow-hidden rounded-3xl md:grid-cols-[1.15fr_1fr]" data-tour-target="hero">
+          <div className="px-9 py-10">
+            <p className="text-sm uppercase tracking-[0.16em] text-[#e0c9b4]">Samanvay · for AICTE bureaus</p>
+            <h1 className="font-display mt-3 text-[44px] font-semibold leading-[1.08]">Check across bureaus before you act.</h1>
+            <p className="mt-4 max-w-md text-xl text-[#e9e2d6]">
+              Officers don’t need another dashboard. Samanvay checks across bureaus at the moment they’re about to act.
+            </p>
+            {users && (
+              <div className="mt-7 flex flex-wrap items-center gap-4">
+                <Button size="lg" className="!bg-[#fbf9f5] !text-ink" onClick={startTour} disabled={busy}>Start guided demo</Button>
+                <span className="text-base text-[#cfc6b8]">About 2½ minutes</span>
+              </div>
+            )}
+          </div>
+          <div className="h-[19rem] px-6 pb-4 md:h-[21rem]"><ThreadsHero /></div>
+        </section>
 
         <ErrorBox error={error || loginError} />
         {loading && <Loading />}
 
         {users && (
           <>
-            <section className="mt-6 flex flex-wrap items-center justify-between gap-5 rounded-xl border border-line bg-surface p-5">
-              <div className="max-w-2xl">
-                <h2 className="text-xl font-semibold">New here? Take the 2-minute guided demo</h2>
-                <p className="mt-1 text-lg text-ink-2">
-                  Four steps: a complaint arrives, Samanvay finds the other bureau’s case, an officer confirms, and both bureaus
-                  share one timeline.
-                </p>
-              </div>
-              <Button size="lg" onClick={startTour} disabled={busy}>
-                Start guided demo
-              </Button>
-            </section>
-
-            <h2 className="mt-8 text-xl font-semibold">Or sign in as a demo user</h2>
+            <h2 className="font-display mt-9 text-2xl font-semibold">Or sign in as a demo user</h2>
             <p className="mt-1 text-base text-muted">No passwords: this prototype uses demo users only.</p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {users.map((u) => (
@@ -95,7 +93,8 @@ export default function LoginPage() {
           </>
         )}
       </main>
-      <Footer width="max-w-5xl" />
+      <Footer width="max-w-6xl" />
+      <CaptionBar />
     </div>
   );
 }

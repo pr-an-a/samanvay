@@ -10,7 +10,7 @@ const AFTER = "Samanvay finds the same college across bureaus — even when the 
 
 function Inbox({ bureau, cases, on, refs, side }) {
   return (
-    <section aria-label={`${BUREAUS[bureau].name} inbox`} className="rounded-xl border border-line bg-surface p-3">
+    <section aria-label={`${BUREAUS[bureau].name} inbox`} className="rounded-xl border border-line bg-surface p-3 text-ink">
       <div className="mb-2 flex items-center justify-between">
         <Bureau code={bureau} className="text-base" />
         <span className="text-base text-ink-2">{cases.length} cases in this inbox</span>
@@ -21,7 +21,7 @@ function Inbox({ bureau, cases, on, refs, side }) {
             key={c.case_id}
             ref={(el) => c.pair && (refs.current[`${side}${c.pair}`] = el)}
             className={`rounded-lg border-l-4 border border-line bg-page px-3 py-1.5 transition-shadow duration-500 ${
-              on && c.pair ? "shadow-[0_0_0_2px_var(--color-ink)]" : ""
+              on && c.pair ? "shadow-[0_0_0_2px_#f0c987]" : ""
             }`}
             style={{ borderLeftColor: BUREAUS[bureau].color }}
           >
@@ -99,7 +99,8 @@ export default function WithoutWithPage() {
         {on ? "With Samanvay" : "Without Samanvay"}
       </PageTitle>
 
-      <div ref={box} data-tour-target="inboxes" className="relative grid grid-cols-[1fr_12rem_1fr] items-start">
+      <div data-tour-target="inboxes" className="moment rounded-2xl p-4">
+      <div ref={box} className="relative grid grid-cols-[1fr_12rem_1fr] items-start">
         <Inbox bureau="RB" cases={data.rb} on={on} refs={refs} side="L" />
         <div data-tour-target="matches" className="self-stretch" aria-hidden />
         <Inbox bureau="PGRC" cases={data.pgrc} on={on} refs={refs} side="R" />
@@ -113,8 +114,8 @@ export default function WithoutWithPage() {
                 className="connector-line"
                 d={`M${p.x1},${p.y1} C${mx},${p.y1} ${mx},${p.y2} ${p.x2},${p.y2}`}
                 fill="none"
-                stroke={p.tier === "id" ? "var(--color-ink)" : "var(--color-amber)"}
-                strokeWidth="3"
+                stroke={p.tier === "id" ? "#fbf9f5" : "#f0c987"}
+                strokeWidth="3.5"
                 strokeLinecap="round"
                 strokeDasharray={p.len}
                 strokeDashoffset={on ? 0 : p.len}
@@ -139,7 +140,8 @@ export default function WithoutWithPage() {
         ))}
       </div>
 
-      <p className="text-center text-2xl font-semibold">{on ? AFTER : BEFORE}</p>
+      <p className="font-display mt-4 px-4 pb-1 text-center text-3xl font-semibold leading-snug">{on ? AFTER : BEFORE}</p>
+      </div>
       <p className="text-center text-base text-muted">
         Real cases from the demo data (all synthetic). The “New today” complaint is the prepared demo complaint. A match is only a suggestion until an officer confirms it.
       </p>

@@ -1,5 +1,7 @@
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/600.css";
+import "@fontsource/fraunces/600.css";
+import "@fontsource/fraunces/400-italic.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -7,6 +9,8 @@ import { AdminOnly, AuthProvider, RequireAuth } from "./auth";
 import Layout from "./components/Layout";
 import "./index.css";
 import AccuracyPage from "./pages/AccuracyPage";
+import HowItWorksPage from "./pages/HowItWorksPage";
+import InboxPage from "./pages/InboxPage";
 import AlertsPage from "./pages/AlertsPage";
 import AuditPage from "./pages/AuditPage";
 import CaseDetailPage from "./pages/CaseDetailPage";
@@ -37,7 +41,9 @@ createRoot(document.getElementById("root")).render(
                 </RequireAuth>
               }
             >
-              <Route index element={<DashboardPage />} />
+              <Route index element={<InboxPage />} />
+              <Route path="reports" element={<DashboardPage />} />
+              <Route path="how-it-works" element={<HowItWorksPage />} />
               <Route path="cases" element={<CasesPage />} />
               <Route path="cases/:id" element={<CaseDetailPage />} />
               <Route path="institutions/:id" element={<InstitutionPage />} />

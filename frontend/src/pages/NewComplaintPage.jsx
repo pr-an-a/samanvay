@@ -5,7 +5,6 @@ import { useAuth } from "../auth";
 import Evidence from "../components/Evidence";
 import { Bureau, Button, Card, ErrorBox, PageTitle } from "../components/ui";
 import { BUREAUS, CATEGORIES, OFFICIAL_TITLE, PLAIN_TITLE, REGIONS, bureauName, daysAgo, lowerFirst, plainAction } from "../labels";
-import { useTour } from "../tour";
 
 const EMPTY = {
   source_bureau: "", raw_institution_name: "", raw_address: "", district: "", region: "", category: "",
@@ -59,7 +58,6 @@ function MatchBanner({ result }) {
 
 export default function NewComplaintPage() {
   const { user } = useAuth();
-  const tour = useTour();
   const isAdmin = user?.role === "ADMIN";
   const [form, setForm] = useState({ ...EMPTY, source_bureau: user?.bureau || "" });
   const [error, setError] = useState(null);
@@ -92,7 +90,6 @@ export default function NewComplaintPage() {
     try {
       const res = await api("/cases", { method: "POST", body });
       setResult(res);
-      if (res.overlap_alerts.length) tour.reach(3);
       setForm({ ...EMPTY, source_bureau: user?.bureau || "" });
       setNote(null);
       window.scrollTo({ top: 0, behavior: "smooth" });

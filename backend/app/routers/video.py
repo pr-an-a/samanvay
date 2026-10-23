@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from .. import stress
+from .. import clash, stress
 from ..auth import get_current_user
 from ..db import get_db
 from ..matcher import TextIndex, profile, score_pair
@@ -73,6 +73,19 @@ def without_with(db: Session = Depends(get_db)) -> dict:
     pg_order = [*pg_fill[:1], *pg[1:2], *pg[:1], *pg_fill[1:2], *pg_fill[2:], *pg[2:]]
     return {"rb": [r if isinstance(r, dict) else card(r) for r in rb_order],
             "pgrc": pg_order, "pairs": pairs}
+
+
+@router.get("/demo/script")
+def demo_script(db: Session = Depends(get_db)) -> dict:
+    """Where the guided demo's pre-action step happens: the Grievance Cell case on the demo college."""
+    from ..seed import DEMO_PGRC_CASE, DEMO_RB_CASE
+    pg = db.scalar(select(Case).where(Case.case_id == DEMO_PGRC_CASE))
+    rb = db.scalar(select(Case).where(Case.case_id == DEMO_RB_CASE))
+    if pg is None or rb is None:
+        raise HTTPException(404, "Demo cases not found: reseed the data")
+    link = db.scalar(select(CaseLink).where(CaseLink.case_a_id == min(pg.id, rb.id), CaseLink.case_b_id == max(pg.id, rb.id)))
+    return {"action_case_pk": pg.id, "other_case_pk": rb.id, "institution_id": rb.institution_id or pg.institution_id,
+            "link_id": link.id if link else None, "other_bureau": rb.source_bureau, "clash_settings": clash.CONFIG}
 
 
 @router.get("/demo/stress-test")

@@ -45,7 +45,9 @@ def test_overdue_filter_matches_stats(client, headers):
 
 def test_search_filters_and_csv_use_same_filters(client, headers):
     h = headers["ADMIN"]
-    one = client.get("/cases", headers=h).json()[5]
+    cases = client.get("/cases", headers=h).json()
+    # a case number that is not also a piece of another ("WRO/2026/018" is inside "SWRO/2026/018")
+    one = next(c for c in cases[5:] if sum(c["case_id"] in d["case_id"] for d in cases) == 1)
     assert [c["case_id"] for c in client.get(f"/cases?q={one['case_id']}", headers=h).json()] == [one["case_id"]]
 
     rb = client.get("/cases?bureau=RB&status=under_process", headers=h).json()

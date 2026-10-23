@@ -2,12 +2,12 @@ from collections import Counter
 from datetime import date, datetime, timezone
 
 from fastapi import APIRouter, Depends
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
 from ..db import get_db
-from ..models import Bureau, Case, CaseLink, CaseStatus, Institution, LinkStatus
+from ..models import AuditAction, AuditLog, Bureau, Case, CaseLink, CaseStatus, Institution, LinkStatus
 from ..services import is_open, is_overdue, utc_naive
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"], dependencies=[Depends(get_current_user)])
@@ -54,6 +54,8 @@ def stats(db: Session = Depends(get_db)) -> dict:
                 "note": "SLA values are demo settings, not official AICTE timelines."},
         "overlaps": {s.value: links.get(s.value, 0) for s in LinkStatus},
         "coordinated_this_month": coordinated,
+        "clashes_prevented": db.scalar(select(func.count(AuditLog.id)).where(AuditLog.action == AuditAction.clash_prevented.value)) or 0,
+        "clashes_overridden": db.scalar(select(func.count(AuditLog.id)).where(AuditLog.action == AuditAction.action_overridden.value)) or 0,
         "by_region": [{"region": r, **v} for r, v in sorted(by_region.items())],
     }
 

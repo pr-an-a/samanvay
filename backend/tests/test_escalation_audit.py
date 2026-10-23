@@ -58,7 +58,10 @@ def test_audit_log_records_actions_and_filters(client, headers):
 
     today = date.today()
     assert client.get(f"/audit?date_from={today}&date_to={today}", headers=h).json()
-    assert client.get(f"/audit?date_to={today - timedelta(days=1)}", headers=h).json() == []
+    # Before today there is only the demo college's seeded back-story (a confirmation dated 10 days ago).
+    earlier = client.get(f"/audit?date_to={today - timedelta(days=1)}", headers=h).json()
+    assert [(e["action"], e["case_refs"]) for e in earlier] == [("link_confirmed", "PG-2026-00169, RB/2026/0138")] or \
+        [(e["action"], e["case_refs"]) for e in earlier] == [("link_confirmed", "RB/2026/0138, PG-2026-00169")]
 
     # Read-only: no way to change or remove entries.
     assert client.delete("/audit", headers=h).status_code == 405

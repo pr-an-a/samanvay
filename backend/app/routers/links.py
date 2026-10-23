@@ -7,7 +7,8 @@ from ..db import get_db
 from .. import audit
 from ..models import AuditAction, CaseEvent, CaseLink, LinkStatus, User, utcnow
 from ..privacy import link_out
-from ..schemas import CaseLinkOut, LinkReviewIn
+from ..schemas import CaseLinkOut, LinkReviewIn, TimelineEntry
+from ..services import utc_naive
 
 router = APIRouter(prefix="/links", tags=["links"])
 
@@ -29,6 +30,20 @@ def get_link(link_id: int, db: Session = Depends(get_db), user: User = Depends(g
     if link is None:
         raise HTTPException(404, "Link not found")
     return link_out(link, user)
+
+
+@router.get("/{link_id}/timeline", response_model=list[TimelineEntry])
+def link_timeline(link_id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    """Both cases' history in one list, in time order: what each bureau has done on this college."""
+    link = db.get(CaseLink, link_id)
+    if link is None:
+        raise HTTPException(404, "Link not found")
+    confirmed = link.status == LinkStatus.confirmed.value
+    rows = [TimelineEntry(timestamp=e.timestamp, case_pk=c.id, case_id=c.case_id, case_bureau=c.source_bureau, actor=e.actor,
+                          actor_bureau=e.bureau, action=e.action, remarks=e.remarks, via_confirmed_link=confirmed and c is link.case_b,
+                          kind=e.kind, asking_for=e.asking_for)
+            for c in (link.case_a, link.case_b) for e in c.events]
+    return sorted(rows, key=lambda t: (utc_naive(t.timestamp), t.case_pk))
 
 
 def review(db: Session, link_id: int, user: User, new_status: LinkStatus, remarks: str | None) -> CaseLink:

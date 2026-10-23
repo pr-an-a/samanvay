@@ -1,17 +1,20 @@
 import { useParams } from "react-router-dom";
+import ActionForm from "../components/ActionForm";
 import LinkList from "../components/LinkList";
+import ThreadTimeline from "../components/ThreadTimeline";
 import { Bureau, Card, ErrorBox, Field, Loading, SlaTag, PageTitle, Status, TextLink } from "../components/ui";
 import { useApi } from "../hooks";
-import { CATEGORIES, formatDate, formatDateTime, plainAction } from "../labels";
+import { CATEGORIES, formatDate, plainAction } from "../labels";
 
 export default function CaseDetailPage() {
   const { id } = useParams();
-  const { data: c, error, loading } = useApi(`/cases/${id}`);
-  const { data: events } = useApi(`/cases/${id}/events`);
+  const { data: c, error, loading, reload: reloadCase } = useApi(`/cases/${id}`);
+  const { data: events, reload: reloadEvents } = useApi(`/cases/${id}/events`);
   const { data: links } = useApi(`/links?case_pk=${id}`);
 
   if (error) return <ErrorBox error={error} />;
-  if (loading || !c) return <Loading />;
+  if (!c) return <Loading />;
+  if (loading && !c) return <Loading />;
 
   return (
     <div className="space-y-6">
@@ -51,21 +54,13 @@ export default function CaseDetailPage() {
         </Card>
       </div>
 
-      <Card title="History">
-        <ol className="space-y-5">
-          {events?.map((e) => (
-            <li key={e.id} className="grid gap-1 border-l-2 border-line pl-5 sm:grid-cols-[13rem_1fr]">
-              <div className="tabular text-base text-muted">{formatDateTime(e.timestamp)}</div>
-              <div>
-                <div className="text-lg font-semibold">{plainAction(e.action)}</div>
-                <div className="text-base text-ink-2">
-                  {e.actor}
-                  {e.remarks && <> · “{e.remarks}”</>}
-                </div>
-              </div>
-            </li>
-          ))}
-        </ol>
+      <ActionForm caseItem={c} links={links ?? []} onSaved={() => { reloadEvents(); reloadCase(); }} />
+
+      <Card title="History" sub={`What ${c.source_bureau === "PGRC" ? "the Grievance Cell" : c.source_bureau === "RB" ? "the Regulation Bureau" : "the Regional Office"} has done on this case.`}>
+        <ThreadTimeline
+          entries={events?.map((e) => ({ timestamp: e.timestamp, case_pk: c.id, case_id: c.case_id, case_bureau: c.source_bureau,
+            actor: e.actor, actor_bureau: e.bureau, action: e.action, remarks: e.remarks, asking_for: e.asking_for }))}
+        />
       </Card>
     </div>
   );

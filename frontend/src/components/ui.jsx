@@ -6,7 +6,7 @@ export function PageTitle({ children, sub, actions }) {
   return (
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div className="max-w-4xl">
-        <h1 className="text-3xl font-semibold text-ink">{children}</h1>
+        <h1 className="font-display text-3xl font-semibold text-ink">{children}</h1>
         {sub && <p className="mt-1 text-lg text-ink-2">{sub}</p>}
       </div>
       {actions && <div className="flex flex-wrap gap-3">{actions}</div>}

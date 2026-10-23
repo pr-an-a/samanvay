@@ -1,0 +1,11 @@
+{
+  "_notes": [
+    "Pre-action check settings. Demo values, not official AICTE rules. Rule-based: no AI.",
+    "duplicate_days: a similar request or notice from another bureau within this many days is a DUPLICATE EFFORT.",
+    "conflict_days: another bureau's show-cause notice or escalation within this many days makes closing a CONFLICTING ACTION.",
+    "idle_days: both linked cases with no activity for this many days means WAITING ON EACH OTHER."
+  ],
+  "duplicate_days": 14,
+  "conflict_days": 30,
+  "idle_days": 21
+}

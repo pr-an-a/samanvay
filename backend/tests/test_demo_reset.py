@@ -28,7 +28,7 @@ def test_reset_restores_demo_data_and_keeps_everyone_signed_in(client, headers, 
 
     r = client.post("/demo/reset", headers=headers["ADMIN"])
     assert r.status_code == 200 and r.json()["sessions_kept"] >= 4
-    assert counts() == (500, 50, 0)  # seeded cases and matches, empty audit log
+    assert counts() == (500, 50, 1)  # seeded cases and matches; the audit log holds only the demo college's back-story
     assert client.get(f"/cases/{escalate['id']}", headers=headers["ADMIN"]).json()["status"] != "escalated"
     assert client.get("/sla/settings", headers=headers["ADMIN"]).json()["last_check"] is None
 

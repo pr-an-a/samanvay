@@ -10,6 +10,9 @@ const ACTIONS = {
   link_rejected: "Marked different colleges",
   case_escalated: "Escalated",
   note_posted: "Coordination note",
+  action_taken: "Action sent",
+  action_overridden: "Sent despite a clash",
+  clash_prevented: "Clash prevented",
 };
 const CONTROL = "rounded-lg border border-line bg-surface px-3 py-2 text-base text-ink";
 
